@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+<div class="column is-4 is-offset-4">
+    <h3 class="title"></h3>
+            <div class="box" background-color="#336699">
+
+            <td><img name="login_r1_c1" src="{{url_for('static',filename="images/login_r1_c1.gif")}}" width="83" height="53" border="0"></td>
+            <td><img name="login_r1_c2" src="{{url_for('static',filename="images/login_r1_c2.gif")}}" width="37" height="53" border="0"></td>
+            <td><img name="login_r1_c3" src="{{url_for('static',filename="images/login_r1_c3.gif")}}" width="159" height="53" border="0"></td>
+            <td><img name="login_r1_c4" src="{{url_for('static',filename="images/login_r1_c4.gif")}}" width="13" height="53" border="0"></td>
+            <td><img src="images/spacer.gif" width="1" height="53" border="0"></td>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-danger">
+        {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/login" bgcolor="#336699">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
+                </div>
+            </div>
+            <div class="field">
+                <label class="checkbox">
+                    <input type="checkbox" name="remember">
+                    Remember me
+                </label>
+            </div>
+                <div>
+                    <button class="button  is-info" style="align-center;">
+                        Login
+                    </button>
+                </div>
+                <hr>
+                <div class='row'>
+                    <a
+                        <button type = 'button'class="button is-info" style="align-center;" href="{{ url_for("auth.signup") }}">Create New Account 
+                        </button>
+                    </a>
+                    <a
+                        <button type = 'button'class="button is-info" style="align-center;" href="{{ url_for("auth.signup") }}">Forgotten
+                        </button>
+                    </a>                   
+                </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

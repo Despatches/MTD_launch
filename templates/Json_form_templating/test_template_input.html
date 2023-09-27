@@ -1,0 +1,68 @@
+<html>
+	<head>
+    	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+	</head>
+	<form method="POST" action="/test_template">
+		<textarea id = 'template' name='template'></textarea>
+		<button>Test Template</button>
+	<form>
+		<button type = 'button' id="indemnity_risk_characteristics">indemnity_risks</button>
+		<button type = 'button' id="format">Format to sql</button>
+		<button type = 'button' id="idents">Extract Identifiers</button>
+		<button type = 'button' id="meaning">meanings</button>
+		<button type = 'button' id='TA6_p1_attribs'> new TA6_p1 attributes</button>
+<textarea id = 'output' name='output'>OUTPUT</textarea>
+<script>
+	$(document).ready(function(){
+		$('#format').click(function(){
+			//template string
+			var ts = $('#template').val().trim()
+			alert(ts)
+			$.ajax({
+				type: 'POST',
+				data : {template: ts, type:'db'},
+				url : '/create_form_db_table',
+				success : function(data){
+					alert(data)
+				}
+			});
+		});
+		$('#meaning').click(function(){
+			//template string
+			var ts = $('#template').val().trim()
+			alert(ts)
+			$.ajax({
+				type: 'POST',
+				data : {template: ts, type:'meaning', sub_type:$('#output').val()},
+				url : '/create_form_db_table',
+				success : function(data){
+					$('#output').val(data)
+				}
+			});
+		});
+
+		$('#idents').click(function(){
+			var ts = $('#template').val().trim()
+		$.ajax({
+				type: 'POST',
+				data : {template: ts, type:'idents'},
+				url : '/create_form_db_table',
+				success : function(data){
+					alert(data)
+				}
+			});
+		});
+		$('#indemnity_risk_characteristics').click(function(){
+			var ts = $('#template').val().trim()
+		$.ajax({
+				type: 'POST',
+				data : {template: ts, type:'indem_risk'},
+				url : '/create_form_db_table',
+				success : function(data){
+					alert(data)
+				}
+			});
+		});
+	});
+</script>
+</html>

@@ -1,0 +1,262 @@
+<section id="service_charges" style="width: 50%;margin: auto;" align="middle" class="hide">
+	<div>
+		<div>
+			<b>3.2.6 Service charges</b>
+		</div>
+		<div>					
+			<p class="q_title">3.2.7 Have you paid service charges?</p>
+		</div>
+		<div class="row">
+			<div class="input_container">
+				<div class = "radio_container">
+					<p>Yes</p>
+					<input name="service_charge_bool"  type="radio" value="1">
+				</div>
+				<div class = "radio_container">
+					<p>No</p>
+					<input name="service_charge_bool"  type="radio" value="0">
+				</div>				
+			</div>
+			<div>
+				<button align="right" style="float:right;" id="service_charge_bool_empty" class="button is-small is-warning"><b>X</b></button>
+			</div>
+		</div>
+		<div id="service_charge_data">
+			<hr class="dropdown-divider">
+			<div>
+				<div>
+					<p class="q_title">3.2.8 How much was the service charge last year (between 1 January and 31 December in £)?</p>
+				</div>
+				<div class="row">
+					<div class = "input_container">
+						<input id="last_service_charge" class="input is-small" type="number" min="0" max="1000" style="width : 20%; align:left;">
+					</div>
+					<div>
+						<button align="right" style="float:right;" id="last_service_charge_empty" class="button is-small is-warning"><b>X</b></button>
+					</div>
+				</div>
+			</div>
+			<hr class="dropdown-divider">
+			<div>					
+				<p class="q_title">3.2.9 Is there a budget or known amount for the service charge this year?</p>
+			</div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="service_charge_budget_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="service_charge_budget_bool"  type="radio" value="0">
+					</div>
+				</div>
+				<div>
+					<button align="right" style="float:right;" id="service_charge_budget_bool_empty" class="button is-small is-warning"><b>X</b></button>
+				</div>				
+			</div>
+			<div id = "service_charge_bill">
+				<hr class="dropdown-divider">
+				<div>
+					please upload any relevant documents, such as a service charge bill.
+				</div>
+				<div class="row">
+					<div class="input_container">
+						<input type="file" id="service_charge_bill_docu">
+					</div>
+					<div>
+						<button align="right" style="float:right;" id="service_charge_bill_docu_empty" class="button is-small is-warning"><b>X</b></button>
+					</div>
+				</div>
+			</div>
+			<hr class="dropdown-divider">
+			<div>
+				<p class="q_title">3.2.10 When are the payments due?</p>
+			</div>
+			<div class="row">
+				<div class="input_container date">
+					<input id="service_charge_payments_due" type="month">
+				</div>
+				<div>
+					<button align="right" style="float:right;" id="service_charge_payments_due_empty" class="button is-small is-warning"><b>X</b></button>
+				</div>				
+			</div>
+			<hr class="dropdown-divider">
+			<div>
+				<div>
+					3.2.11 Who are payments made to?
+				</div>
+					<div class ="row">
+						<div class="input_container">
+							<div class = "radio_container">
+								<p>Landlord(s)</p>
+								<input name="service_charge_pay_reciever"  type="radio" value="landlord">
+							</div>
+							<div class = "radio_container">
+								<p>Managing agent(s)</p>
+								<input name="service_charge_pay_reciever"  type="radio" value="agent">
+							</div>
+							<div class = "radio_container">
+								<p>Freehold company</p>
+								<input name="service_charge_pay_reciever"  type="radio" value="freehold_company">
+							</div>
+							<div class = "radio_container">
+								<p>Resident’s Association</p>
+								<input name="service_charge_pay_reciever"  type="radio" value="resi_assoc">
+							</div>										
+						</div>
+						<div class="empty_container">
+							<button align="right" style="float:right;" id="service_charge_pay_reciever_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+						</div>
+					</div>
+				<div id="service_charge_reciever_details">
+					<span>Please provide details of the </span><span id="service_charge_reciever_type"></span>:
+					<div>
+						<pclass="q_title">Name of organisation</p>
+						<div class="row">
+							<div class = "input_container">
+								<input id="service_charge_organisation" class="input">
+							</div>
+							<div class="empty_container">
+								<button align="right" style="float:right;" id="service_charge_organisation_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+							</div>								
+						</div>
+						<hr class="dropdown-divider">
+						<p class="q_title">Building name</p>
+						<div class = "row">
+							<div class="input_container">
+								<input id="service_charge_Building_name" class="input">
+							</div>
+							<div class="empty_container">
+								<button align="right" style="float:right;" id="service_charge_Building_name_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+							</div>							
+						</div>
+						<hr class="dropdown-divider">
+						<p class="q_title">Building/street no</p>
+						<div class="row">
+							<div class="input_container">
+								<input id="service_charge_street_no" class="input">
+							</div>
+							<div class="empty_container">
+								<button align="right" style="float:right;" id="service_charge_street_no_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+							</div>
+						</div>
+						<hr class="dropdown-divider">
+						<p class="q_title">Street Name</p>
+						<div class="row">
+							<div class="input_container">
+								<input id="service_charge_street_name" class="input">
+							</div>
+							<div class="empty_container">
+								<button align="right" style="float:right;" id="service_charge_street_name_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+							</div>
+						</div>						
+						<hr class="dropdown-divider">
+						<p class="q_title">Town/City</p>
+						<div class="row">
+							<div class="input_container">
+								<input id="service_charge_town_or_city" class="input">
+							</div>
+							<div class="empty_container">
+								<button align="right" style="float:right;" id="service_charge_town_or_city_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+							</div>							
+						</div>
+						<hr class="dropdown-divider">
+						<p class="q_title">Postcode</p>
+						<div class="row">
+							<div class="input_container">
+								<input id="service_charge_postcode" class="input">
+							</div>
+							<div class="empty_container">
+								<button align="right" style="float:right;" id="service_charge_postcode_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+							</div>
+						</div>						
+					</div>
+				</div>
+			</div>
+			<hr class="dropdown-divider">
+			<div>
+				3.3 Have you applied to the landlord for an extension of the lease or to buy the freehold?
+			</div>	
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="landlord_extension_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="landlord_extension_bool"  type="radio" value="0">
+					</div>	
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="landlord_extension_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>				
+			</div>
+			<div id="landlord_extension_details_mod">
+				<div>
+					please provide any details of when you applied and whether the application has been accepted
+				</div>
+				<div class="row">
+					<div class="input_container">
+						<textarea id="lease_extension_application" class="textarea">
+						</textarea>
+					</div>
+					<div class="empty_container">
+						<button align="right" style="float:right;" id="lease_extension_application_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+					</div>						
+				</div>
+			</div>
+		</div>
+		<hr class="dropdown-divider">
+		<button id ="submit_service_charges" class="button is-success">Submit</button>
+	</div>
+</section>
+<script type="text/javascript">
+var service_charges = {}
+$(document).ready(function(){
+	$("#service_charge_reciever_details").slideUp();
+	boolean_slide_open("input[name=landlord_extension_bool]","#landlord_extension_details_mod","stand");
+
+	$("input[name=service_charge_pay_reciever]").click(function(){
+		if ($(this).val() != "landlord"){
+			$("#service_charge_reciever_details").slideDown();
+			if ($(this).val() == "agent"){
+				$("#service_charge_reciever_type").text("Managing agent(s)")
+			} else if ($(this).val() == "freehold_company"){
+				$("#service_charge_reciever_type").text("Freehold company")
+			} else if ($(this).val() == "resi_assoc"){
+				$("#service_charge_reciever_type").text("Resident’s Association")
+			}
+		} else {
+			$("#service_charge_reciever_details").slideUp()
+		};
+	});
+
+	boolean_slide_open("input[name=service_charge_bool]","#service_charge_data","stand");
+
+	boolean_slide_open("input[name=service_charge_budget_bool]","#service_charge_bill","stand");
+
+	var service_charge_input_fields=[
+			{"identifier":"last_service_charge", "input_type":"input"},
+			{"identifier":"service_charge_bool",  "input_type":"bool", radio_function:function(){$("#service_charge_data").slideUp()}},
+			{"identifier":"service_charge_budget_bool",  "input_type":"bool",radio_function:function(){$("#service_charge_bill").slideUp()}},
+			{"identifier":"service_charge_payments_due", "input_type":"date"},
+			{"identifier":"service_charge_bill_docu", "input_type":"docu"},
+			{"identifier":"service_charge_pay_reciever", "input_type":"radio", radio_function:function(){$("#service_charge_reciever_details").slideUp()}},
+			{"identifier":"service_charge_organisation", "input_type":"text"},
+			{"identifier":"service_charge_Building_name", "input_type":"text"},
+			{"identifier":"service_charge_street_no", "input_type":"text"},
+			{"identifier":"service_charge_town_or_city", "input_type":"text"},
+			{"identifier":"service_charge_postcode", "input_type":"text"},	
+			{"identifier":"service_charge_street_name", "input_type":"text"},
+			{"identifier":"landlord_extension_bool", "input_type":"bool",radio_function:function(){$("#landlord_extension_details_mod").slideUp()}},
+			{"identifier":"lease_extension_application", "input_type":"detail_text"}			
+		]
+	
+	empty_and_convert(service_charge_input_fields)
+
+	ajax_submission('submit_service_charges',service_charges, "/TA6_part_1_service_charges", service_charge_input_fields);
+
+});
+</script>

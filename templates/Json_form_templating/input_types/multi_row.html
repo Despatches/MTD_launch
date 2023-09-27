@@ -1,0 +1,34 @@
+
+			<p class="q_title">{{ question['multi_row_guidance'] |default('Fill out a new entry for each applicable instance') }}</p>
+			<p class="q_title"><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
+			{% for other_text in question['other_question_text'] %}			
+
+				<p>{{other_text}}</p>
+			{% endfor %}	
+			<table row_num='0' class="table" align="middle" id="{{question['identifier']}}">	
+					<tr>
+			{% for question in question['sub_questions'] %}
+				{% if question['question_set'] is not defined %}
+					<th>
+						{{question['table_title']|default( question['question_title'])}}
+					</th>
+				{% endif %}
+					{% if question['sub_questions'] is defined %}
+						{% include "Json_form_templating/input_types/multi_row_sub_item_table_row.html"%}
+					{% endif %}	
+
+			{% endfor %}						
+					<th>
+					</th>
+				</tr>
+			</table>				
+			<div class="input_container" id="{{question['identifier']}}_new_asset_container">
+				<button class="button is-success" id="{{question['identifier']}}_new_asset">Add New {{question['object_type']| default ('Individual') }}</button> 
+			</div>	
+			<div id="{{question['identifier']}}_asset_inputs">
+			{% include "Json_form_templating/subquestion_loop.html"%}
+
+				<div class="q_title">
+					<button class="button is-success" id="add_{{question['identifier']}}">Confirm {{question['object_type']| default ('Add new entry') }}</button>
+				</div>
+			</div>

@@ -1,0 +1,816 @@
+
+{% extends "base.html" %}
+{% macro other_input_data(question) -%}
+   {% if question['required'] is defined %}
+   		required='{{question['required']}}'
+   	{% endif %}
+{%- endmacro %}
+
+{% block content %}
+<meta id="form_data" data-flow_controls='{{ main_form_data['flow_controls'] | tojson }}' data-form_id="{{main_form_data['form_id']}}"  data-questions='{{ main_form_data['questions'] | tojson }}' data-form ="{{ main_form_data['template']['form_identifier'] }}" data-results={{main_form_data['results'] | default('none')}} data-section_marker={{ main_form_data['section_marker'] }}>
+<style>
+.pillar{
+	display:flex;
+ 	flex-direction:column;
+}
+
+.row{
+	display:flex; 
+	flex-direction:row; 
+}
+
+.input_container{
+	width:600px;
+	display:flex; 
+	flex-direction:row; 	
+}
+
+.short_radio{
+	margin:auto; width:90%;
+}
+
+.radio_container{
+	margin-right:10px;
+	display:flex;
+ 	flex-direction:column;
+}
+
+.q_title{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.child_q{
+	margin-left: 20px;
+}
+
+.empty_button{
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+
+}
+
+.empty_container{
+	position: relative;
+}
+
+</style>
+{% set subsections= namespace(count=0, ident_prefix='') %}
+
+<div class="columns">
+	<div class="column is-one-fifth" style="background-color:#ede6e6;color:#135e7c">
+		<aside class="menu is-warning">
+			<p class="menu-heading">
+   				Sections
+  			</p>
+  			<ul class="menu-list" id='sections_side_menu'>
+  				{% for section in template['Sections'] %}
+  					{% if section['sub_sections'] is not defined %}
+			  	<li>
+			  		<div>
+				  		<a id="{{section['section_identifier']}}_selector" purp="selec" selec="{{section['section_identifier']}}" style="display:flex; flex-direction:row;">
+				  		<div>
+				  			{{ section['section_name'] }}
+				  		</div>
+				  		<div style="width:100px" class="hide" id="{{section['section_identifier']}}_selector_completion_tick">
+				  			<img src="{{url_for('static', filename='gen_images/confirmation_tick.png')}}"/>
+				  		</div>
+				  		</a>
+				  	</div>
+			  	</li>
+			  		{% else %}
+			  		{% set subsections.count = 0 %}
+				<li sub_menu="{{section['section_identifier']}}" menu_type="sub_menu">
+					<a selec="{{section['section_identifier']}}">{{ section['section_name'] }}</a>
+				  	<ul class="menu-list" id="{{section['section_identifier']}}_sub_sects" men_type="menu_sub_sec" menu="{{section['section_identifier']}}" status="closed">
+				  		{% for sub_sec in section['sub_sections']%}
+				  	{% set subsections.count = subsections.count + 1  %}
+					  <li>
+					  	<a sub_item={{ subsections.count }} id="ownership_selector" purp="selec" selec="ownership">
+					 		{{ sub_sec['section_title'] }}
+					  	</a>
+					  </li>	
+					  	{% endfor %} 
+					</ul>
+				</li>
+					{% endif %}			  		
+			  	{% endfor %}		  				  	  	
+			</ul>
+		</aside>
+	</div>
+	<div class="column" style="color:black;" id='section_holder'>
+		<div id="loader" style="width: 100%;height: 100%; z-index: 5; background-color: grey; position: absolute; opacity: 0.6;" class="hide">
+			<button class="button is-primary is-loading" style="margin: auto; position: relative;"></button>
+		</div>
+		{% include "Json_form_templating/guidance_section.html" %}
+		{% for section in template['Sections'] %}
+			{% if section['sub_sections']|length == 0 %}
+				{% include "Json_form_templating/Json_form_templating_section.html" %}
+			{% else %}
+				{% for sub_section in section['sub_sections'] %}
+					{% include "Json_form_templating/Json_form_templating_section.html" %}
+				{% endfor %}
+			{% endif %}
+		{% endfor %}
+
+
+	</div>
+</div>
+<script>
+var table_row=0;
+var submitable;
+var allow_details = true;
+var other_text_submittable;
+var main_form_data = {{ main_form_data | tojson }}
+var form_data = $("meta[id=form_data]").data()
+var sub_forms = {{ sub_forms | tojson }}
+var current_section
+var open_section
+
+$(document).ready(function(){
+	var reached_section = main_form_data['reached_section']
+
+	var template = main_form_data['template']
+
+	var questions = main_form_data['questions'] 
+	var sections = main_form_data['sections']
+
+	var results = main_form_data['result_send']
+
+	var sub_table_data = main_form_data['sub_tables_send']
+	//alert(questions['ownership'][0]['identifier'])
+
+	function empty_text_values(val){
+		if (val == 0){
+			val = ''
+			return val
+		}
+	}
+
+	function db_bool_convert(val){
+		var new_val = val
+		if (val == 'yes'){
+			new_val = '1'
+		} else if (val == 'no'){
+			new_val = '0'
+		};
+		return new_val
+	};
+
+	function empty_and_convert(data_fields){
+		/*empty_and_convert_type = {'date':function(item){
+			var pre_value = results[item.identifier]['value']
+			if (pre_value != false || undefined){
+				$(`#${item.identifier}`).val(pre_value);
+			};
+		}
+		}*/
+		function multi_choice_evals(item){
+					if (item.radio_function === undefined){
+						item.radio_function="none"
+					}
+					if (item.styling != undefined){
+						if (item.styling == 'dropdown'){
+							var dropdown = $(`select[id=${item.identifier}]`)
+
+							$(`input[name=${item.identifier}]:checked`).val($(dropdown).val());
+							$(dropdown).change(function(){
+								alert($(dropdown).val());
+								$(`input[name=${item.identifier}]:checked`).val($(dropdown).attr('value'));
+							});
+							if (results != 'none'){
+								if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+									$(`input[name = ${item.identifier}][value=${results[item.identifier]['value']}]`).click()
+								};
+							};
+						} else if (item.styling == 'block'){
+							var rad_block = $(`div[radio_block=${item.identifier}]`)
+							$(rad_block).mouseenter(function(){
+								$(this).css({"background-color":"#f9f7f7"});
+							});
+							$(rad_block).mouseleave(function(){
+								if ($(this).prop("selected") == true){
+									$(this).css({"background-color":"#ede6e6"});
+								} else{
+									$(this).css({"background-color":"lightblue"})
+								};
+							});
+							$(rad_block).click(function(){
+								$(rad_block).each(function(){
+									$(this).prop("selected", false)
+									$(this).css({"background-color":"lightblue"})
+								});
+								$(this).css({"background-color":"#ede6e6"});
+								$(this).prop("selected", true);
+								console.log($(this).attr('hidden_value'))
+								//$(`input[name=${item.identifier}][value='${$(this).attr('val')}']`).click();
+							});
+							if (results != 'none'){
+								if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+									$(`div[radio_block=${item.identifier}][hidden_value=${results[item.identifier]['value']}]`).click()
+								}
+							};											
+						};
+					} else{
+						if (results != 'none'){
+							if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+									$(`input[name = ${item.identifier}][value=${results[item.identifier]['value']}]`).click()
+								}
+							};
+					}
+					empty_radio_set(item.identifier, item.radio_function)
+				
+		};
+
+		function json_date_conversion(date){
+			var currentDate = new Date(date);
+			var date = ("0" + currentDate.getDate()).slice(-2);
+			var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+			var year = currentDate.getFullYear();
+			var dateString = year + "-" + month + "-" + date;
+			return dateString		
+		};
+
+		var empty_and_convert_funcs = {
+			'checkbox': function(item){
+				if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+				var resulty = results[item.identifier]['value']
+					if (resulty == 'yes'){
+						$(`input[name=${item.identifier}]`).click()
+					};
+				};
+				$(`#${item.identifier}_empty`).click(function(){
+					$(`input[name=${item.identifier}]`).prop('checked',false)
+				});
+			},
+			'bool':function(item){
+					if (results != 'none'){
+						if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+						results[item.identifier]['value'] = db_bool_convert(results[item.identifier]['value'])
+						//alert(results[item.identifier]['value'])
+					}
+				}
+					multi_choice_evals(item)
+			},
+			'text':function(item){
+					if (item.styling != undefined && item.styling['stock_options'] != undefined/*item.stock_options.options.length > 0*/){
+						var stock_other = $(`#${item.identifier}_stock_other`);
+						$(stock_other).slideUp();
+						$(`select[id=${item.identifier}_stock]`).change(function(){
+							if ($(this).val() == 'other'){
+								$(stock_other).slideDown();
+							}else{
+								$(stock_other).slideUp()
+							};
+						});
+						$(`#${item.identifier}_empty`).click(function(){
+							$(`#${item.identifier}_stock`).val("");
+							$(`${stock_other}`).val("");
+							$(`${stock_other}`).slideUp();
+						});
+						if (results != 'none'){
+							if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+								var other = true
+								$(`option[group=${item.identifier}_stock]`).each(function(){
+										var stock_opt = $(this).val();
+										if (stock_opt == results[item.identifier]['value']){
+											$(`select[id=${item.identifier}_stock]`).val(stock_opt);
+											other = false;
+										};
+									});
+									if (other == true){
+										$(`select[id=${item.identifier}_stock]`).val('other');
+										$(`input[id=${item.identifier}_stock_other]`).val(results[item.identifier]['value']);
+										$(`div[id=${item.identifier}_stock_other]`).slideDown();
+									};
+							};
+							//$(`input[name = ${item.identifier}][value=${results[item.identifier]['value']}]`).click();
+						};
+						empty_input(item['identifier']);
+						if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+							var pre_value = results[item.identifier]['value'];
+							if (pre_value != false || undefined){
+								$(`#${item.identifier}`).val(pre_value);
+							};
+						};
+					};
+
+				},
+				'date':function(item){
+					if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+						var date = json_date_conversion(results[item.identifier]['value'])				
+						$(`input[id=${item.identifier}]`).val(date)
+					};
+				},
+				'detail_text':function(item){
+					if (results != 'none'){
+							if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined || false){
+								var pre_value = results[item.identifier]['value'];
+								$(`#${item.identifier}`).val(pre_value);
+							}
+					}
+				},
+				'docu':function(item){
+					return 0 
+				}
+		};
+
+		data_fields.forEach(function(item){
+			if (empty_and_convert_funcs[item.input_type] != undefined){
+				empty_and_convert_funcs[item.input_type](item)
+			}else if(item.input_type != "multi_row"){
+				if (item.input_type == 'radio'|| item.input_type == 'bool_extra'){
+					multi_choice_evals(item)
+				}else{
+					if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined || false){
+						var pre_value = results[item.identifier]['value'];
+							$(`#${item.identifier}`).val(pre_value);
+					};
+					
+					empty_input(item['identifier'])
+				}
+			} else if (item.input_type == 'multi_row'){
+				multi_row_data_table(item.identifier, $(`#add_${item.identifier}`), item.data_rows)
+				empty_and_convert(item.data_rows)
+			}
+
+		});
+	};
+
+
+	//empty_and_convert(questions['ownership'])
+
+	function empty_radio_set(radio_set, scroll_trigger){
+		$(`#${radio_set}_empty`).click(function(){
+		if (scroll_trigger != "none"){
+			scroll_trigger()
+		}		
+			$(`input[name=${radio_set}]`).each(function(){
+				$(this).prop("checked", false)
+			});
+		});
+	};
+
+	function empty_input(input){
+		$(`#${input}_empty`).click(function(){
+			$(`#${input}`).val("");
+		});
+	};	
+
+	var form_flow_controls = JSON.parse({{ main_form_data['flow_controls'] | tojson }})
+
+	form_flow_controls.forEach(function(reliance_set){
+		$(`#${reliance_set.control_subject}_container`).slideUp();
+		$(`#${reliance_set.control_subject}_warning`).slideUp();
+
+		var rel_len = reliance_set.reliances.length
+		var view_change = false
+		var control_subject = reliance_set.control_subject
+		//function rel_eval(rel_len, reliances, change){
+
+		//}
+		function list_match(value, list){
+			var list_len = list.length
+			var count = 0
+			var match = false
+			while (count < list_len){
+				if (value == list[count]){
+					match = true
+				};
+				count++
+			};
+			return match
+		} 
+		reliance_set.reliances.forEach(function(item){
+			var data_input_collector
+			var collect_val
+			var new_reliance_value
+			if (item.type == 'radio' || item.type == 'bool' ||  item.type == 'bool_extra' || item.type == 'checkbox'){
+				data_input_collector = $(`input[name='${item.identifier}']`)
+				collect_val =  $(`input[name=${item.identifier}]`)
+			} else {
+				data_input_collector = $(`#${item.identifier}`)
+			}
+			$(data_input_collector).change(function(){
+				if (item.type == 'radio' || item.type == 'bool' ||  item.type == 'bool_extra' || item.type == 'checkbox'){
+						new_reliance_value = $(`input[name='${item.identifier}']:checked`).val()
+					}else {
+						new_reliance_value = (`#${item.identifier}`).val()
+					}
+				if (list_match(new_reliance_value,item.value) == true){
+					if ($(`#${control_subject}_warning`).attr('confirmed') != 'true'){
+						$(`#${control_subject}_warning`).slideDown()
+					}
+				} else if (list_match(new_reliance_value,item.value) == false|| new_reliance_value.length  == 0){
+					$(`#${control_subject}_warning`).slideUp()
+				};			
+				if ($(`#${control_subject}_container`).attr('status') != 'locked'){
+					if (list_match(new_reliance_value,item.value) == true){
+						$(`#${control_subject}_container`).slideDown()
+							.attr('flow_control', 'on')
+					} else if (list_match(new_reliance_value,item.value) == false || new_reliance_value.length == 0){
+						$(`#${control_subject}_container`).slideUp()
+							.attr('flow_control', 'off')
+					}
+				};
+				$(`#${item.identifier}_empty`).click(function(){
+					$(`#${control_subject}_container`).slideUp();
+					$(`#${control_subject}_warning`).slideUp();
+				});
+			});
+		});
+	});
+
+	sections.forEach(function(section){
+		empty_and_convert(questions[section]);
+		ajax_submission(section, form_data.form, questions[section]);
+	});
+
+	$('button[type=accept_warning_button]').each(function(){
+		$(this).click(function(){
+			var base = $(this).attr('base');
+			$(`#${base}_container`).attr('status', 'unlocked')
+			$(`#${base}_warning`).attr('confirmed','true')
+			$(`#${base}_warning`).slideUp()
+			$(`#${base}_container`).slideDown()
+		});
+	});
+
+	function final_input_value(vari){
+		vari.value = true;
+		vari.false = 0;
+		type = vari.input_type
+		id_or_name=vari.identifier
+		if (type == "radio" || type == "bool" || type == "bool_extra"){
+			vari.value = "empty";
+			if ($(`input[name=${id_or_name}]:checked`).length > 0){
+				vari.value = $(`input[name=${id_or_name}]:checked`).val();
+			};
+		} else if (type == "text" ||type ==  "detail_text"){
+			if (vari.styling != undefined && vari.styling['stock_options'] != undefined){
+				if (!$(`#${id_or_name}_stock`).val().trim().length){
+					vari.value = false;
+					vari.false=1;					
+				} else{
+					vari.value = $(`#${id_or_name}_stock`).val()
+					if (vari.value == 'other'){
+						if (!$(`input[id=${id_or_name}_stock_other]`).val().trim().length){
+							/*alert($(`input[id=${id_or_name}_stock_other]`).val())
+							alert('3')*/
+							vari.value = false;
+							vari.false = 1;						
+						}else {
+							vari.value = $(`input[id=${id_or_name}_stock_other]`).val().trim();
+						};
+					};					
+				};
+			}else{
+				if (!$(`#${id_or_name}`).val().trim().length){
+					vari.value = false;
+					vari.false = 1;
+				} else {
+					vari.value = $(`#${id_or_name}`).val().trim();
+				};
+			};
+		} else if (type == "input"){
+			if (vari.styling != undefined && vari.styling['stock_options'] != undefined){
+				if (!$(`#${id_or_name}_stock`).val().trim().length){
+					vari.value = false;
+					vari.false=1;					
+				} else{
+					vari.value = $(`#${id_or_name}_stock`).val()
+					if (vari.value == 'other'){
+						if (!$(`#${id_or_name}_stock_other`).val().trim().length){
+							vari.value = false;
+							vari.false = 1;						
+						}else {
+							vari.value = $(`#${id_or_name}_stock_other`).val().trim();
+						};
+					};					
+				};
+			}else{
+				if (!$(`#${id_or_name}`).val().trim().length){
+					vari.value = false;
+					vari.false = 1;
+				} else {
+					vari.value = $(`#${id_or_name}`).val().trim();
+				};
+			}			
+		} else if (type == "checkbox"){
+			if ($(`input[name=${id_or_name}]:checked`).length > 0){
+				vari.value = 2;
+			} else{
+				vari.value = 3;
+			};
+		} else if (type == "multi_row"){
+			vari.rows = []
+			$(`tr[table_name=${id_or_name}][uploaded='no'`).each(function(){
+				//alert("row")
+				var row_data = {};
+				var row_num = $(this).attr("row_num") 
+				vari.data_rows.forEach(function(item){
+					//alert(item.identifier)
+					row_data[item.identifier] = {};
+					row_data[item.identifier].value=$(`td[row=${row_num}][name=${item.identifier}][table_name=${id_or_name}]`).attr('val');
+					row_data[item.identifier].input_type = item.input_type
+					row_data[item.identifier].false = $(`td[row=${row_num}][name=${item.identifier}][table_name=${id_or_name}]`).attr('fa')
+					console.log(item.identifier, row_data[item.identifier].false)
+					/*if (row_data[item.identifier].value == false){
+						row_data[item.identifier].false = 1
+					} else {
+						row_data[item.identifier].false = 0
+					}*/
+				});
+				vari.rows.push(row_data)
+				
+			});
+			vari.value = vari.rows.length
+			if (vari.rows.length < 1){
+				vari.value = false;
+				vari.false = 1;
+			};
+		} else if (type == "docu"){
+			vari.value = false;
+			vari.false = 1;
+		} else if (type == "date"){
+			if ($(`#${id_or_name}`).val().length === 0){
+			vari.value = false;
+			vari.false = 1;
+			} else {
+				vari.value = $(`#${id_or_name}`).val();
+			}
+		}else{
+			if ($(`#${id_or_name}`).val().length === 0){
+				vari.value = false;
+				vari.false = 1;
+			} else {
+				vari.value = $(`#${id_or_name}`).val();
+			};
+		};
+		return vari
+	};
+
+	function ajax_submission(section, url, input_conversion){
+		submission_button = `submit_${section}`
+		var data_object = {}
+		$(`#${submission_button}`).click(function(){
+			input_conversion.forEach(function(item){
+				data_object[item.identifier] = final_input_value(item);
+			})
+			var sec_status = 'steady'
+			if (section == sections[reached_section]){
+				sec_status = reached_section + 1
+			}
+			var final_data = JSON.stringify(data_object)
+
+					$.ajax({
+					type : "POST",
+					url : `/TA6_Part_1_submit`,
+					data : {form_ID : form_data.form_id, inputs : final_data, section : section, sec_status: sec_status},
+					success : function(data){
+						questions[open_section].forEach(function(item){
+							if (item.input_type == 'multi_row'){
+								$(`tr[table_name=${item.identifier}][uploaded='no']`).attr('uploaded', 'yes')
+							}
+						})
+						next_section();
+					}
+					/*error: function(error) {
+									console.log(error);	
+					}*/		
+				});
+		});
+	};
+
+	function multi_row_data_table(table_ref, trigger,inputs){
+		var new_row
+		var table = $(`#${table_ref}`)
+		var table_row = 0
+		var cell_display = ''
+		var cell_false = 0
+		/*function delete_table_row(table_ref, button){
+			$(button).click(function(){
+				alert("4")
+				$(`tr[table_name=${table_ref}][row_num=${$(this).attr('row')}]`).remove();
+			});
+		};*/
+		var allow_details = true
+
+		$(`#${table_ref}_asset_inputs`).slideUp();
+
+		$(`#${table_ref}_new_asset`).click(function(){
+			$(`#${table_ref}_asset_inputs`).slideDown();
+		});
+
+		function add_new_table_row(table,table_ref, new_row, row_num){
+			$(table).append(new_row);
+			$(`#${table_ref}_asset_inputs`).slideUp();
+			$(`button[table_name='${table_ref}'][row='${row_num}']`).click(function(){
+			$(`tr[table_name=${table_ref}][row_num=${$(this).attr('row')}]`).remove();
+				});
+			console.log(new_row)
+		}
+
+		$(trigger).click(function(){
+			/*precursor_functions.forEach(function(item){
+				item();
+			});*/
+			if (allow_details == true){
+				table_row = parseInt($(table).attr('row_num'), 10)
+				table_row += 1
+				new_row = `<tr table_name=${table_ref} row_num='${table_row}', uploaded = 'no', ref = 'none'>`
+				$(table).attr('row_num', table_row)
+				inputs.forEach(function(item){
+					var final_input = final_input_value(item);
+					var cell_value = final_input.value;
+					cell_display = '';
+					cell_false = 0
+					if (item.input_type == 'radio' || item.input_type == 'bool'|| item.input_type == 'checkbox'|| item.input_type == 'bool_extra'){
+						if (cell_value != (false || 'empty')){cell_display = $(`input[name=${item.identifier}]:checked`).attr('display');
+						};
+						$(`input[name="${item.identifier}"]`).each(function(){
+							$(this).prop("checked", false);
+						});
+					}else{
+						$(`#${item.identifier}`).val("");
+						if (cell_value != false){cell_display = final_input.value};
+					};
+					if (cell_value == false){
+						cell_false = 1
+					};
+					
+					//alert(cell_false)
+					new_row += `<td row='${table_row}' type="data" table_name="${table_ref}" name="${item.identifier}" val = ${cell_value} fa=${cell_false} uploaded = 'no' ref = 'none'>${cell_display} </td>`
+
+					item.value=undefined;
+					
+				});
+				//alert(new_row)
+				new_row += `<td><button class="button is-warning is-small" row='${table_row}' table_name="${table_ref}">Delete</button></td>`
+				new_row += '</tr>'
+				add_new_table_row(table,table_ref, new_row,table_row);			
+			};
+		});
+
+		multi_row_display_evaluations = {
+			'radio': function(item, cur_row){cell_display = $(`input[name=${item.identifier}][value=${cur_row[item.identifier]}]`).attr('display')
+			return cell_display
+			},
+			'detail_text':function(item, cur_row){
+				cell_display = empty_text_values(cur_row[item.identifier])
+				return cell_display
+			}
+		}
+
+		if (sub_table_data != 'none'){
+			if (sub_table_data[table_ref] != ('empty' || undefined)){
+				//alert(sub_table_data[table_ref])
+				Object.keys(sub_table_data[table_ref]['data']).forEach(function(data_row_ref){
+					table_row = parseInt($(table).attr('row_num'), 10);
+					table_row += 1;
+					$(table).attr('row_num', table_row)
+					var cur_row = sub_table_data[table_ref]['data'][data_row_ref];
+					new_row = `<tr table_name=${table_ref} row_num='${table_row}' uploaded = 'yes' ref = '${data_row_ref}'>`
+					inputs.forEach(function(item){
+						//cur_row[item.identifier]
+						var stored_data_piece = cur_row[item.identifier]
+
+						if (stored_data_piece == undefined){
+							cell_display = ''
+							cell_false = 1
+						} else {
+							cell_false = 0
+							if (multi_row_display_evaluations[item.input_type] != undefined){
+								cell_display = multi_row_display_evaluations[item.input_type](item, cur_row)
+							}else{
+								cell_display =cur_row[item.identifier]
+							};
+						};
+						new_row += `<td row='${table_row}' type="data" table_name="${table_ref}" name="${item.identifier}" val = ${cur_row[item.identifier]} fa=${cell_false} uploaded = 'yes' ref = '${data_row_ref}'>${cell_display}</td>`
+					});
+					new_row += `<td><button class="button is-warning is-small" row='${table_row}' table_name="${table_ref}">Delete</button></td>`
+					new_row += '</tr>'
+					add_new_table_row(table, table_ref,new_row, table_row);
+				});
+			};
+		};
+
+	};
+	$("li[menu_type=sub_menu]").click(function(){
+		var menu = $(this).attr("sub_menu");
+		var menu_selec = $(`ul[menu=${menu}]`)
+		if ($(menu_selec).attr("status") == "closed"){
+			$(menu_selec).slideDown()
+			$(menu_selec).attr("status","open")
+		}; /*else if($(menu_selec).attr("status") == "open"){
+			$(menu_selec).slideUp()
+			$(menu_selec).attr("status","closed")
+		}*/
+	});
+	/*$("li[menu_type=sub_menu]").mouseleave(function(){
+		var menu = $(this).attr("sub_menu");
+		if ($(`a[selec=${menu}]`).hasClass("is-active") == false){
+			$(`ul[menu=${menu}]`).slideUp()
+		};
+	});*/
+
+	$("ul[men_type=menu_sub_sec]").slideUp()
+
+	$("a[purp=selec]").click(function(){
+		open_section = $(this).attr("selec")
+		var opener = "#"+ open_section
+		if (current_section !== undefined){
+			$(current_section).addClass("hide")
+		}
+
+		current_section = $(opener)
+		$(current_section).removeClass("hide")
+		$("a[purp=selec]").removeClass("is-active")
+		$(this).addClass("is-active")
+		$("ul[men_type=menu_sub_sec]").each(function(){
+			if ($(this).attr("menu") != open_section){
+				$(this).slideUp();
+				$(this).attr("status","closed");
+			};
+		})
+	});
+
+	$("button[id=begin_form]").click(function(){
+		$("#guidance").addClass("hide")
+		$(`a[selec=${sections[reached_section]}]`).click()
+
+	});
+
+	function next_section(){
+		reached_section += 1
+		$(`a[selec=${sections[reached_section]}]`).click()
+	}
+
+	/*alert(results)
+	var result_keys =Object.keys(results)
+	result_keys.forEach(function(item){
+		var current_input = results[item]
+		if (current_input != false || undefined){
+			$(`#${item}`).val(current_input)
+		};
+	});*/
+
+});
+
+function add_sub_form(form_data){
+	function create_new_section(section_identifier, name){
+		section_menu_component = `
+			<li>
+		  		<div>
+			  		<a id="${section_identifier}_selector" purp="selec" selec="${section_identifier}" style="display:flex; flex-direction:row;">
+			  		<div>
+			  			${name}
+			  		</div>
+			  		<div style="width:100px" class="hide" id="${section_identifier}_selector_completion_tick">
+			  			<img src="{{url_for('static', filename='gen_images/confirmation_tick.png')}}"/>
+			  		</div>
+			  		</a>
+			  	</div>
+		  	</li>`
+		  	return section_menu_component
+  }
+  function new_section_fabricator(section){
+  		function question_container(question){
+  			if (question['mandatory_guidance'] != undefined){
+  				
+  			}
+  		}
+  		var sub_count = 0
+  		var new_section =`
+  		<section id="${section['section_identifier']}" style="width: 50%; margin: auto;" class="hide">
+  			<div>
+				<div>
+					<b>${ section['section_name'] }</b>
+				</div>`
+		section['section_text'].forEach(function(section_text){
+			new_section += `<div>${section_text}</div>`
+		});
+		new_section += '<div>'
+		if (sub_count == 0)
+  }
+	var sub_form_ident = form_data['template']['form_identifier']
+	var form_flows = form_data['form_flows']
+
+	form_flows.forEach(function(flow){
+		if (flow['control_component'] == 'none'){
+			form_data['sections'].forEach(function(section){
+				$('#sections_side_menu').append(create_new_section(section['section_identifier'], section['section_name']))
+				$('#section_holder').append()
+			});
+		}
+	});
+	form_data['sections'].forEach(function(section){
+		empty_and_convert(questions[section]);
+		ajax_submission(section, form_data.form, questions[section]);
+	});
+
+}
+</script>
+
+{% endblock %}

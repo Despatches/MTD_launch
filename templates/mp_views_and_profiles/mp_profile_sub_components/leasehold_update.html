@@ -1,0 +1,46 @@
+ {% block leaseholds %}
+   {% if leaseholds_data == None %}
+             No Leaseholds assigned to sale
+    {% else %}
+
+            <div class="table-wrapper" id='work_task_table_wrapper'style="height:400px;width:900px;">
+                 <table class="fl-table" align="left">
+                    <thead>
+                        <tr>
+                            <th colspan = {{mp.title_derivatives['leaseholds']['headings']|length +1 }}>leaseholds</th>
+                        </tr>
+                        <tr>
+                            {% for header in mp.title_derivatives['leaseholds']['headings'] %}
+                                <th style='width:300px'> 
+                                    {{ header[1] }}
+                                </th>
+                            {% endfor %}  
+                            <th style='width:200px'>
+                            </th>                      
+                        </tr>
+                    </thead>
+                </table>
+            <div style="height:400px;overflow-y:auto;width:900px;">
+                <table class="fl-table" align="left" id="display_leasehold_table">
+                    <tbody>
+                        {% for leasehold in mp.title_derivatives['leaseholds']['data'] %}
+                            <tr style="color:black" type="leasehold" data-name="{{leasehold['reference_name']}}" data-freehold_type="{{leasehold['freehold_type']}}" data-x_coordinate="{{leasehold['x_location_point']}}" data-y_coordinate="{{leasehold['y_location_point']}}" data-holding_id="{{leasehold[holding_ID]}}" obj_type="leasehold">
+                                          
+                                {% for header in mp.title_derivatives['leaseholds']['headings'] %}
+                                     <td style='width:300px'> 
+                                        {{ leasehold[header[0]] }} 
+                                    </td>
+                                {% endfor %}
+                                <td style='width:200px'>
+                                    <a 
+                                        <button href="{{ url_for("mp.leasehold_profile",holding_ID = leasehold[holding_ID],selec_set_ID = selec_set_ID )}}" type ="submit" class="button is-block is-info is-small ">Actions</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                 </table>
+             </div>
+            </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,11 @@
+<div class="row">
+	<div class="input_container">
+		<div>
+			<input name="{{question['identifier']}}"  type="checkbox", value="checked">
+		</div>
+		<div>
+			<p>{{question['label']}}</p>
+		</div>
+	</div>
+	{% include "Json_form_templating/input_types/side_buttons.html"%}
+</div>

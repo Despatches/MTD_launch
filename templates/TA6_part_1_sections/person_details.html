@@ -1,0 +1,205 @@
+
+<section id="data_providers" style="width: 50%;margin: auto;" align="middle" class="hide">
+			<div id="q_1" style= "horizontal-align: 50;" style="color:black;">
+				<div>
+					<p class="q_title"><b>1. Personal details of individual providing preliminary information</b></p>
+				</div>
+				<div id="q_1_inputs">
+					<div class = "pillar" id="first_name_area">
+						<p>First Name</p>
+						<div>
+							<input id="first_name" class="input">
+						</div>
+						<div type="required_for_person" id="first_name_required" style="background-color: red; color:black;" class="box hide">
+							This data is required to add individuals details
+						</div>
+					</div>
+					<div class = "pillar" id="middle_name_area">
+						<p>Middle Names</p>
+						<input id="middle_name" class="input">
+						<div type="required_for_person" id="middle_name_required" style="background-color: red; color:black;" class="box hide">
+							This data is required to add individuals details
+						</div>				
+					</div>
+					<div class = "pillar" id="surname_area">
+						<p>Surname</p>
+						<input id="surname" class="input">
+						<div type="required_for_person" id="surname_required"style="background-color: red; color:black;" class="box hide">
+							This data is required to add individuals details
+						</div>				
+					</div>
+				</div>
+			</div>
+			<hr class="dropdown-divider">
+			<div id="q_1.1">
+				<p class="q_title"><b>1.1 Please provide details of the capacity in which you are providing preliminary information for the sale </b></p>
+				<div class="input_container">
+					<div class="radio_container">
+						<p>Seller</p>
+						<input class="short_radio" name="seller_type" type="radio" value="seller" text="Seller"checked>
+					</div>
+					<div class="radio_container">
+						<p>Seller’s personal<br> representative</p>
+						<input class="short_radio" name="seller_type" type="radio" value="seller_rep" text="Seller’s personal representative">
+					</div>
+					<div class="radio_container">
+						<p>Other</p>
+						<input class="short_radio" name="seller_type" type="radio" value="other_form_filler" text="Other">
+					</div>
+				</div>
+				<div id="person_type_other"> 
+					<div>
+						<p class="q_title">please specify your relationship to the property being sold, below:
+		  				For example, seller’s family member, seller’s friend, estate agent, mortgagee in possession.</p>
+					</div>
+					<div>
+						<textarea class="textarea" id="other_person_text">	
+						</textarea>
+					</div>
+				</div>
+				<hr class="dropdown-divider">
+			</div>
+			<div align="middle">
+				<button class="button is-success" id="add_person_details">Confirm individual</button>
+			</div>
+			<hr class="dropdown-divider">
+			<table class="table" align="middle" id="individuals_table">	
+				<tr>
+					<th>
+						First Name
+					</th>
+					<th>
+						Middle Names
+					</th>
+					<th>
+						Surname
+					</th>						
+					<th>
+						Data Provider Type
+					</th>
+					<th>
+						Other Data
+					</th>
+					<th>
+					</th>
+				</tr>
+			</table>
+
+			<button class="button is-success" id="submit_individuals">
+				Submit and Continue
+			</button>
+
+		</section>
+<script>
+function person_details_validate(name){
+	if ($(`#${name}`).val().length < 1){
+			allow_details = false
+			$(`#${name}_required`).removeClass(`hide`)
+		}else {
+			$(`#${name}_required`).addClass("hide")
+		}
+
+}
+$(document).ready(function(){
+	$("#person_type_other").slideUp();
+
+	$("input[name=seller_type]").click(function(){
+		if ($(this).val() == "other_form_filler"){
+			$("#person_type_other").slideDown();
+		} else{
+			$("#person_type_other").slideUp();
+		}
+	});
+
+	$("#add_person_details").click(function(){
+		allow_details = true
+		var extra_details = "None"
+		other_text_submittable = false
+		person_details_validate("first_name")
+		person_details_validate("surname")
+		if (allow_details == true){
+			table_row +=1;
+			$(`#first_name`).val();
+			$(`#middle_name`).val();
+			$(`#surname`).val();
+
+			person_type = $("input[name=seller_type]:checked").val();
+			if (person_type == "other_form_filler"){
+				var other_text = $("textarea[id=other_person_text]").val();
+				if (other_text.length > 0){
+					extra_details =	other_text;
+					other_text_submittable = true;
+				}
+			}
+			$("#individuals_table").append(
+				`<tr row="${table_row}" type="individual">
+					<td row="${table_row}" info="first_name" d="${$('#first_name').val()}">
+						${$('#first_name').val()}
+					</td>
+					<td row="${table_row}" info="middle_name" d="${$('#middle_name').val()}">
+						${$('#middle_name').val()}
+					</td>
+					<td row="${table_row}" info="surname" d="${$('#surname').val()}">
+						${$('#surname').val()}
+					</td>
+					<td row="${table_row}" filler_type=${person_type} info="seller_type" d="${$("input[name=seller_type]:checked").val()}">
+						${$("input[name=seller_type]:checked").attr('text')}
+					</td>
+					<td row="${table_row}" info="person_type" d="${extra_details}">
+						${extra_details}
+					</td>
+					<td row="${table_row}">
+						<button id="remove_individual" row="${table_row}">remove</button>
+					</td>
+				</tr>`
+				)
+			$("#first_name").val('')
+			$("#middle_name").val('')
+			$("#surname").val('')
+			$("textarea[id=other_person_text]").val('')
+		}
+		$("button[id=remove_individual]").click(function(){
+			row = $(this).attr("row")
+			$(`tr[row=${row}]`).remove()
+		})
+	});
+
+	$("#submit_individuals").click(function(){
+		submitable = true
+		if (submitable == true){
+			$("#loader").removeClass("hide")
+			var person_number = from_data.person_number
+			var individuals = []
+			$("tr[type=individual]").each(function(){
+				person_number += 1
+				row = $(this).attr("row")
+				ind = {}
+				ind.first_name = $(`td[info=first_name][row=${row}]`).attr("d")
+				ind.surname = $(`td[info=surname][row=${row}]`).attr("d");
+				ind.middle_name = $(`td[info=middle_name][row=${row}]`).attr("d");
+				ind.seller_type = $(`td[info=seller_type][row=${row}]`).attr("d");
+				ind.person_number = person_number;
+				if (other_text_submittable == true){
+					ind.other_Details = $(`td[info=other_details][row=${row}]`).attr("d")
+				} else if (other_text_submittable == false){
+					ind.other_Details = false
+				}
+				individuals.push(ind)
+			});
+			people = JSON.stringify(individuals)
+			$.ajax({
+				type : "POST",
+				url : "/TA6_part_1_add_people",
+				data : {individuals : people, form_ID :from_data.form_id, person_number : person_number},
+				success : function(data){
+					$("#loader").addClass("hide")
+					next_section();
+					$("#q_1").addClass("hide");
+					$("#q_1.1").addClass("hide");
+					/*$("#person_type_other")addClass("hide");*/
+				}
+			});
+		}
+	});
+});
+</script>

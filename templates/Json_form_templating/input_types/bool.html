@@ -1,0 +1,13 @@
+		<div class="row">
+			<div class="input_container">
+				<div class = "radio_container">
+					<p>Yes</p>
+					<input display = 'YES' name="{{question['identifier']}}"  type="radio" value="1">
+				</div>
+				<div class = "radio_container">
+					<p>No</p>
+					<input display = 'NO' name="{{question['identifier']}}"  type="radio" value="0">
+				</div>				
+			</div>
+			{% include "Json_form_templating/input_types/side_buttons.html"%}					
+		</div>

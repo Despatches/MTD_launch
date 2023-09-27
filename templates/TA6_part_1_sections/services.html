@@ -1,0 +1,146 @@
+<section id="services" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>14. Services</b>
+		</div>
+		<div>					
+			<p><b>14.1</b>  Which of the following services are connected to the property?</p>
+		</div>
+		<div>
+			<div class="input_container">
+					<div>
+						<input name="mains_drainage"  type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Mains drainage</p>
+					</div>
+				</div>
+				<hr class="dropdown-divider">
+			<div class="input_container">
+					<div>
+						<input name="electricity"  type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Electricity</p>
+					</div>				
+				</div>
+				<hr class="dropdown-divider">
+			<div class="input_container">
+					<div>
+						<input name="water_supply"  type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Water Supply</p>
+					</div>				
+				</div>
+				<hr class="dropdown-divider">
+			<div class="input_container">
+					<div>
+						<input name="gas"  type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Gas</p>
+					</div>				
+				</div>
+				<hr class="dropdown-divider">
+			<div class="input_container">
+					<div>
+						<input name="broadband"  type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Broadband</p>
+					</div>				
+				</div>
+				<hr class="dropdown-divider">
+			<div class="input_container">
+					<div>
+						<input name="sewage_plant"  type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Sewage Plant</p>
+					</div>				
+				</div>
+				<hr class="dropdown-divider">
+			<div class="input_container">
+					<div>
+						<input name="telephone_landlines"  type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Telephone Landlines</p>
+					</div>				
+				</div>
+				<hr class="dropdown-divider">
+			<div class="input_container">
+					<div>
+						<input name="solar_panels"  type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Solar Panels</p>
+					</div>				
+				</div>
+				<hr class="dropdown-divider">
+			<div class="input_container">
+					<div>
+						<input name="heat_pumps" type="checkbox" set="services">
+					</div>
+					<div>
+						<p>Ground and air heat pumps</p>
+					</div>				
+				</div>
+				<hr class="dropdown-divider">				
+				<div>
+			<div class="input_container">
+						<div>
+							<input name="other_provisioned_services" type="checkbox" set="services">
+						</div>
+						<div>
+							<p>Other</p>
+						</div>				
+					</div>
+					<div id="other_services_details">
+						<p class="q_title">
+							please give details.
+						</p>
+						<div class="row">
+							<div class="input_container">
+								<textarea class="textarea" id ="other_provisioned_services_details">
+								</textarea>
+							</div>
+							<div class="empty_container">
+								<button align="right" style="float:right;" id="other_provisioned_services_details_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+							</div>							
+						</div>
+					</div>	
+				</div>																									
+			</div>
+			<button class="button is-success is-medium" id="submit_services">
+				Submit
+			</button>
+		</div>
+</section>
+
+<script>
+services = {}
+$(document).ready(function(){
+	boolean_slide_open("input[name=other_provisioned_services]","#other_services_details","stand");
+
+	services_input_fields=[
+		{"identifier":"mains_drainage", "input_type":"checkbox"},
+		{"identifier":"electricity", "input_type":"checkbox"},
+		{"identifier":"gas", "input_type":"checkbox"},
+		{"identifier":"broadband", "input_type":"checkbox"},
+		{"identifier":"sewage_plant", "input_type":"checkbox"},
+		{"identifier":"telephone_landlines", "input_type":"checkbox"},
+		{"identifier":"water_supply", "input_type":"checkbox"},
+		{"identifier":"solar_panels", "input_type":"checkbox"},
+		{"identifier":"heat_pumps", "input_type":"checkbox"},
+		{"identifier":"other_provisioned_services", "input_type":"checkbox"},
+		{"identifier":"other_provisioned_services_details", "input_type":"detail_text"}
+	]
+	empty_and_convert(services_input_fields);
+
+	ajax_submission('submit_services',services, "/TA6_part_1_services", services_input_fields);		
+
+
+});
+</script>

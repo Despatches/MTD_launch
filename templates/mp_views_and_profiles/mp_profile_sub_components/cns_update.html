@@ -1,0 +1,36 @@
+{% block companies_and_shares %}
+            <table bgcolor="green">
+
+                <tr>
+    {% if cns_data == None %} <td>No companies or shares attributed
+                    </td>
+                </th>
+                </tr>
+            </table>
+        {% else %}
+                    <h2>Companies and Shares</h2>
+                    <table class="fl-table" align="right">
+                        <thead>
+                            <tr>
+                            {% for header in cns_headings %}
+                                <th> {{ header }}</th>
+                            {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                            <tr style="color:black">
+                                {% for cell in row %}
+                                <td> {{ cell }} </td>
+                                {% endfor %}
+                                <th>
+                                    <a 
+                                     <button href="{{ url_for("mp.selectedmp",particular_id = row[0]) }}" type ="submit" class="button is-block is-info is-large ">View</button>
+                                    </a>
+                                </th>
+                            </tr>
+                         </tbody>
+                    </table>
+                            {% endfor %}
+        {% endif %}
+        {% endblock %}

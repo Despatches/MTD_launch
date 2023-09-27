@@ -1,0 +1,65 @@
+<section id="consent" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>11. Consent</b>
+		</div>
+		<div>					
+			<p class="q_title"><b>11.1</b> Do you have consent for any matters that need permission?</p>
+		</div>
+		<p class="q_title">
+			Check with your solicitor that all necessary consents have been received.<br>
+			If you are not sure if permission is needed, ask your solicitor as soon as it is practical.
+		</p>
+		<div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="all_required_consents"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="all_required_consents"  type="radio" value="0">
+					</div>
+					<div class = "radio_container">
+						<p>Don’t know</p>
+						<input name="all_required_consents"  type="radio" value="not_known">
+					</div>			
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="all_required_consents_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>					
+			</div>
+			<div id="required_consents_mod">
+				<hr class="dropdown-divider">
+				<p class="q_title">Give details.</p>
+				<div class="row">
+					<div class="input_container">
+						<textarea class="textarea" id="all_required_consents_details"></textarea>
+					</div>
+					<div class="empty_container">
+						<button align="right" style="float:right;" id="all_required_consents_details_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+					</div>
+				</div>				
+			</div>						
+		</div>
+		<hr class="dropdown-divider">
+		<button class="button is-success is-medium" id="submit_consents">Submit</button>
+		
+	</div>
+</section>
+
+<script>
+consents = {}
+$(document).ready(function(){
+	boolean_slide_open("input[name=all_required_consents]","#required_consents_mod","stand");
+
+	consents_input_fields=[
+		{"identifier":"all_required_consents", "input_type":"bool_extra",radio_function:function(){$("#required_consents_mod").slideUp()}},
+		{"identifier":"all_required_consents_details", "input_type":"detail_text"},
+	]
+	empty_and_convert(consents_input_fields);
+
+	ajax_submission('submit_consents',consents, "/TA6_part_1_consents", consents_input_fields);	
+});
+</script>

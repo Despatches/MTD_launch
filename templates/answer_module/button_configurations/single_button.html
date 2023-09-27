@@ -1,0 +1,36 @@
+{% if selection_type == "change" %}
+
+{% if os.path.exists('./static/answer_img/TFU001.a.png') %}
+	<img src="/static/answer_img/{{answer[2]}}.png">
+{% endif %}
+
+{% if selections == answer[2] %}
+
+<input type="radio" name="selections" value="{{answer[2]}}" checked/> <div>{{answer[2]}}</div>
+
+{% else %}
+
+<input type="radio" name="selections" value="{{answer[2]}}" /> <div>{{answer[2]}}</div>
+
+{% endif %}
+
+{% else %}
+
+
+
+
+{% if os.path.exists('./static/answer_img/TFU001.a.png') %}
+	<img src="/static/answer_img/{{answer[2]}}.png">
+{% endif %}
+
+{% if selections == answer[2] %}
+
+<input type="radio" name="selections" value="{{answer[2]}}" checked/> <div>{{answer[3]}}</div>
+
+{% else %}
+
+<input type="radio" name="selections" value="{{answer[2]}}" /> <div>{{answer[3]}}</div>
+
+{% endif %}
+
+{% endif %}

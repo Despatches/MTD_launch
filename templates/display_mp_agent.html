@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block links %}
+ {% include "link_configs_and_spatial/spatial_links.html" %}
+{% endblock %}
+                         
+
+{% block content %}
+<div>
+<button name="mpsp" class = "button is-medium" id="mpsp">view sale particulars</button>
+<button name="mpsp" class = "button is-medium hide" id="mpsp" >view market particulars</button>
+</div>
+<div id='map' style='height:250px;'></div>
+<div id="mp">
+	<div>
+		<a
+			<button  href="{{ url_for("mp.newmp",user_type="agent") }}"
+				class="button is-info"> 
+					Create New MP  
+				</button>
+		</a>
+	</div>
+
+ {% if row_count == None%}
+ 		No active market particulars
+ {% else %}
+	<div class="table-wrapper">
+	    <table class="fl-table">
+	        <thead>
+			<tr>
+				{% for header in headings[1:] %}
+				<th> {{ header }}</th>
+				{% endfor %}
+			</tr>
+			</thead>
+	        <tbody>
+			{% for row in data %}
+			<tr style="color:black">
+				<td> {{ row['name'] }} </td>
+				<td> {{ row['creation_date'] }} </td>
+					{% if row['confirmed_on_the_market'] == True %}
+				<td>confirmed on the market</td>
+					{% elif row['confirmed_on_the_market'] == False %}
+				<td>not confirmed on the market</td>
+					{% endif %}
+					{% if row['active_offers']  == True %}
+				<td>currently active offers</td>
+					{% elif row['active_offers'] == False %}
+				<td>no active offers</td>
+					{% endif %}
+					{% if row['updates']  == True %}
+				<td>New Updates</td>
+					{% elif row['updates'] == False %}
+				<td>No New Updates</td>
+					{% endif %}
+				<th>
+					<a 
+	            		<button href="{{ url_for("mp.selectedmp",particular_id = row['id']) }}" type ="submit" class="button is-block is-info is-small ">View</button>
+	            	</a>
+	        	</th>
+			</tr>
+	        </form>
+
+		{% endfor %}
+
+	        </tbody>
+	    </table>
+	</div>
+	{% endif %}
+	</div>
+
+<div class = "hide" id="sp">
+<a
+	<button  href="{{ url_for("mp.newmp", user_type="agent") }}"
+		class="button is-block is-info is-large is-fullwidth">Market New Sale market particulars</button>
+</a>
+ 		No active Sale particulars
+</div>
+<script>
+$(document).ready(function() {
+
+    $("a[id=nav_mp]").addClass("is-active");
+    
+		$("button[name='mpsp']").click(function(){
+			$( "#mp" ).toggleClass("hide");
+			$( "#sp" ).toggleClass("hide");
+			$("button[name='mpsp']").toggleClass("hide");
+		});
+        map =Initialize_map(50.00,0.3675,16);
+});
+</script>
+
+{% endblock %}

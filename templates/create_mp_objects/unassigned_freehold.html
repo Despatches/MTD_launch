@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block links %}
+    <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/base_map.js') }}"></script>
+{% endblock %}
+{% block content %}
+<td style="color:black;">
+    {% include "create_mp_objects/general_freehold.html" %}
+    {% include "create_mp_objects/mp_return_button.html" %}
+</td>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "action_base.html" %}
+
+{% block action %}
+<form method="POST" action="/newmp/{{user_type}}">
+
+            <div class="field">
+                <div id='mp_name_warn' class="notification is-danger hide" >
+                    Provide a name to identify the market particulars
+                 </div>
+                <div class="control">
+                    <input class="input" type="name" name="sudo_name" placeholder="New MP Ref.Name" autofocus=""
+                    id='mp_name'>
+                </div>
+                
+                Basic Scope</div>
+                <input type="radio" name="market_type" value ="standard_resi"/> Domestic Residential Conveyance
+                <input type="radio" name="market_type" value ="simple_commercial"/> Simple Commercial Conveyance
+                <input type="radio" name="market_type" value ="large_or_MnA"/>Large or MnA Transaction
+            <div>
+                     <button class="button is-info" id='submit_mp' type='button'>Proceed</button>
+             </div>
+             <button class="button is-info hide" id='true_submit'>Proceed</button>
+        </form>
+<script type="text/javascript">
+$(document).ready(function(){
+    var mp = {}
+    $(`#submit_mp`).click(function(){
+        var submit = true
+        if (!$(`#mp_name`).val().trim().length){
+            submit = false
+            $(`#mp_name_warn`).removeClass('hide')
+        } else {
+             mp.name = $(`#mp_name`).val().trim();
+             $(`#mp_name`).val(mp.name)
+        };
+        if (submit == true){
+            $('#true_submit').click()
+        };
+    });
+
+});
+/*
+                    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-danger">
+        {{ messages[0] }}
+         </div>
+        {% endif %}
+    {% endwith %}
+*/
+</script>
+{% endblock %}

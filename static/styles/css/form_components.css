@@ -1,0 +1,59 @@
+.pillar{
+	display:flex;
+ 	flex-direction:column;
+}
+
+.row{
+	display:flex; 
+	flex-direction:row; 
+}
+
+.input_container{
+	width:600px;
+	display:flex; 
+	flex-direction:row; 	
+}
+
+.short_radio{
+	margin:auto; width:90%;
+}
+
+.radio_container{
+	margin-right:10px;
+	display:flex;
+ 	flex-direction:column;
+}
+
+.q_title{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.child_q{
+	margin-left: 20px;
+}
+
+.empty_button{
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.empty_container{
+	position: relative;
+}
+
+.radio_table table, th, td {
+	border: 1px solid;
+	border-collapse: collapse;
+}
+
+.guidance_slide{
+	position:  absolute;
+	height:  100%;
+	width: 0%;
+	float: right;
+	opacity: 80%;
+	z-index: 2;
+	background-color: orange;
+}

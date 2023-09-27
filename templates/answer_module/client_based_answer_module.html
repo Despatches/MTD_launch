@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block content %}
+<meta  id="selec_set_ID" selec_set_ID="{{ selec_set_ID }}">
+
+<div>
+    <button class="button is-medium is-success" id="advice"> Ask for advice </button>
+    <div class="hide" id="advice_radio">
+        <input type="radio" name="advisor_type" value="agent">agent
+        <input type="radio" name="advisor_type" value="legal">legal
+         <textarea  name="advice"></textarea>
+    </div>
+</div>
+<div id="main_bd">
+	<div style="height:60px">
+		<p style="text-align:center;">
+			<span id="question"></span>
+		</p>
+	</div>
+	<div id="answers" class="columns" style="height:250px">
+		
+	</div>
+	<div id = "extra_answers">
+		
+	</div>
+	<div id = "create_entries">
+		
+	</div>	
+	<div>
+    	<button class="button is-medium is-success" id="advice"> Add extra Commment </button>
+	</div>
+	    <button id ="proceed" class="button is-block is-info is-large">Proceed</button>
+</div>
+    <div align="bottom" >
+        <a 
+         <button href="{{url_for("mp.selectedmp",particular_id=particular_id)}}" class="button is-info">Finish making selections</button>
+        </a>
+    </div>
+
+<script>
+	function get_next_q_a(){
+		$.ajax({
+			data: { selec_set : $("meta[id=selec_set_ID]").attr("selec_set_ID") },
+			url:"/get_mp_next_question",
+			type:"POST",
+			success: function(data){
+				$("div[id=create_entries]").empty()
+				$("div[id=extra_answers]").empty()
+				$("div[id=answers]").empty()
+				extra = []
+				new_entries =[]
+				radio = false
+				if (data.answer_list == "queue_empty"){
+					alert("yes")
+				}
+				else{
+					question = JSON.parse(data.question);
+					$("span[id=question]").text(`${question.question_meaning}`)
+					for (let a of data.answer_list){
+						a = JSON.parse(a)
+						if (a.auxilliary_data == "no_extra"){
+							$("div[id=answers]").append(`<div class = "column"><input type = "radio" value = ${a.full_code} name = ${question.Q_ID}> <div>${a.glossary_term}</div></div>`)
+							if (radio == false){
+								radio = true;
+							};
+						}else if (a.auxilliary_data == "extra"){
+							$("div[id=extra_answers]").append(`<input type="text"> extra_type="${a.glossary_term}" full_code=${a.full_code}`)
+							extra.append(`${a.full_code}`)
+						}else if (a.auxilliary_data == "create_entries"){
+							$("div[id=create_entries]").append(`<input type="text" full_code=${a.full_code}>`)
+							new_entries.append(`${a.full_code}`)
+						}
+					}
+				}
+			},
+			error: function(error){
+				console.log(error)
+			}
+		});
+	};
+
+function submit_answers(post_ans ,q_prop){
+		post_ans = JSON.stringify(post_ans);
+	    $.ajax({
+    		data : { selections : post_ans, propagator : q_prop, selec_set : $("meta[id=selec_set_ID]").attr("selec_set_ID") },
+    		url : "/collect_mp_answers",
+    		type : "POST",
+    		success : function(data){
+    			alert(data);
+    			get_next_q_a()
+    		},
+    		error: function(error){
+				console.log(error)
+			}
+    	});
+}
+let radio = false
+var send_answers = [];
+var extra = [];
+var new_entries = [];
+var question;
+$(document).ready(function(){
+
+	get_next_q_a()
+	$("#advice").click(function(){
+        $( "#advice_radio" ).toggleClass("hide");
+    });
+
+    $("button[id=proceed]").click(function(){
+    	send_answers = []
+    	if (radio == true){
+    		a = {"type" : "no_extra" , "full_code" : $(`input[name=${question.Q_ID}]:checked`).val()}
+    		send_answers.push(a)
+    	}
+    	if (extra.length > 0){
+	    	for (let e of extra){
+	    		a = {"type" : "extra" , "full_code" : e , "extra" : $(`input[full_code=${e}]`).val(), "extra_type" : $(`input[full_code=${e}]`).attr("extra_type")}
+	    		send_answers.push(a)
+	    	}
+	    }
+	    if (new_entries.length > 0){
+	    	for (let n of new_entries){
+	    		a = {"type" : "new_entries" , "full_code" : n , "entries" : $(`input[full_code=${n}]`).val()}
+	    		send_answers.push(a)
+	    	}
+	    }
+	    if (question.propagator === null){
+	    	q_prop = 0
+	    }
+	    else{
+	    	q_prop = question.propagator
+	    }
+	    alert(q_prop)
+	    alert(send_answers[0].type)
+	    submit_answers(send_answers, q_prop)
+    });
+});
+
+</script>
+<script>
+
+</script>  
+
+{% endblock %}

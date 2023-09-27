@@ -1,0 +1,52 @@
+    
+    {% with non_texts = get_flashed_messages(category_filter=["non_text"]) %}
+    {% if non_texts %}
+        <div class="notification is-danger">
+            {%- for msg in non_texts %}
+                {{ msg }}
+            {% endfor %}    
+    {% endif %}
+    {% endwith %}
+    {% if no_extra >= 1 %}
+    <table>
+        <tr>
+
+    {% for answer in answer %}
+        <td style="padding-left:20px">
+        {% include "answer_module/button_configurations/single_button.html" %}
+        </td>
+    {% endfor %}
+    </tr>
+    </table>
+        <input type="radio" name="selections" value="{{skip[2]}}" align="center" /> SKIP
+
+        <readonly name="question" value="{{Question}}" display="none">
+    {% endif %}
+    <button id ="proceed" class="button is-block is-info is-large">Proceed</button>
+</div>
+</body>
+ <div>
+
+</div>
+    {% with text_errors = get_flashed_messages(category_filter=["text_error"]) %}
+    {% if text_errors %}
+        <div class="notification is-danger">
+            {%- for msg in text_errors %}
+                {{msg}}
+            {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% for answer in text_answer %}
+    
+        {% include "answer_module/button_configurations/text_answer.html" %}
+
+    {% endfor %}
+</div>
+</body>
+    {% for answer in create_entries %}
+         {% include "answer_module/button_configurations/text_answer.html" %}
+
+    {% endfor %}
+</form>
+</div>

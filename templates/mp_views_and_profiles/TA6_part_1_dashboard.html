@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="columns">
+		<div class="column">
+			{% for doc in document_list %}
+				<div> {{ doc['identifier'] }} </div>
+				{% if doc['value'] == False %}
+					<div> Doc required </div>
+				{% else %}
+					<div> Doc supplied </div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div class="column">
+			{% for detail in detail_list %}
+				<div> {{ detail['identifier'] }} </div>
+			{% endfor %}
+		</div>	
+		<div class="column">
+			{% for section in reached_sections %}
+				<div> {{ section }} </div>
+			{% endfor %}
+		</div>		
+	</div>
+
+{% endblock %}

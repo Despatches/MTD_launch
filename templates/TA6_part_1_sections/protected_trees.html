@@ -1,0 +1,85 @@
+<section id="protected_trees" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>10. Protected trees</b>
+		</div>
+		<div>					
+			<p class="q_title">10.1 Are any trees on your property subject to a Tree Preservation Order?</p>
+		</div>
+		<div>
+			<div class="row">
+				<div class = "input_container">
+					<div class="radio_container">
+						<p>Yes</p>
+						<input name="TPO_bool"  type="radio" value="1">
+					</div>
+					<div class="radio_container">
+						<p>No</p>
+						<input name="TPO_bool"  type="radio" value="0">
+					</div>
+					<div class = "radio_container">
+						<p>Don’t know</p>
+						<input name="TPO_bool"  type="radio" value="not_known">
+					</div>	
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="TPO_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>									
+			</div>							
+		</div>
+		<div id="TPO_details">
+			<hr class="dropdown-divider">
+			<div>
+				<div>					
+					<p class="q_title">10.1.1 Have the terms of the order been complied with?</p>
+				</div>			
+				<div class="row"> 
+					<div class="input_container">
+						<div class = "radio_container">
+							<p>Yes</p>
+							<input name="order_terms_complied_with"  type="radio" value="1">
+						</div>
+						<div class = "radio_container">
+							<p>No</p>
+							<input name="order_terms_complied_with"  type="radio" value="0">
+						</div>
+						<div class = "radio_container">
+							<p>Don’t know</p>
+							<input name="order_terms_complied_with"  type="radio" value="not_known">
+						</div>				
+					</div>
+					<div class="empty_container">
+						<button align="right" style="float:right;" id="order_terms_complied_with_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+					</div>		
+				</div>
+				<hr class="dropdown-divider">			
+				<div>
+					<p class="q_title">10.1.2 Supply a copy of any relevant documents.</p>
+					<div id="TPO_files" class="input_container">
+						<input type="file" id="tpo_docu">
+					</div>
+
+				</div>					
+			</div>	
+		</div>
+		<hr class="dropdown-divider">
+		<button id="submit_protected_trees">Submit</button>
+	</div>
+</section>
+
+<script>
+protected_trees={}
+$(document).ready(function(){
+	boolean_slide_open("input[name=TPO_bool]","#TPO_details","stand");
+
+	protected_trees_input_fields=[
+		{"identifier":"TPO_bool", "input_type":"bool_extra",radio_function:function(){$("#TPO_details").slideUp()}},
+		{"identifier":"order_terms_complied_with", "input_type":"bool_extra"},
+		{"identifier":"tpo_docu", "input_type":"docu"},
+	]
+	
+	empty_and_convert(protected_trees_input_fields);
+
+	ajax_submission('submit_protected_trees',protected_trees, "/TA6_part_1_protected_trees", protected_trees_input_fields);	
+});
+</script>

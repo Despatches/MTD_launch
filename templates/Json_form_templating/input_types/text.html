@@ -1,0 +1,35 @@
+{% if question['styling'] is not defined %} 
+
+	<div class="row">
+		<div class="input_container">
+			<input type="text" id ='{{question['identifier']}}' name="{{question['identifier']}}">
+		</div>
+		{% include "Json_form_templating/input_types/side_buttons.html"%}	
+	</div>
+{% else %}
+	{% if question['styling']['stock_options'] is defined and question['styling']['stock_options']['options']|length > 1%}
+		<div class="row">
+			<div class="input_container">	
+				<div class="select is-primary">
+					<select id="{{question['identifier']}}_stock" name='{{question['identifier']}}_stock'>
+						<option group="{{question['identifier']}}_stock" value=""></option>
+						{% for option in question['styling']['stock_options']['options'] %}
+							<option group="{{question['identifier']}}_stock" value="{{option}}">{{option}}</option>
+						{% endfor %}
+						<option set="{{question['identifier']}}" value="other">Other</option>
+					</select>
+				</div>
+			</div>
+			{% include "Json_form_templating/input_types/side_buttons.html"%}
+		</div>
+		<div id="{{question['identifier']}}_stock_other">
+			<p class="q_title">{{question['styling']['stock_options']['other_text']|default('Define Other')}}</p>
+			<div class="row">
+				<div class="input_container">
+					<input class='input' type="text" id ='{{question['identifier']}}_stock_other' name="{{question['identifier']}}">
+				</div>	
+			</div>
+		</div>
+	{% endif %}
+
+{% endif %}

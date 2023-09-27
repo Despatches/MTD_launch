@@ -1,0 +1,114 @@
+<section id="solar_panels" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>8.  Solar Panels</b>
+		</div>
+		<div>					
+			<p class="q_title"><b>8.1</b>   Have solar panels been installed at the property?</p>
+		</div>
+		<div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="solar_panels_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="solar_panels_bool"  type="radio" value="0">
+					</div>
+				</div>
+				<div>
+					<button align="right" style="float:right;" id="solar_panels_bool_empty" class="button is-small is-warning"><b>X</b></button>
+				</div>				
+			</div>			
+			<div id="solar_panels_details" class="child_q">
+				<hr class="dropdown-divider">
+				<p class"q_title"><b>8.1.1</b> Which year were the solar panels installed</p>
+				<div class="row">
+					<div class="input_container">
+						<input class="input is-small" type="number" id="solar_installation_year" style="width:20%;" min='1950' max='2022'> 
+					</div>
+					<div>
+						<button align="right" style="float:right;" id="solar_installation_year_empty" class="button is-small is-warning"><b>X</b></button>
+					</div>				
+				</div>
+				<div>
+					<hr class="dropdown-divider">	
+					<div><b>8.1.2</b> Do you own the solar panels outright?</div>
+					<div class="row">
+						<div class="input_container">
+							<div class = "radio_container">
+								<p>Yes</p>
+								<input name="solar_panels_ownership_bool"  type="radio" value="1">
+							</div>
+							<div class = "pillar">
+								<p>No</p>
+								<input name="solar_panels_ownership_bool"  type="radio" value="0">
+							</div>
+						</div>
+						<div>
+							<button align="right" style="float:right;" id="solar_panels_ownership_bool_empty" class="button is-small is-warning"><b>X</b></button>
+						</div>			
+					</div>
+					<div id="panels_ownership_details" class="child_q">
+				<hr class="dropdown-divider">		
+						<p class="q_title"><span><b>8.1.3 </b>Has a long lease of the roof / air space been granted to a solar panel provider?</span><nl><span>(A typical long lease may last 20 to 25 years.)</span></nl></p>
+						<div class="row">
+							<div class="input_container">
+								<div class = "radio_container">
+									<p>Yes</p>
+									<input name="solar_panels_long_lease_ownership_bool"  type="radio" value="1">
+								</div>
+								<div class = "radio_container">
+									<p>No</p>
+									<input name="solar_panels_long_lease_ownership_bool"  type="radio" value="0">
+								</div>
+							</div>
+							<div>
+								<button align="right" style="float:right;" id="solar_panels_long_lease_ownership_bool_empty" class="button is-small is-warning"><b>X</b></button>
+							</div>				
+						</div>
+						<hr class="dropdown-divider">	
+						<div>
+							<p class="q_title">you’ll need to supply copies of the relevant documents, such as copies of electricity bills for feed-in tariffs (payments made for supplying electricity to the main grid).</p>
+							<div class="row">
+								<div class="input_container">
+									<input type="file" id="solar_electrical_tarrif_docu">
+								</div>
+								<div>
+									<button align="right" style="float:right;" id="solar_electrical_tarrif_docu_empty" class="button is-small is-warning"><b>X</b></button>
+								</div>		
+							</div>
+						</div>						
+					</div>
+				</div>					
+			</div>
+		</div>
+		<hr class="dropdown-divider">
+		<button id="submit_solar_panels" class="button is-success is-medium">Submit</button>
+	
+	</div>
+</section>
+
+<script>
+solar_panels={}
+$(document).ready(function(){
+	boolean_slide_open("input[name=solar_panels_bool]","#solar_panels_details","stand");
+	boolean_slide_open("input[name=solar_panels_ownership_bool]","#panels_ownership_details","stand");
+
+	solar_panels_input_fields=[
+			{"identifier":"solar_panels_bool", "input_type":"bool", radio_function:function(){$("#solar_panels_details").slideUp()}},
+			{"identifier":"solar_installation_year", "input_type":"input"},
+			{"identifier":"solar_panels_ownership_bool", "input_type":"bool", radio_function:function(){$("#panels_ownership_details").slideUp()}},
+			{"identifier":"solar_panels_long_lease_ownership_bool", "input_type":"bool"},
+			{"identifier":"solar_electrical_tarrif_docu", "input_type":"docu"}	
+		]
+
+	empty_and_convert(ownership_input_fields);
+
+	ajax_submission('submit_solar_panels',solar_panels, "/TA6_part_1_solar_panels", solar_panels_input_fields);
+
+
+});
+</script>

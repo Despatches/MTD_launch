@@ -1,0 +1,61 @@
+<section id="disputes" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>20. Disputes and complaints</b>
+		</div>
+		<div>					
+			<p>20.1. Have there been any disputes or complaints about your property or a property nearby?</p>
+		</div>
+		<div>
+
+			<div style="display:flex; flex-direction:row; ">
+				<div class = "pillar">
+					<p>Yes</p>
+					<input name="complaints_bool"  type="radio" value="1">
+				</div>
+				<div class = "pillar">
+					<p>No</p>
+					<input name="complaints_bool"  type="radio" value="0">
+				</div>
+				<hr class="dropdown-divider">			
+			</div>
+			<div id="complaints_details">
+				<p>give details such as when this took place and who was involved.</p>
+				<div>
+					<textarea class="textarea" id="complaints"></textarea>
+				</div>
+			</div>						
+		</div>
+		<hr class="dropdown-divider">
+		<div>					
+			<p>20.2. Are you aware of anything that might lead to a dispute about your property or a property nearby?</p>
+		</div>
+		<div>
+
+			<div style="display:flex; flex-direction:row; ">
+				<div class = "pillar">
+					<p>Yes</p>
+					<input name="disputes_bool"  type="radio" value="1">
+				</div>
+				<div class = "pillar">
+					<p>No</p>
+					<input name="disputes_bool"  type="radio" value="0">
+				</div>
+				<hr class="dropdown-divider">			
+			</div>
+			<div id="disputes_details">
+				<p>give details</p>
+				<div>
+					<textarea class="textarea" id="disputes"></textarea>
+				</div>
+			</div>						
+		</div>		
+	</div>
+</section>
+
+<script>
+$(document).ready(function(){
+	boolean_slide_open("input[name=disputes_bool]","#disputes_details","stand")
+	boolean_slide_open("input[name=complaints_bool]","#complaints_details","stand")
+});
+</script>

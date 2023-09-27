@@ -1,0 +1,116 @@
+    <head>
+ {% include "link_configs_and_spatial/spatial_links.html" %}
+
+  </head>
+
+<h1 class="title is-1" align='center' style="color:black;">Freehold:{{reference_name}}</h1>
+<table>
+	<tr>
+		<td>
+			<div class = "corchild">
+				{% if not major_objects %}
+					<h1 style="color:black;">no objects created</h1>
+				{% else %} 
+<aside class="accordion">
+	{% for object in major_objects %}
+	<h1>{{ object }}</h1>
+	<div class="opened-for-codepen">
+		<h2>News Item #1</h2>
+		<div class="opened-for-codepen">
+			<h3>News Item #1a</h3>
+			<div>
+				<h4>News Subitem 1</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+				<h4>News Subitem 2</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+				
+				<h4>News Subitem 3</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			</div>
+			
+			<h3>News Item #1b</h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<h3>News Item #1c</h3>
+			<div class="opened-for-codepen">
+				<h4>News Subitem 1</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+				
+				<h4>News Subitem 2</h4>
+				<p class="opened-for-codepen">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			</div>
+		</div>
+		</div>
+	</div>
+	{% endfor %}
+</aside>
+	{% endif %}
+</div>
+</td>
+<td style = "align:left;">
+
+
+<div style="color:black;">
+	<a href="{{ url_for('mp.freehold_survey') }}"><button > add survey data</button></a>
+	{% if location_data == None %}
+	No map data currently assigned 
+	 <button> Add map data </button>
+	{% else %}
+	   <div id='map' style='height:400px;width:400px'></div>
+    <button> edit map data </button>
+  {% endif %}
+  </div>
+<a 
+  <button href="{{ url_for("mp.mp_object_props",particular_id=particular_id,selec_set_ID=selec_set_ID, holding_ID=holding_ID)}}" type ="submit" class="button is-block is-info is-large ">Define Freehold</button>
+ </a>
+<div style="color:black;">
+search for existing disclosure components
+<a
+	<button>
+		go
+	</button>
+</a>
+</div>
+
+
+</div>
+</td>
+</tr>
+</table>
+	<script>
+	var latlong = JSON.parse({{ location_data | tojson }})
+	map =Initialize_map(latlong[0],latlong[1],16);
+	L.marker([latlong[0],latlong[1]]).addTo(map);
+
+ function add_marker(e){
+    var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+};
+
+	map.on('click', add_marker);
+	
+var headers = ["H1","H2","H3","H4","H5","H6"];
+
+$(".accordion").click(function(e) {
+  var target = e.target,
+      name = target.nodeName.toUpperCase();
+  
+  if($.inArray(name,headers) > -1) {
+    var subItem = $(target).next();
+    
+    //slideUp all elements (except target) at current depth or greater
+    var depth = $(subItem).parents().length;
+    var allAtDepth = $(".accordion p, .accordion div").filter(function() {
+      if($(this).parents().length >= depth && this !== subItem.get(0)) {
+        return true; 
+      }
+    });
+    $(allAtDepth).slideUp("fast");
+    
+    //slideToggle target content and adjust bottom border if necessary
+    subItem.slideToggle("fast",function() {
+        $(".accordion :visible:last").css("border-radius","0 0 10px 10px");
+    });
+    $(target).css({"border-bottom-right-radius":"0", "border-bottom-left-radius":"0"});
+  }
+});
+</script>

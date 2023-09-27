@@ -1,0 +1,288 @@
+		<section id="ownership" class="hide" style="width: 50%;margin: auto;">
+			<div>
+				<b>3.1 Is your property freehold or leasehold?</b>
+			</div>
+			<div class="row">
+				<!-- 3.1 -->
+				<div class="input_container">
+					<div class = "radio_container">
+						<div><p>Leasehold</p></div>
+						<input name="lease_or_free" value="Leasehold" type="radio">
+					</div>
+					<div class = "radio_container">
+						<div><p>Freehold</p></div>
+						<input name="lease_or_free" value ="Freehold"  type="radio">
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="lease_or_free_empty" class="button is-small is-warning"><b>X</b></button>
+				</div>					
+			</div>
+			<div id="leasehold" class="child_q">
+					<div id="leasehold_warning" class="box">
+						You’ll need a copy of your lease in order to answer these questions. If you do not have a copy of your lease, ask your solicitor for help.
+						Estate agents need to be able to share the following information with the buyer.
+						<button class="button is-warning" id="accept_leasehold_warning"> 
+						continue
+						</button>
+					</div>
+					<div id="leasehold_b">
+
+						<div>
+							<hr class="dropdown-divider">
+							<div class="q_title"><b>3.2 Ground rent</b></div>
+							<div>
+								<div>
+									<b>3.2.1</b> How much ground rent do you pay each year? £ / year
+								</div>
+								<div class="row">	
+									<div style="width:600px">
+										<!-- 3.2.3 -->
+										<input id="ground_rent_value" class="input is-small" type="number" min="0" max="1000" style="width : 20%; align:left;">
+									</div>
+									<div class="empty_container">
+										<button align="right" style="float:right;" id="ground_rent_value_empty" class="button is-small is-warning"><b>X</b></button>
+									</div>
+								</div>								
+							</div>
+							
+							<div>
+								<hr class="dropdown-divider">
+								<div>									
+									<b>3.2.2</b> Does your lease say when the rent is likely to be increased?
+								</div>
+								<div style="content:""; clear:both; display:table;">
+									<div class="row">
+										<!-- 3.2.4 -->
+										<div class="input_container">
+											<div class = "radio_container">
+												<p>Yes</p>
+												<input name="ground_rent_increase_bool"  type="radio" value="1" class="short_radio">
+											</div>
+											<div class = "radio_container">
+												<p>No</p>
+												<input name="ground_rent_increase_bool"  type="radio" value="0">
+											</div>
+										</div>
+										<div>
+											<button align="right" style="float:right;" id="ground_rent_increase_bool_empty" class="button is-small is-warning"><b>X</b></button>
+										</div>										
+									</div>
+								</div>
+								<div id="ground_rent_increase_time" class="child_q">
+									<div>
+										<p class="q_title"> please give details of the next increase (date, frequency, amount) - if you don’t have your lease then your solicitor will be able to obtain a copy.</p>
+									</div>
+									<div>
+										<p>Date of next increase</p>
+										<div class="row">
+											<div class="input_container">
+												<input type="date" id="ground_rent_increase_date">
+											</div>
+											<div class="empty_container">
+												<button style="float:right;" id="ground_rent_increase_date_empty" class="button is-small is-warning"><b>X</b></button>
+											</div>
+										</div>
+									</div>
+									<div>
+										<p>Frequency of increase:</p>
+										<div class="row">	
+											<div class="select is-primary">
+											  <select id="ground_rent_increase_frequency_options">
+											  	 <option group="ground_rent_increase_frequency" value=""></option>
+											    <option group="ground_rent_increase_frequency" value="annually">annually</option>
+											    <option group="ground_rent_increase_frequency" value="bi-annually">bi-annually</option>
+											    <option set="ground_rent_increase_frequency" value="quarterly">quarterly</option>
+											    <option set="ground_rent_increase_frequency"  value="every 5 years">every 5 years</option>
+											    <option set="ground_rent_increase_frequency" value="every 10 years">every 10 years</option>
+											    <option set="ground_rent_increase_frequency" value="other">Other</option>
+											  </select>
+											</div>
+
+											<div>
+												<button style="float:right;" id="ground_rent_increase_frequency_options_empty" class="button is-small is-warning"><b>X</b></button>
+											</div>
+										</div>										
+										<div id="rent_increase_frequency_container">
+											<div class="q_title"><p>describe the rent increse frequency</p></div>
+											<div class="row">
+												<div class="input_container">
+													<textarea type="text" id="ground_rent_increase_frequency_text" name="ground_rent_increase_frequency" class="textarea"></textarea>	
+												</div>
+												<div>
+													<button style="float:right;" id="ground_rent_increase_frequency_text_empty" class="button is-small is-warning"><b>X</b></button>
+												</div>
+											</div>
+										</div>								
+									</div>
+								</div>
+								<div>
+									<hr class="dropdown-divider">
+									<div>
+										<b>Amount of increase:</b>
+									</div>
+									<div>									
+										<b>3.2.5</b> Are the rent increases fixed, or variable?
+									</div>
+									<div class="row">
+										<div class = "input_container">
+											<div class = "radio_container">
+												<p>Fixed</p>
+												<input name="rent_increase_type"  type="radio" value="fixed">
+											</div>
+											<div class = "radio_container">
+												<p>Variable</p>
+												<input name="rent_increase_type"  type="radio" value="variable">
+											</div>
+											<div class = "radio_container">
+												<p>Other</p>
+												<input name="rent_increase_type"  type="radio" value="other">
+											</div>
+										</div>
+										<div>
+											<button style="float:right;" id="rent_increase_type_empty" class="button is-small is-warning"><b>X</b></button>
+										</div>
+									</div>									
+									<div class = "pillar" id="rent_increase_details">
+										<div class="q_title">
+											<p id="rent_inc_text"></p>
+										</div>
+										<div class="row">
+											<textarea class="textarea" id="rent_increase_type_details">
+											</textarea>
+											<div>
+												<button style="float:right;" id="rent_increase_type_details_empty" class="button is-small is-warning"><b>X</b></button>
+											</div>
+										</div>											
+									</div>
+								</div>
+							</div>							
+						</div>
+					</div>
+			</div>
+			<hr class="dropdown-divider">
+			<div>
+				<button class="button is-success" id="submit_ownership_data">
+					submit
+				</button>
+			</div>
+			
+		</section>
+
+<script>
+
+$(document).ready(function(){
+	var ownership = {}
+
+	var leasehold = {}
+
+	$("input[name=rent_increase_type]").change(function(){
+		$("#rent_increase_details").slideDown();
+		var rent = $("p[id=rent_inc_text]")
+		$(rent).slideUp()
+		if ($(this).val() == "fixed"){
+			$(rent).text("Give details of the fixed rent increase")
+		} else if ($(this).val() == "variable"){
+			$(rent).text(" How much are the rent increases and how is this calculated?")
+		} else if ($(this).val() == "other"){
+			$(rent).text("What are the amounts of rent increase and how is the revised rent calculated?")
+		}
+		$(rent).slideDown();
+	});
+
+	$("#ground_rent_increase_frequency_options").change(function(){
+		if ($(this).val() == 'other'){
+			$("#rent_increase_frequency_container").slideDown()
+		}
+		else{
+			$("#rent_increase_frequency_container").slideUp()
+		};
+	});
+
+	$("#rent_increase_frequency_container").slideUp()
+	
+	$("#rent_increase_details").slideUp();
+	$("#leasehold_b").slideUp();	
+	
+	$("#accept_leasehold_warning").click(function(){
+		$("#leasehold_b").slideDown();
+		$("#leasehold_warning").slideUp();
+	});
+
+	$("#leasehold").slideUp();
+	$("input[name=lease_or_free]").click(function(){
+		if ($(this).val() == "Leasehold"){
+			$("#leasehold").slideDown()
+		} else if ($(this).val() == "Freehold"){
+			$("#leasehold").slideUp();
+		};
+	});
+	/*boolean_slide_open("input[name=ground_rent_increase_bool]","#ground_rent_increase_time","stand");
+
+	empty_radio_set("lease_or_free",function(){$("input[name=lease_or_free][value=freehold]").click()})
+	empty_radio_set("ground_rent_increase_bool",function(){$("#ground_rent_increase_time").slideUp()})
+
+	empty_radio_set("rent_increase_type",function(){$("#rent_increase_details").slideUp(); $("p[id=rent_inc_text]").slideUp()})
+
+	empty_input("years_left_on_lease");
+
+	empty_input("ground_rent_value");
+
+	empty_input("ground_rent_increase_date");
+	empty_input("ground_rent_increase_frequency_options");
+	empty_input("ground_rent_increase_frequency_text");
+	empty_input("rent_increase_type_details");
+
+	$("#submit_ownership_data").click(function(){
+		ownership=final_input_value("radio", 'lease_or_free');
+
+		if (ownership.value == "Leasehold"){
+			leasehold.years_left=final_input_value("input", 'years_left_on_lease');
+
+			leasehold.rent_value=final_input_value("input", 'ground_rent_value');
+
+			leasehold.ground_rent_increase_bool=final_input_value("radio", 'ground_rent_increase_bool') ;
+
+			leasehold.ground_rent_increase_date=final_input_value("input", 'ground_rent_increase_date');
+
+			leasehold.ground_rent_increase_frequency_text=final_input_value("text", 'ground_rent_increase_frequency_text');
+
+			leasehold.rent_increase_type=final_input_value("radio", 'rent_increase_type');
+
+			leasehold.rent_increase_type_details=final_input_value("text", 'rent_increase_type_details');
+
+		};*/
+		ownership_input_fields=[
+			{"identifier":"lease_or_free", "input_type":"radio", radio_function:function(){$("input[name=lease_or_free][value=freehold]").click()}},
+			{"identifier":"years_left_on_lease", "input_type":"input"},
+			{"identifier":"ground_rent_value", "input_type":"input"},
+			{"identifier":"ground_rent_increase_bool", "input_type":"bool",radio_function:function(){$("input[name=ground_rent_increase_bool][value=0]").click()}},
+			{"identifier":"ground_rent_increase_date", "input_type":"date"},
+			{"identifier":"ground_rent_increase_frequency_text", "input_type":"text"},
+			{"identifier":"rent_increase_type", "input_type":"radio", radio_function:function(){$("#rent_increase_details").slideUp(); $("p[id=rent_inc_text]").slideUp()}},
+			{"identifier":"rent_increase_type_details", "input_type":"detail_text"}
+		]
+
+	/*	owner = JSON.stringify(ownership)
+
+		lease = JSON.stringify(leasehold)
+
+		alert(`${owner}`)
+
+		alert(`${lease}`)
+		$.ajax({
+			type : "POST",
+			url : "/TA6_part_1_ownership",
+			data : {form_ID :from_data.form_id, ownership : owner, leasehold : lease},
+			success : function(data){
+				alert(data)
+				next_section()
+			}
+		});
+	});*/
+	empty_and_convert(ownership_input_fields)
+
+	ajax_submission('submit_ownership_data',ownership, "/TA6_part_1_ownership", ownership_input_fields);
+
+});
+</script>
