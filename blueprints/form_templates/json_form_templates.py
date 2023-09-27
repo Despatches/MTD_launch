@@ -450,6 +450,7 @@ def create_meaning_lists(template, typing='meanings',**kwargs):
 	if 'add_on' in kwargs:
 		if kwargs['add_on'] != None:
 			add_on = kwargs['add_on']
+			
 	def multi_loop(result):
 		if result['input_type'] == 'multi_row':
 			for m in result['data_rows']:

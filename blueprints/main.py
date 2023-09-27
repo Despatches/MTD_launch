@@ -30,3 +30,8 @@ def landing():
 @login_required
 def FAQ():
 	return render_template('FAQ/FAQ.html')
+
+@main.route('/management/<agency>/<user>')
+@login_required
+def management_entry():
+	return render_template('management_splash.html.jinja')

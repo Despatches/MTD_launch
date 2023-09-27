@@ -1,6 +1,6 @@
 from launch import db
 from flask_login import login_user , current_user, login_required
-from launch.models.models import User, market_particulars, answer , new_form_object, templates
+from launch.models.models import User, market_particulars , new_form_object, templates
 from launch.functions.data_base_procedures import add_to_selections_with_parents, counter,last_input_to_select_set, find_propagations,delete_last_from_queue, sort_answers_and_add,add_to_selections_without_parents,get_selection_keys, check_selection_set,delete_last_from_object_queue, sort_answers_and_add_objects, add_to_selections_without_parents_objects,add_to_selections_with_parents_objects,collect_object_selections,update_last_data_entry_mp
 from launch.functions.access_record_procedures import update_last_user_access
 from launch.blueprints.form_templates.standard_TA6.standard_TA6 import template as standard_ta6_template, bounds_radio_options
@@ -149,8 +149,8 @@ def template_form_collect():
 
 	equals = pairings[section]
 
-	print(equals)
-	print(inputs)
+	#print(equals)
+	#print(inputs)
 
 	final_inputs = form_equals_evaluation(equals, inputs, form)
 
@@ -464,6 +464,7 @@ def bulk_form_collect(form, template_set, *args):
 	form_results.evaluate_objects(template_set['object_links'])
 	form_results.work_tasks()
 	form_results.fetch_detail_data()
+	form_results.sub_forms_gather(True)
 	gather = False
 	if 'gather' in args:
 		gather = True
@@ -497,14 +498,14 @@ def collect_synopsis_data(form_name,p_type, particular_id):
 			questions = form_results.element_relevances['questions']
 			sections = form_results.element_relevances['sections']
 			section_names = [section['section_name'] for section in template['Sections']]
-
+			subforms =  form_results.sub_forms
 			#print(form_results.__dict__)
 			#template_send = json.dumps(templates['TA6_Part_1']['template'])
 
 			form_set={'questions':questions,'sections':sections,'section_names':section_names,
 						'results':result_send, 'form_name':form_name,'p_type':p_type, 'particular_id':particular_id,
 						'rsections':form_results.element_relevances['sections'],'reached_section':form_results.section_marker,
-						'objects':object_send, 'sub_tables':sub_tables,'form':form, 'searchable_data':searchable_data
+						'objects':object_send, 'sub_tables':sub_tables,'form':form, 'searchable_data':searchable_data, 'sub_forms':subforms
 					}
 			return render_template('synopsis_template_html.html', form_set=json.dumps(form_set), p_type = p_type, particular_id = particular_id)
 
@@ -666,17 +667,26 @@ def template_form(form_name, p_type, particular_id, **kwargs):
 		"""
 	main_form_data = form_send_data(kwargs, form_name)
 	template = copy.deepcopy(main_form_data['template'])
+	if p_type == 'market_particulars':
+		query = """SELECT sudo_name FROM  `particulars_and_objects`.`market_particulars` WHERE market_particulars_ID  = %s"""
+		params = (particular_id,)
+		parent_data = {}
+		cursor = db.cursor()
+		cursor.execute(query, params)
+		parent_data['name'] = cursor.fetchall()[0][0]
+		cursor
+	else: parent_data = 'none'
 	main_form_data['template'] = json.dumps(main_form_data['template'])
 	
 	if len(sub_forms) > 0:
 		pass
-	return render_template("Json_form_templating/Json_form_templating.html", main_form_data = main_form_data,template=template, sub_forms=sub_forms)
+	return render_template("Json_form_templating/Json_form_templating.html", main_form_data = main_form_data,template=template, sub_forms=sub_forms, parent_data= parent_data, col_type='query_pairings')
 
 	#return render_template("Json_form_templating/Json_form_templating.html", template = template, flow_controls = flow_controls, js_template=js_template, questions=questions ,form_id = form['form'], sections=sections, results = result_send, sub_table_data = sub_tables_send, section_marker=form_results.section_marker)
 
 	#return render_template("Json_form_templating/Json_form_templating.html", template = template, flow_controls = flow_controls, js_template=js_template, questions=questions ,form_id = form['form'], sections=sections, results = result_send, sub_table_data = sub_tables_send)
 
-
+#TA6_forms.route("/form/micro/<form_name>/<root_linkage>/<root_linkage_id>", defaults={'parent_data': 'none'})
 @TA6_forms.route("/form/micro/<form_name>/<root_linkage>/<root_linkage_id>")
 @login_required
 def template_micro_form(form_name, root_linkage, root_linkage_id, **kwargs):
@@ -694,7 +704,8 @@ def template_micro_form(form_name, root_linkage, root_linkage_id, **kwargs):
 	main_form_data['template'] = json.dumps(main_form_data['template'])
 	sub_forms = 'micro'
 	main_form_data['template_type'] = 'micro'
-	return render_template("Json_form_templating/Json_form_templating.html", main_form_data = main_form_data,template=template, sub_forms=sub_forms, submission_url='/micro_submission', root_linkage=root_linkage, root_linkage_id=root_linkage_id)
+	#print(main_form_data['result_send'])
+	return render_template("Json_form_templating/Json_form_templating.html", main_form_data = main_form_data,template=template, sub_forms=sub_forms, submission_url='/micro_submission', root_linkage=root_linkage, root_linkage_id=root_linkage_id, col_type='micro')
 
 
 @TA6_forms.route("/micro_submission", methods=['POST'])
@@ -745,7 +756,7 @@ def alter_meaning_text():
 	meaning_text_data = json.loads(request.form.get("data"))
 	query = 'CALL `form_data`.`TA6_Part_1_text_edit_add`(%s,%s,%s);'
 	params = (meaning_text_data['form'], meaning_text_data['identifier'], meaning_text_data['new_text'])
-	print(params)
+	#print(params)
 	cursor = db.cursor()
 	cursor.execute(query, params)
 	db.commit()
@@ -758,7 +769,7 @@ def document_collection():
 	cursor = db.cursor()
 
 	form_name = request.form.get('form_name')
-	print(form_name, 'the form_name')
+	#print(form_name, 'the form_name')
 	form = request.form.get('form_ID')
 	text_reference = request.form.get('text_reference')
 	for uploaded_file in request.files.getlist('documents'):
@@ -793,7 +804,7 @@ def report_construction():
 	data = json.loads(request.form.get('data'))
 	template_set = templates[data['form_name']]
 	form_results = bulk_form_collect(data['form'], template_set, 'gather')
-	return '{}'.format(render_template('template_report_maker/template_report_maker.html', form_object =form_results ))
+	return '{}'.format(render_template('template_report_maker/template_report_maker.html.jinja', form_object =form_results ))
 
 
 def micro_synop_return(data):
@@ -811,7 +822,7 @@ def micro_synop_return(data):
 			objects=object_send, sub_tables=sub_tables, reached_section=form_results.section_marker,
 			form_name = form_name, form = form, particular_id=particular_id,
 			p_type=p_type, section_names=section_names)"""
-	data = {'results':result_send, 'questions':questions,'section_names':section_names, 'reached_section':form.section_marker, 'sections':sections, 'form_name':data['form_name']}
+	data = {'results':result_send, 'questions':questions,'section_names':section_names, 'reached_section':form.section_marker, 'sections':sections, 'form_name':data['form_name'], 'form':form.form}
 	return data
 
 @TA6_forms.route("/extend_synopsis", methods=['POST'])

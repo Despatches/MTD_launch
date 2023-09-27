@@ -1,4 +1,5 @@
 function list_match(value, list){
+	console.log(list)
 	var list_len = list.length
 	var count = 0
 	var match = false
@@ -45,6 +46,7 @@ function bulk_send_reliances(form_flow_controls, type='form'){
 				}else {
 					new_reliance_value = (`#${item.identifier}`).val()
 				}
+				console.log(item)
 				var matchy =list_match(new_reliance_value,item.value)
 				if (type == 'form'){
 					if (matchy == true){

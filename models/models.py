@@ -3,6 +3,8 @@ from flask import redirect, url_for
 from flask_login import UserMixin
 from launch.blueprints.form_templates import template_data_transitions as form_data
 from launch.blueprints.form_templates.templates import templates
+from launch.models.stamps import stamps
+import re
 
 class User(UserMixin):
 	def __init__(self,ID):
@@ -48,26 +50,41 @@ class User(UserMixin):
 		user_get.close()
 		return None
 
+#class title_derivative():
+#	def __init__(data_list,pair_set):
+#		self.X_location_point = 
+
+
+#class cns(title_derivative):
+
+basic_deriv_data_pair = [('reference_name','Name'), ('date_first_specified', 'Date First Specified'), 
+						('ID',), ('parent_object_type',),
+						('provisioned_ID',), ('parent_ID',),('creating_user',),('verified',),('verified_id',),
+						('X_location_point',), ('Y_location_point',)]
+
+cns = basic_deriv_data_pair[0:-2]
+cns += [('registry_name', 'Name At registered at Registry'),('percentage', 'Share Percentage')]
+
 mp_title_derivatives = {
 					'c_n_s':{
-						'table':"`selection_routines`.`cns_within_market_partics`",
-						'columns':[('reference_name',),('registered_at_companies_house',)]
+						'table':"`companies_and_shares`.`company_share`",
+						'columns':cns
 					},
 					'freehold_shares':{
-						'table':"`selection_routines`.`unassigned_freehold_share`",
-						'columns':[('provisioned_ID',),('reference_name',),]
+						'table':"`title_derivatives`.`freehold_share`",
+						'columns':basic_deriv_data_pair +[('percentage', 'Share Percentage'),]
 					},
 					'leaseholds':{
-						'table':'`selection_routines`.`unassigned_leasehold`',
-						'columns':[('reference_name','Name'), ('freehold_type', 'Freehold'), ('freehold_ID','Parent Freehold'), ('holding_ID',), ('X_location_point',), ('Y_location_point',)]
+						'table':'`title_derivatives`.`leasehold`',
+						'columns':basic_deriv_data_pair + [('sub_lease',),('material_parent',)]
 					},
 					'commonholds':{
-						'table':'`selection_routines`.`commonhold_within_market_partics`',
-						'columns':[('reference_name',)]
+						'table':'`title_derivatives`.`common_hold`',
+						'columns':basic_deriv_data_pair +[('percentage_ownership', 'Share Percentage'), ('percentage_vote', 'Vote Percentage')]
 					},
 					'freeholds':{
-						'table':'`selection_routines`.`unassigned_freehold`',
-						'columns':[('reference_name','Name'), ('provisioned_ID', 'ID'), ('date_first_specified', 'Date First Specified'),('holding_ID',), ('x_location_point',), ('y_location_point',)]
+						'table':'`title_derivatives`.`freehold`',
+						'columns':basic_deriv_data_pair
 					}
 				}
 
@@ -94,7 +111,9 @@ class market_particulars:
     		`market_particulars`.`sudo_name`,\
     		`market_particulars`.`creation`,\
     		`market_particulars`.`last_user_to_change`,\
-    		`market_particulars`.`last_data_change`\
+    		`market_particulars`.`last_data_change`,\
+    		`market_particulars`.`single_point_loci_lat`,\
+    		`market_particulars`.`single_point_loci_lng`\
 		FROM `particulars_and_objects`.`market_particulars`\
 		where`market_particulars_ID` = %s;"\
 
@@ -112,6 +131,10 @@ class market_particulars:
 		self.confirmed_on_the_market = mp[8]
 		self.sudo_name = mp[9]
 		self.creation = mp[10]
+		self.last_user_to_change = mp[11]
+		self.last_data_change = mp[12]
+		self.single_point_x = mp[13]
+		self.single_point_y = mp[14]
 		self.forms={}
 
 		market_partics_get.close()
@@ -135,6 +158,11 @@ class market_particulars:
 			self.TA6.add_element_relevances()
 			self.TA6.exclude_irrelevants()
 			self.TA6.sub_forms_gather(True)
+			for sub in self.TA6.sub_forms:
+				self.forms[sub] = self.TA6.sub_forms[sub]
+			self.forms['TA6_Part_1'] = self.TA6.__dict__
+		else:
+			self.TA6 = None
 
 	def TA6_and_subs(self):
 		self.TA6_collection()
@@ -169,7 +197,7 @@ class market_particulars:
 			for col in columns[1:]:
 				query_columns += ',`{}`'.format(col[0])
 
-			query = 'SELECT {} FROM {} WHERE market_particulars = %s'.format(query_columns,td[key]['table'])
+			query = "SELECT {} FROM {} WHERE parent_ID = %s AND parent_object_type = 'market_particular'".format(query_columns,td[key]['table'])
 			params = (self.id,)
 			cursor.execute(query,params)
 			results = cursor.fetchall()
@@ -192,7 +220,112 @@ class market_particulars:
 					self.title_derivatives[key]['data'].append(new_ob)
 		cursor.close()
 
+	#outmoded pre objectg orientated stamp_evaluation
+	"""def stamp_evaluation(self):
+		self.stamps ={}
+		for stamp in stamps:
+			cur_stamp =  stamps[stamp]
+			stamp_attr = {}
+			stamp_value = True
+			for stamp_key in cur_stamp['identifiers']:
+				print(stamp_key)
+				x = re.search("\.", stamp_key)
+				if not x == None:
+					deci = x.start()
+					form_loci = stamp_key[0:deci]
+					identifier = stamp_key[deci+1:]
+					print(form_loci,identifier)
+					if form_loci in self.forms:
+						form = self.forms[form_loci]
+						if identifier in form['data']:
+							match = False
+							for val in cur_stamp['identifiers'][stamp_key]['values']:
+								print(val, form['data'][identifier]['value'])
+								if form['data'][identifier]['value'] ==  val:
+									stamp_attr[stamp_key] = {'value':val}
+									match = True
+									break
+							if match == False and cur_stamp['identifiers'][stamp_key]['status'] ==  'required':
+								stamp_value = False
+								break
+			self.stamps[stamp] = stamp_value"""
 
+	def stamp_evaluation(self):
+		self.stamps = stamps.stamp_set(stamps.stamps,self.forms)
+
+	def auto_objects(self):
+		if self.total_derivatives != 0:
+			return 0
+		if self.TA6 != None:
+			lease_or_free = self.TA6.data['lease_or_free']['value']
+			if lease_or_free  != 'empty':
+				if lease_or_free == 'Freehold':
+					self.new_freehold_derivative()
+				elif lease_or_free == 'Leasehold':
+					self.new_leasehold_derivative()
+
+	def new_freehold_derivative(self):
+		cursor = db.cursor()
+		query = """INSERT INTO `title_derivatives`.`freehold`
+					(
+					`creating_user`,
+					`reference_name`,
+					`parent_object_type`,
+					`parent_ID`,
+					`verified`,
+					`x_location_point`,
+					`y_location_point`,
+					`other_data`,
+					`date_first_specified`)
+					VALUES
+					(%s,
+					%s,
+					%s,
+					%s,
+					%s,
+					%s,
+					%s,
+					%s,
+					NOW());
+					"""
+		params = (None, self.sudo_name+ ' Freehold', 'market_particular', self.id, self.single_point_x, self.single_point_y,'')
+
+		cursor.execute(query, params)
+		db.commit()
+		cursor.close()
+		return 0
+
+	def new_leasehold_derivative(self):
+		cursor = db.cursor()
+		query = """INSERT INTO `title_derivatives`.`leasehold`
+					(
+					`parent_object_type`,
+					`creating_user`,
+					`reference_name`,
+					`parent_ID`,
+					`x_location_point`,
+					`y_location_point`,
+					`other_data`,
+					`date_first_specified`)
+					VALUES
+					(
+					%s,
+					%s,
+					%s,
+					%s,
+					%s,
+					%s,
+					%s,
+					NOW());
+
+					"""
+		params = ('market_particular', None, self.sudo_name+ ' Leasehold', self.id, self.single_point_x, self.single_point_y,'')
+
+		cursor.execute(query, params)
+		print('works')
+		db.commit()
+		cursor.close()
+		return 0
 
 class selection_set_mp:
 	def __init__(self, market_particulars,selections_owner):
@@ -217,69 +350,6 @@ class question:
 		self.Q_ID = Q_ID
 		self.question_meaning = q_data
 		get_q_data.close()
-
-class answer:
-	def __init__(self,data,Q_ID):
-		self.parent_q = Q_ID
-		self.answer = data[0]
-		self.full_code = data[1]
-		self.auxilliary_data = data[2]
-
-	def add_to_selections_with_parents(abc, selec_set_ID, parent_selec_ID):
-		answer = self['full_code']
-		ans_type = self['type']
-		answer_input = db.cursor()
-
-		query = "select max(`lft`) into @lftmove from selection_routines.market_particulars_selections where market_particulars_selections.parent_set = %s and market_particulars_selections.unique_selection_ID=%s;"
-		params = (f"{selec_set_ID}",f"{parent_selec_ID}")
-		answer_input.execute(query,params)
-		answer_input.execute("select @lftmove;")
-		max_lft = answer_input.fetchone()
-		if max_lft[0] == None or 0:
-			add_to_selections_without_parents(answer,selec_set_ID)
-			#query ='select max(`rgt`) into @lftmove from selection_routines.market_particulars_selections where market_particulars_selections.parent_set = %s;'
-			#params = (selec_set_ID,)
-			#answer_input.execute(query,params)
-			#parent_selec_ID=None
-
-		else:
-			query = "update selection_routines.market_particulars_selections SET `rgt` := (`rgt`+2) where `rgt`>=@lftmove AND `parent_set`= %s;"
-			params = (selec_set_ID,)
-			answer_input.execute(query,params)
-
-			query = "update selection_routines.market_particulars_selections SET `lft` := (`lft`+2) where `lft`>@lftmove and market_particulars_selections.parent_set = %s;"
-			answer_input.execute(query,params)
-
-	#update the counter to keep track of entries in selection sets
-		#counter(selec_set_ID)
-			count = counter(selec_set_ID)
-
-			query ="select @lftmove"
-			answer_input.execute(query)
-			lftmove=answer_input.fetchone()
-			if not lftmove[0]==None:
-
-				query = "insert into selection_routines.market_particulars_selections(parent_set, unique_selection_ID, parent_unique_selection_ID, selection_ans,lft,rgt,selection) values (%s,@ID_counter, %s,%s,@lftmove + 1,@lftmove + 2,curdate())"
-				params = (selec_set_ID,parent_selec_ID,answer)
-				answer_input.execute(query,params)
-
-	# end add_to_selections_with_parents procedure
-				db.commit()
-				answer_input.close()
-
-			else:
-				query = "insert into selection_routines.market_particulars_selections(parent_set, unique_selection_ID, parent_unique_selection_ID, selection_ans,lft,rgt,selection) values (%s,@ID_counter, %s,%s,1,2,curdate())"
-				params = (selec_set_ID,parent_selec_ID,answer)
-				answer_input.execute(query,params)
-
-	#add extra data if extra type answer
-		if ans["type"] == "extra":
-			extra_data_store( ans,selec_set_ID)
-
-	# end add_to_selections_with_parents procedure
-		db.commit()
-		answer_input.close()
-		return None
 
 class selection_set_queue:
 	def __init__ (self):

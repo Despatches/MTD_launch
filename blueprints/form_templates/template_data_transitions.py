@@ -89,7 +89,7 @@ def collect_form_data(query_column, form_id, db_table= '`form_data`.`TA6_Part_1_
 
 	query = f'SELECT {query_column}, section_marker, user_initiator, ceation_moment FROM {db_table}\
 				WHERE form_id = %s'
-	print(query)
+	#print(query)
 
 	cursor.execute(query, params)
 
@@ -255,7 +255,7 @@ class form_results_collection:
 		results =cursor.fetchall()
 		for r in results:
 			if create == False:
-				self.sub_forms[r[0]] = {'form_name':templates[r[0]]['template']['Form']}
+				self.sub_forms[r[0]] = {'form':templates[r[0]]['template']['form_identifier'], 'form_name':templates[r[0]]['template']['Form']}
 			else:
 				self.sub_forms[r[0]] = form_results_collection(self.form_name, self.form,r[0], 'ancilliary_form')
 				self.sub_forms[r[0]].bulk_micro_collect()
@@ -267,6 +267,7 @@ class form_results_collection:
 		self.add_element_relevances()
 		self.exclude_irrelevants()
 		self.unanswered_questions()
+		self.work_tasks()
 		self.template_sort = json_form_templates.template_sort(template_set['template'], True)['questions']
 		for ident in self.data:
 			for q in self.template_sort[self.data[ident]['section']]:
@@ -371,25 +372,27 @@ class form_results_collection:
 
 			cursor.execute(query, params)
 			sub_data = cursor.fetchall()
+			self.data[table_route] = self.data[f'{table_route}_count']
 			if len(sub_data) > 0:
 				"""for sub_d in sub_data:
 					ref = sub_d[-1]
 					self.sub_tables[table_route]['data'][ref] = {}
 					for key in sub['table_key']:
 						self.sub_tables[table_route]['data'][ref][key] = sub_d[sub['table_key'][key]['db_position']]"""
-				self.data[f'{table_route}_count']['data_rows'] = []
+				self.data[f'{table_route}_count']['rows'] = []
 				for sub_d in sub_data:
 					new_row = {}
 					for key in sub['table_key']:
-						new_row[key] = sub_d[sub['table_key'][key]['db_position']]
+						new_row[key] = {'value':sub_d[sub['table_key'][key]['db_position']]}
 
-					self.data[f'{table_route}_count']['data_rows'].append(new_row)	
+					self.data[f'{table_route}_count']['rows'].append(new_row)	
 
 				#self.data[f'{table_route}_count']['data_rows'] = self.sub_tables[table_route]['data']
 
 			else: 
 				#self.sub_tables[table_route] = 'empty'
-				self.data[f'{table_route}_count']['data_rows'] = 'none'
+				self.data[f'{table_route}_count']['rows'] = 'none'
+				self.data[table_route]['rows'] = 'none'
 
 			#print(self.sub_tables[table_route])
 		#print(self.sub_tables)
@@ -684,9 +687,9 @@ def input_type_jiggling(e, data, form, docu_det, ident):
 					if sub_row_matches['form'] in r and r[sub_row_matches['form']]['value'] != False:
 
 						#sub_row_matches['data'].append(r[sub_row_matches['form']])
-						print(r[sub_row_matches['form']])
+						#print(r[sub_row_matches['form']])
 						returns = input_type_jiggling('none',r[sub_row_matches['form']], form, sub_table_docu_det, sub_row_matches['form'])
-						print(returns)
+						#print(returns)
 						def alter_date(output):
 							if output == False:
 								return 'null'

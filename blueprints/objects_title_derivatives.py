@@ -1,6 +1,8 @@
+#from flask_googlemaps import GoogleMaps
+#from flask_googlemaps import Map
 from launch import db
 from flask_login import login_user , current_user
-from launch.models.models import User, market_particulars, answer 
+from launch.models.models import User, market_particulars 
 from launch.functions.data_base_procedures import (add_to_selections_with_parents, 
 												counter,last_input_to_select_set, find_propagations,
 												delete_last_from_queue, sort_answers_and_add,add_to_selections_without_parents,

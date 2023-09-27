@@ -10,7 +10,7 @@ auth = Blueprint("auth",__name__)
 
 @auth.route('/login')
 def login():
-    return render_template('login.html')
+    return render_template('auth_and_login/login.html')
 
 @auth.route('/login', methods = ["post"])
 def login_post():
@@ -41,11 +41,15 @@ def login_post():
 		cursor.close()
 		return redirect(url_for('auth.login'))
 
+@auth.route('/basic_signup')
+def basic_signup():
+    return render_template('auth_and_login/signup.html')
+
 @auth.route('/signup')
 def signup():
-    return render_template('signup.html')
+    return render_template('auth_and_login/new_account_type.html')
 
-@auth.route('/signup', methods=['POST'])
+@auth.route('/basic_signup', methods=['POST'])
 def signup_post():
 
 	email = request.form.get('email')
@@ -72,9 +76,11 @@ def signup_post():
 		cursor.close()
 		return redirect(url_for('auth.login'))
 
-			
+@auth.route('/new_account')
+def new_account_types():
+	return render_template('auth_and_login/new_account_type.html')
 
 @auth.route('/logout')
 def logout():
 	logout_user()
-	return render_template('login.html')
+	return redirect(url_for('auth.login'))

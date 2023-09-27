@@ -1,5 +1,16 @@
-	function multi_row_data_table(table_ref, trigger,inputs){
-		console.log(table_ref)
+//add new table row to multi row data tables
+function add_new_table_row(table,table_ref, new_row, row_num){
+	$(table).append(new_row);
+	$(`#${table_ref}_asset_inputs`).slideUp();
+	$(`button[table_name='${table_ref}'][row='${row_num}']`).click(function(){
+	$(`tr[table_name=${table_ref}][row_num=${$(this).attr('row')}]`).remove();
+		});
+	//console.log(new_row)
+}
+
+// creates input triggers for multi row tables and infils multi row data in tables
+function multi_row_data_table(table_ref, trigger,inputs){
+		console.log(table_ref, inputs)
 		var new_row
 		var table = $(`#${table_ref}`)
 		var table_row = 0
@@ -19,14 +30,6 @@
 			$(`#${table_ref}_asset_inputs`).slideDown();
 		});
 
-		function add_new_table_row(table,table_ref, new_row, row_num){
-			$(table).append(new_row);
-			$(`#${table_ref}_asset_inputs`).slideUp();
-			$(`button[table_name='${table_ref}'][row='${row_num}']`).click(function(){
-			$(`tr[table_name=${table_ref}][row_num=${$(this).attr('row')}]`).remove();
-				});
-			//console.log(new_row)
-		}
 	$(trigger).click(function(){
 		/*precursor_functions.forEach(function(item){
 			item();
@@ -42,8 +45,10 @@
 					var cell_value = final_input.value;
 					cell_display = '';
 					cell_false = 0
-					if (item.input_type == 'radio' || item.input_type == 'bool'|| item.input_type == 'checkbox'|| item.input_type == 'bool_extra'){
-						if (cell_value != (false || 'empty')){cell_display = $(`input[name=${item.identifier}]:checked`).attr('display');
+					if //(item.input_type == 'radio' || item.input_type == 'bool'|| item.input_type == 'checkbox'|| item.input_type == 'bool_extra'){
+						(item.input_type == ('radio' || 'bool'||'checkbox'||'bool_extra')){
+						if (cell_value != (false || 'empty')){
+							cell_display = $(`input[name=${item.identifier}]:checked`).attr('display');
 						};
 						$(`input[name="${item.identifier}"]`).each(function(){
 							$(this).prop("checked", false);
@@ -54,6 +59,7 @@
 					};
 					if (cell_value == false){
 						cell_false = 1
+						cell_display = ''
 					};
 					
 					//alert(cell_false)
@@ -71,7 +77,7 @@
 	});
 
 		multi_row_display_evaluations = {
-			'radio': function(item, cur_row){cell_display = $(`input[name=${item.identifier}][value=${cur_row[item.identifier]}]`).attr('display')
+			'radio': function(item, cur_row){cell_display = $(`input[name=${item.identifier}][value=${cur_row[item.identifier]['value']}]`).attr('display')
 			return cell_display
 			},
 			'detail_text':function(item, cur_row){
@@ -80,39 +86,46 @@
 			}
 		}
 
-		if (sub_table_data != 'none'){
-			if (sub_table_data[table_ref] != ('empty' || undefined)){
-				//alert(sub_table_data[table_ref])
-				Object.keys(sub_table_data[table_ref]['data']).forEach(function(data_row_ref){
-					table_row = parseInt($(table).attr('row_num'), 10);
-					table_row += 1;
-					$(table).attr('row_num', table_row)
-					var cur_row = sub_table_data[table_ref]['data'][data_row_ref];
-					new_row = `<tr table_name=${table_ref} row_num='${table_row}' uploaded = 'yes' ref = '${data_row_ref}'>`
-					inputs.forEach(function(item){
-						//cur_row[item.identifier]
-						var stored_data_piece = cur_row[item.identifier]
+		/* FILLs table with already chosen multi selections */
+		function table_pre_fill(data_row_ref){
+			console.log(data_row_ref)
+			table_row = parseInt($(table).attr('row_num'), 10);
+			table_row += 1;
+			$(table).attr('row_num', table_row)
+			//var cur_row = sub_table_data[table_ref]['data'][data_row_ref];
+			var cur_row = data_row_ref;
+			console.log(data_row_ref)
+			new_row = `<tr table_name=${table_ref} row_num='${table_row}' uploaded = 'yes' ref = '${data_row_ref}'>`
+			inputs.forEach(function(item){
+				//cur_row[item.identifier]
+				console.log(cur_row[item.identifier]['value'])
+				var stored_data_piece = cur_row[item.identifier]
 
-						if (stored_data_piece == undefined){
-							cell_display = ''
-							cell_false = 1
-						} else {
-							cell_false = 0
-							if (multi_row_display_evaluations[item.input_type] != undefined){
-								cell_display = multi_row_display_evaluations[item.input_type](item, cur_row)
-							}else{
-								cell_display =cur_row[item.identifier]
-							};
-						};
-						new_row += `<td row='${table_row}' type="data" table_name="${table_ref}" name="${item.identifier}" val = ${cur_row[item.identifier]} fa=${cell_false} uploaded = 'yes' ref = '${data_row_ref}'>${cell_display}</td>`
-					});
-					new_row += `<td><button class="button is-warning is-small" row='${table_row}' table_name="${table_ref}">Delete</button></td>`
-					new_row += '</tr>'
-					add_new_table_row(table, table_ref,new_row, table_row);
-				});
-			};
+				if (stored_data_piece == undefined){
+					cell_display = ''
+					cell_false = 1
+				} else {
+					cell_false = 0
+					if (multi_row_display_evaluations[item.input_type] != undefined){
+						cell_display = multi_row_display_evaluations[item.input_type](item, cur_row)
+					}else{
+						cell_display =cur_row[item.identifier]['value']
+					};
+				};
+				new_row += `<td row='${table_row}' type="data" table_name="${table_ref}" name="${item.identifier}" val = ${cur_row[item.identifier]['value']} fa=${cell_false} uploaded = 'yes' ref = '${data_row_ref}'>${cell_display}</td>`
+			});
+			new_row += `<td><button class="button is-warning is-small" row='${table_row}' table_name="${table_ref}">Delete</button></td>`
+			new_row += '</tr>'
+			add_new_table_row(table, table_ref,new_row, table_row);
 		};
+		//console.log(results)
+		if (results[table_ref] != undefined && results[table_ref]['rows'] != 'none'){
+			results[table_ref]['rows'].forEach(table_pre_fill);
+		}
+		
 	};
+
+//convert 'yes' 'no' to '1' '0'
 function db_bool_convert(val){
 	var new_val = val
 	if (val == 'yes'){
@@ -124,62 +137,64 @@ function db_bool_convert(val){
 };
 
 
+
 function multi_choice_evals(item){
-			if (item.radio_function === undefined){
-				item.radio_function="none"
-			};
-			if (item.styling != undefined){
-				if (item.styling == 'dropdown'){
-					var dropdown = $(`select[id=${item.identifier}]`)
+	if (item.radio_function === undefined){
+		item.radio_function="none"
+	};
+	if (item.styling != undefined){
+		if (item.styling == 'dropdown'){
+			var dropdown = $(`select[id=${item.identifier}]`)
 
-					$(`input[name=${item.identifier}]:checked`).val($(dropdown).val());
-					$(dropdown).change(function(){
-						alert($(dropdown).val());
-						$(`input[name=${item.identifier}]:checked`).val($(dropdown).attr('value'));
-					});
-					if (results != 'none'){
-						if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
-							$(`input[name = ${item.identifier}][value=${results[item.identifier]['value']}]`).click()
-						};
-					};
-				} else if (item.styling == 'block'){
-					var rad_block = $(`div[radio_block=${item.identifier}]`)
-					$(rad_block).mouseenter(function(){
-						$(this).css({"background-color":"#f9f7f7"});
-					});
-					$(rad_block).mouseleave(function(){
-						if ($(this).prop("selected") == true){
-							$(this).css({"background-color":"#ede6e6"});
-						} else{
-							$(this).css({"background-color":"lightblue"})
-						};
-					});
-					$(rad_block).click(function(){
-						$(rad_block).each(function(){
-							$(this).prop("selected", false)
-							$(this).css({"background-color":"lightblue"})
-						});
-						$(this).css({"background-color":"#ede6e6"});
-						$(this).prop("selected", true);
-						//$(`input[name=${item.identifier}][value='${$(this).attr('val')}']`).click();
-					});
-					if (results != 'none'){
-						if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
-							$(`div[radio_block=${item.identifier}][hidden_value=${results[item.identifier]['value']}]`).click()
-						}
-					};											
+			$(`input[name=${item.identifier}]:checked`).val($(dropdown).val());
+			$(dropdown).change(function(){
+				alert($(dropdown).val());
+				$(`input[name=${item.identifier}]:checked`).val($(dropdown).attr('value'));
+			});
+			if (results != 'none'){
+				if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+					$(`input[name = ${item.identifier}][value=${results[item.identifier]['value']}]`).click()
 				};
-			} else{
-				if (results != 'none'){
-					if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
-							$(`input[name = ${item.identifier}][value=${results[item.identifier]['value']}]`).click()
-						}
-					};
 			};
-			empty_radio_set(item.identifier, item.radio_function);
-		
+		} else if (item.styling == 'block'){
+			var rad_block = $(`div[radio_block=${item.identifier}]`)
+			$(rad_block).mouseenter(function(){
+				$(this).css({"background-color":"#f9f7f7"});
+			});
+			$(rad_block).mouseleave(function(){
+				if ($(this).prop("selected") == true){
+					$(this).css({"background-color":"#ede6e6"});
+				} else{
+					$(this).css({"background-color":"lightblue"})
+				};
+			});
+			$(rad_block).click(function(){
+				$(rad_block).each(function(){
+					$(this).prop("selected", false)
+					$(this).css({"background-color":"lightblue"})
+				});
+				$(this).css({"background-color":"#ede6e6"});
+				$(this).prop("selected", true);
+				//$(`input[name=${item.identifier}][value='${$(this).attr('val')}']`).click();
+			});
+			if (results != 'none'){
+				if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+					$(`div[radio_block=${item.identifier}][hidden_value=${results[item.identifier]['value']}]`).click()
+				}
+			};											
 		};
+	} else{
+		if (results != 'none'){
+			if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
+					$(`input[name = ${item.identifier}][value=${results[item.identifier]['value']}]`).click()
+				}
+			};
+	};
+	empty_radio_set(item.identifier, item.radio_function);
 
+};
+
+//converts dates as they arrive from python
 function json_date_conversion(date){
 	var currentDate = new Date(date);
 	var date = ("0" + currentDate.getDate()).slice(-2);
@@ -189,6 +204,9 @@ function json_date_conversion(date){
 	return dateString	
 };
 
+/*stores functions for empty and convert funtion for each input type needs to be updated as
+ more input types are referencd in templates
+      */
 var empty_and_convert_funcs = {
 	'checkbox': function(item){
 		if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
@@ -314,7 +332,7 @@ function input_interactions(item){
 				empty_input(item['identifier']);
 			};
 		} else if (item.input_type == 'multi_row'){
-			console.log(item)
+			console.log(results[item.identifier])
 			multi_row_data_table(item.identifier, $(`#add_${item.identifier}`), item.data_rows);
 			empty_and_convert(item.data_rows);
 		};
@@ -327,6 +345,8 @@ function input_interactions(item){
 
 }
 
+
+//emptyies radio button inputs
 function empty_radio_set(radio_set, scroll_trigger){
 	$(`#${radio_set}_empty`).click(function(){
 		if (scroll_trigger != "none"){
@@ -338,13 +358,15 @@ function empty_radio_set(radio_set, scroll_trigger){
 		});
 	};
 
+//empty standard input
 function empty_input(input){
 	$(`#${input}_empty`).click(function(){
 		$(`#${input}`).val("");
 	});
 };	
 
-
+//creates click events for emptying inputs
+//also inputs pre existing data in input areas
 function empty_and_convert(data_fields){
 	data_fields.forEach(item => input_interactions(item));
 };

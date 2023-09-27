@@ -1,12 +1,14 @@
 from flask import Flask, render_template, session,redirect,url_for
 from config import Config
 import mysql.connector as mysql
+#from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 import os
 import re
 import stat
 import json
-import mimetypes
+#import mimetypes
+#import humanize
 from datetime import datetime
 from flask.views import MethodView
 import os
@@ -29,8 +31,8 @@ def create_app():
     from .blueprints.auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
-    from .blueprints.mp_ajax import mp_ajax as mp_ajax_blueprint
-    app.register_blueprint(mp_ajax_blueprint)
+    #from .blueprints.mp_ajax import mp_ajax as mp_ajax_blueprint
+    #app.register_blueprint(mp_ajax_blueprint)
 
     from .blueprints.spatial import spatial as spatial_blueprint
     app.register_blueprint(spatial_blueprint)
@@ -53,6 +55,9 @@ def create_app():
 
     from .blueprints.TA6 import TA6_forms as TA6_forms_blueprint
     app.register_blueprint(TA6_forms_blueprint)
+
+    #from .blueprints.file_server import file_server as file_server_blueprint
+    #app.register_blueprint(file_server_blueprint)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -81,6 +86,8 @@ def create_app():
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
         return response
+
+    #Bootstrap(app)
 
     return app
 

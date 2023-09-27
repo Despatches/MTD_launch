@@ -1,7 +1,9 @@
+#from flask_googlemaps import GoogleMaps
+#from flask_googlemaps import Map
 from launch import db
 from flask_login import login_user , current_user, login_required
 from launch.Objects.selections import market_particular_selection
-from launch.models.models import User, market_particulars, answer, freehold, templates 
+from launch.models.models import User, market_particulars, freehold, templates 
 from launch.blueprints.mp_infinate_cascade import synopsis as synopsis_cascade
 from launch.functions.data_base_procedures import (add_to_selections_with_parents, 
 												counter,last_input_to_select_set, find_propagations,
@@ -17,6 +19,10 @@ from launch.blueprints.form_templates.templates import templates
 import string
 import random
 import datetime
+from werkzeug.utils import secure_filename
+import base64
+
+
 
 mp = Blueprint('mp' , __name__)
 @mp.route("/synopsis/<particular_id>")
@@ -30,9 +36,12 @@ def synopsis(particular_id):
 def newmp(user_type):
 	return render_template("new_mp_form.html", user_type=user_type)
 
-@mp.route("/newmp/<user_type>",methods=['POST'])
+@mp.route("/newmp",methods=['POST'])
 @login_required
-def mp_proceed(user_type):
+def mp_proceed():
+	ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+	def allowed_file(filename):
+		return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 	sudo_name = request.form.get("sudo_name")
 	market_type = request.form.get("market_type")
 	if sudo_name == None or len(sudo_name) <= 1:
@@ -43,37 +52,42 @@ def mp_proceed(user_type):
 	cid = current_user.id
 	mp_creator = cid
 
-	if user_type=="vendor":
-		query = 'call particulars_and_objects.new_market_particulars(%s,%s,%s);'
+	cover_image = 'none'
+	filename = 'none'
+	print(request.files)
+	if 'cover_image' not in request.files:
+		cover_image = 'none'
+	elif request.files['cover_image'].filename == '':
+		cover_image = 'none'
+	else:
+		cover_image = request.files['cover_image']
+		if cover_image and allowed_file(cover_image.filename):
+			filename = secure_filename(cover_image.filename)
+			if len(filename) > 30:
+				filename = filename[0:30]
 
-	elif user_type=="agent":
-		query = "call particulars_and_objects.agent_new_mp (%s,%s,%s);"
+	if current_user.agent == True:
+		query = "call particulars_and_objects.agent_new_mp (%s,%s,%s, %s, %s);"
+	else :
+		query = 'call particulars_and_objects.new_market_particulars_by_vendor(%s,%s,%s, %s, %s);'
 
+	#if user_type=="vendor":
+		#query = 'call particulars_and_objects.new_market_particulars(%s,%s,%s);'
+
+	#elif user_type=="agent":
+		#query = "call particulars_and_objects.agent_new_mp (%s,%s,%s);"
+
+	if cover_image != 'none':
+		cover_image = base64.b64encode(cover_image.stream.read())
 	if not market_type == "fully_custom":
 		prc_last_id = 'select last_insert_id();'
-		params = (cid,cid,sudo_name)
+		params = (cid,cid,sudo_name, cover_image, filename)
 		create_mp.execute(query,params)
 		db.commit()
 		create_mp.execute(prc_last_id)
-		new_mp_id = create_mp.fetchone()
+		last_insert = create_mp.fetchall()
+		new_mp_id = last_insert[0][0]
 		create_mp.close()
-
-		create_selection_set=db.cursor()
-		query = 'call selection_routines.create_new_market_partic_selection_set(%s,%s)'
-		params = (new_mp_id[0],cid)
-		create_selection_set.execute(query,params)
-		prc_last_id = 'select last_insert_id();'
-		create_selection_set.execute(prc_last_id)
-		selec_set = create_selection_set.fetchone()
-
-# add some basic questions into knew set in new mp
-		
-		query = "call selection_routines.initiation_q_mp(%s)"
-		params =(selec_set[0],)
-		create_selection_set.execute(query,params)
-
-		db.commit()
-		create_selection_set.close()
 
 		return redirect(url_for('mp.selectedmp', particular_id = new_mp_id))
 		#return redirect(url_for('mp.mp_basic',particular_id = new_mp_id, selec_set_ID=selec_set))
@@ -110,40 +124,39 @@ class market_particulars_set():
 			self.updates  = False
 
 def fetch_mps():
-	if current_user.agency != False:
-		get_mps = db.cursor()
-		query="SELECT market_particulars_ID,sudo_name, creation, confirmed_on_the_market,active_offers,last_user_to_change,last_data_change,`market_particulars_access_log`.`most_recent_access`\
-			FROM `particulars_and_objects`.`market_particulars`\
-			LEFT JOIN `particulars_and_objects`.`market_particulars_access_log`\
-			on `market_particulars`.market_particulars_ID = `market_particulars_access_log`.`market_particulars`\
-			AND particulars_and_objects.`market_particulars`.vendor_ID = `market_particulars_access_log`.`user`\
-			LEFT JOIN user_data.agency_assigned_to_market_partics\
-			on user_data.agency_assigned_to_market_partics.market_particulars = particulars_and_objects.market_particulars.`market_particulars_ID`\
-			WHERE user_data.agency_assigned_to_market_partics.`agency` = %s;"
+	get_mps = db.cursor()
+	query="SELECT market_particulars_ID,sudo_name, creation, confirmed_on_the_market,active_offers,last_user_to_change,last_data_change,`market_particulars_access_log`.`most_recent_access`\
+		FROM `particulars_and_objects`.`market_particulars`\
+		LEFT JOIN `particulars_and_objects`.`market_particulars_access_log`\
+		on `market_particulars`.market_particulars_ID = `market_particulars_access_log`.`market_particulars`\
+		AND particulars_and_objects.`market_particulars`.vendor_ID = `market_particulars_access_log`.`user`\
+		LEFT JOIN user_data.agency_assigned_to_market_partics\
+		on user_data.agency_assigned_to_market_partics.market_particulars = particulars_and_objects.market_particulars.`market_particulars_ID`\
+		WHERE user_data.agency_assigned_to_market_partics.`agency` = %s;"
 
-		params =(current_user.agency,)
-		get_mps.execute(query,params)
-		data = get_mps.fetchall()
-		row_count = len(data)
-		if not row_count == 0:
-			d=[]
-		
-			for mp in data:
-				mp = market_particulars_set(mp)
-				d.append(mp)
-			data =d
-
-		get_mps.close()
-		return {'data':data,'row_count':row_count}
-	else:
-		return redirect("/market_partics/vendor")
+	params =(current_user.agency,)
+	get_mps.execute(query,params)
+	data = get_mps.fetchall()
+	row_count = len(data)
+	if not row_count == 0:
+		d=[]
+	
+		for mp in data:
+			mp = market_particulars_set(mp)
+			d.append(mp)
+		data = d
+	else: data='none'
+	get_mps.close()
+	return {'data':data,'row_count':row_count}
 
 
 @mp.route("/market_partics/agency")
 @login_required
 def display_mp():
-
-	mps = fetch_mps()
+	if current_user.agency != False:
+		mps = fetch_mps()
+	else:
+		return redirect("/market_partics/vendor")
 
 	headings =("ID" ,"name", "Genesis Date", "Market Conformation", "active offers","unread updates")
 	return render_template("display_mp_agent.html", headings=headings,data=mps['data'],row_count=mps['row_count'], agent=current_user.agent)
@@ -151,9 +164,32 @@ def display_mp():
 @mp.route("/market_partics/vendor")
 @login_required
 def display_mp_vendor():
-	mps = fetch_mps()
+	get_mps = db.cursor()
+	query="SELECT market_particulars_ID,sudo_name, creation, confirmed_on_the_market,active_offers,last_user_to_change,last_data_change,`market_particulars_access_log`.`most_recent_access`, cover_img, cover_name\
+		FROM `particulars_and_objects`.`market_particulars`\
+		LEFT JOIN `particulars_and_objects`.`market_particulars_access_log`\
+		on `market_particulars`.market_particulars_ID = `market_particulars_access_log`.`market_particulars`\
+		AND particulars_and_objects.`market_particulars`.vendor_ID = `market_particulars_access_log`.`user`\
+		LEFT JOIN user_data.agency_assigned_to_market_partics\
+		on user_data.agency_assigned_to_market_partics.market_particulars = particulars_and_objects.market_particulars.`market_particulars_ID`\
+		WHERE `particulars_and_objects`.`market_particulars`.`vendor_ID` = %s;"
+
+	params =(current_user.id,)
+	get_mps.execute(query,params)
+	data = get_mps.fetchall()
+	row_count = len(data)
+	#print(data)
+	if not row_count == 0:
+		d=[]
+	
+		for mp in data:
+			mp = market_particulars_set(mp)
+			d.append(mp)
+		data = d
+	else: data='none'
+	get_mps.close()
 	headings =("ID" ,"name", "Genesis Date", "Market Conformation", "active offers","unread updates")
-	return render_template("display_mp_agent.html", headings=headings,data=mps['data'],row_count=mps['row_count'], agent=current_user.agent)
+	return render_template("display_mp_agent.html", headings=headings,data=data,row_count=row_count, agent=current_user.agent)
 
 
 
@@ -174,25 +210,6 @@ def selectedmp(particular_id):
 	}
 
 	setfind = db.cursor()
-	if session.get('current_mp_set'):
-		if session['current_mp_set'][0] == particular_id:
-			query = "select `market_particulars_selection_set`.`market_particulars_selections_set_ID` from selection_routines.market_particulars_selection_set where market_particulars_selection_set.market_particulars_selections_set_ID = (select max(`market_particulars_selection_set`.`market_particulars_selections_set_ID`) from selection_routines.market_particulars_selection_set where `market_particulars_selection_set`.`market_particulars_ID` = %s);"
-			params = (particular_id,)
-			setfind.execute(query,params)
-			selecset = setfind.fetchone()
-			if not session['current_mp_set'][1] == selecset[0]:
-				selec_set_ID = check_selection_set(particular_id,current_user.id)
-				session['current_mp_set'] =(particular_id,selec_set_ID)
-			else:
-				selec_set_ID = session['current_mp_set'][1]
-		
-		else:
-			selec_set_ID = check_selection_set(particular_id,current_user.id)
-			session['current_mp_set'] =(particular_id,selec_set_ID)
-	else:
-		selec_set_ID = check_selection_set(particular_id,current_user.id)
-		session['current_mp_set'] =(particular_id,selec_set_ID)
-
 	mp = market_particulars(particular_id)
 
 	if int(current_user.id) == (int(mp.user_creator) or int(mp.vendor)):
@@ -201,12 +218,17 @@ def selectedmp(particular_id):
 		#mp.form_status()
 		mp.fetch_market_particular_components()
 		mp.TA6_and_subs()
-
-		if mp.TA6 != None:
+		mp.stamp_evaluation()
+		mp.auto_objects()
+		print(mp.title_derivatives)
+		if not  mp.TA6 == None:
+			#print(mp.TA6, 'bb')
 			TA6_data = json.dumps({'data':mp.TA6.data,'sub_forms':mp.TA6.sub_forms, 'form':mp.TA6.form})
+		else: TA6_data = None
+		print(mp.stamps.__dict__)
 
 		return render_template("mp_views_and_profiles/mp_profile.html" ,sudo_name = mp.sudo_name ,creation_date = mp.creation, 
-									mid=mp.id, particular_id=particular_id,selec_set_ID=selec_set_ID,
+									mid=mp.id, particular_id=particular_id,
 									mp = mp, headings = headings, TA6_data = TA6_data)
 	else:
 		print(current_user.id, mp.user_creator, mp.vendor)
@@ -219,7 +241,7 @@ def selectedmp(particular_id):
 def check_set(particular_id):
 	selec_set_ID = session['current_mp_set'][1]
 	selec_set_ID=check_selection_set(particular_id,current_user.id)
-	return render_template("answer_module/client_based_answer_module.html", selec_set_ID=selec_set_ID)
+	return render_template("answer_module/client_based_answer_module.html")
 
 @mp.route("/mp/data/<particular_id>/<selec_set_ID>")
 @login_required
@@ -393,24 +415,24 @@ def prospect_properties():
 
 	return render_template("prospect_properties.html",props = prospect_props)
 
+def create_rand_string():
+	code = string.ascii_letters
+	code2= string.digits
+	codes = (code,code2)
+	rand=''
+	counter = 0
+	while counter !=10:
+		a =character_type(codes)
+		rand = f'{rand}' + (random.choice(a))
+		counter += 1
+	return rand
+
 @mp.route("/view_code_create/<particular_id>")
 @login_required
 def create_view_code(particular_id):
 	def character_type(codes):
 		choice = random.choice(codes)
 		return choice
-
-	def create_string():
-		code = string.ascii_letters
-		code2= string.digits
-		codes = (code,code2)
-		rand=''
-		counter = 0
-		while counter !=10:
-			a =character_type(codes)
-			rand = f'{rand}' + (random.choice(a))
-			counter += 1
-		return rand
 	
 	exists=1
 	count =0
@@ -421,7 +443,7 @@ def create_view_code(particular_id):
 			flash ("error producing view code request again or try again later")
 			return f"{exists}"
 			return redirect(url_for ("mp.selectedmp",particular_id=particular_id))
-		view_code = create_string()
+		view_code = create_rand_string()
 
 		check_code=db.cursor()
 
@@ -467,6 +489,18 @@ def new_mp_offer(particular_id):
 	def barter_components():
 		return 0
 	return render_template("new_mp_offer.html")
+
+@mp.route("/<form_code>/issue_code")
+def form_issue_code(form_code):
+	issue_code = create_rand_string()
+	query = "INSERT INTO `form_data`.`form_issue_code` (form_id,view_code, creation_date_time) VALUES (%s,%s,now())"
+	cursor =db.cursor()
+
+	params = (form_code,issue_code)
+	cursor.execute(query, params)
+
+	cursor.close()
+	return render_template("new_mp_offer.html", issue_code=issue_code)
 
 #@mp.route("/disclosure_package")
 #def disclosure_package(particular_id):

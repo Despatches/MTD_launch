@@ -84,7 +84,7 @@
             <div class="column is-one-fifth"> 
                 <div>
                     <a
-                      button href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" type ="submit" class="button is-block is-warning is-fullwidth" style="margin:5px;">Synopsis
+                      button href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}" type ="submit" class="button is-block is-warning is-fullwidth" style="margin:5px;">Synopsis
                     </a>
                 </div>
                 <div>
@@ -163,17 +163,7 @@
 <section id="object_details">
  <div class='columns'>
     <div class='column is-half'>
-        <div class='hide'>
     {% include "mp_views_and_profiles/mp_profile_sub_components/mp_components_update.html" %}
-        </div>
-        <div>
-            <table id='dd_task_table' class='table' style='overflow:scroll;height:600px'>
-                <thead>
-                    <th>
-                    </th>
-                </thead>
-            </table>
-        </div>
     </div>
     <div class='column'>
         <div style='overflow:scroll;height:600px'>
@@ -281,7 +271,7 @@
 </section>
 <section id="other_forms" class="hide">
     <div style="height:20px;"></div>
-    <a href="{{ url_for('TA6_forms.template_micro_form',root_linkage='market_particular', root_linkage_id=particular_id, form_name='TA6_Part_1') }}">
+    <a href="{{ url_for('TA6_forms.template_form', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}">
         {%if TA6_data == None%} 
             <button class="button is-medium"  >New TA6 part 1</button>
         {% else %}
@@ -289,7 +279,7 @@
         {% endif %}
 
     </a>
-    <a href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}">
+    <a href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}">
         <button class="button is-medium" >TA6 part 1 collected data</button>
     </a>  
     <div style='height:900px'>
@@ -324,19 +314,19 @@
                                     <div class ="navbar-dropdown" style="color:black; width:60px;">
                                         <div>  
                                             <a
-                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" >
+                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}" >
                                                 Sewage and Waste
                                             </a>
                                         </div>
                                         <div>  
                                             <a
-                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" >
+                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}" >
                                                 Basement
                                             </a>
                                         </div>
                                         <div>  
                                             <a
-                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" >
+                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}" >
                                                 Attic Development
                                             </a>
                                         </div>
@@ -422,22 +412,6 @@ const dp_breakdown = $('#datapoints')
 var crf_data = {'risk':{'total':0},'fraud':{'total':0}, 'competancy':{'total':0}, 'no_neg':{'total':0}}
 var dp_breakdown_list=[];
 //console.log(stamps)
-
-function dd_tasks(form){
-    var new_dd_task
-    var fd = form['data']
-    Object.keys(fd).forEach(function(ident){
-        if (fd[ident]['pro_meanings'] != undefined && fd[ident]['pro_meanings']['dd_task'] != undefined && fd[ident]['pro_meanings']['dd_task'].length > 0 && fd[ident]['pro_meanings']['dd_task'][0].length > 0 ){
-            var task_list = fd[ident]['pro_meanings']['dd_task']
-            console.log(task_list)
-            task_list.forEach(function(task){
-                new_dd_task = `<tr><td>${task}</td></tr>`
-                console.log(new_dd_task)
-                $('#dd_task_table').append(new_dd_task)
-            });
-        }
-    });
-}
 
 function eval_frc(form_data){
     if (form_data != undefined){
@@ -695,7 +669,6 @@ function issue_disclose_vendor(disclosure, issue_data){
     })
 }
 $(document).ready(function(){
-    dd_tasks(TA6_data)
     $('div[group=colour_stamp]').click(function(){
         var type = $(this).attr('type');
         var stamp = $(this).attr('stamp');

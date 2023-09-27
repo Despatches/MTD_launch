@@ -1,23 +1,44 @@
+from draft_attic_conersion import mortgage_components as draft_attic_conversion
 reader = ['FCA', 'principle'],
 purpose = ['regulator_compliance', 'principal_compliance','paper-trail', 'legal_contract', 'legal_case_compliance', 
 'underwriter_cover', 'marketing_terms', 'inhouse_pii', '3rd_party_pii', 'product_training', ]
 
-gbr = 'general binding rules for small sewage discharge to ground'
+professional_disclosure_certificate= 'pro_cert_disclose'
+gb_reg = 'general binding rules for small sewage discharge to ground'
 mortgage_product = 'finance product'
 ssp = 'small sewage treatment plant'
 bdh = 'boundary demarcation or segregation hardware'
 condue = 'within the purview of full disclosure and due diligence and conveyance of title'
+professional_safeguards = ['lender due diligence', 'lender security', 'defect indemnity','risk evaluation']
+consumer_safety = {
+		'purchaser_safety':{
+			'purchaser_value':'',
+			'product_fail-safes':''
+		},
+		'vendor_safety':{
+			'indicative_fraud':'',
+			'money_laundering':'',
+			'vulnerable_persons':['elderly', 'disabled', 'language barriers', 'education barriers', 'understanding barriers', 'special']
+		},
+	}
 
 boundary_dispute_data=''#
 
+lending_fundamentals = {
+	professional_disclosure_certificate:{
+		''
+	}
+}
+
 mortgage_components = {
+	'draft_attic_conersion': draft_attic_conversion,
 	'small_sewage_treatment_plant_intallation':{
 		'target_markets':{
 			'stamps':{'general-binding-rules-small-sewage-discharge-to-the-ground':False},
 
 			'description':f'purchase and installation of {ssp}',
 
-			f'match_steps':f"""properties that are sold after 1 January 2015 must either comply {gbr} at the point of completion, or the new
+			f'match_steps':f"""properties that are sold after 1 January 2015 must either comply {gb_reg} at the point of completion, or the new
 							owner must ensure that the correct works are undertaken to comply with the rules else apply for an environmental permit
 							to continue to discharge sewage to ground in the current format""",
 
@@ -27,10 +48,10 @@ mortgage_components = {
 								permit if made to comply with the rules would also be target properties""",
 			
 			'match_target_needs':{
-									'basic' :f"""installation of small sewage treatment plants in properties that do not comply with the {gbr}
+									'basic' :f"""installation of small sewage treatment plants in properties that do not comply with the {gb_reg}
 									can often be expensive. The small sewage treatment plants are seldom valued at below £2500 discluding
 									installation costs and vat. The {mortgage_producut} reduces the upfront cost of buying a property that requires 
-									a new sewage treatment plant either to comply with the {gbr} or because they wish to be more environmentally
+									a new sewage treatment plant either to comply with the {gb_reg} or because they wish to be more environmentally
 									conscious and thus install a small sewage treatment plant as opposed to utilising a environment agency exemption
 									permit. Inclusion of an extra indemnity layer for the installation of the sewage treatment plant in case of 
 									unexpected delays in the new owners use of the property is also important.""",
@@ -144,17 +165,18 @@ mortgage_components = {
 				]
 			},
 			'regulation_reference':[
-			'The Building Regulations 2010','Combustion appliances and fuel storage systems','J6':'Protection of liquid fuel storage systems'
+				'The Building Regulations 2010',
+				'Combustion appliances and fuel storage systems','J6':'Protection of liquid fuel storage systems',
 				]
-					'''															1.8m away from non-fire rated eaves of a building
-																				1.8m away from a non-fire rated building or structure (e.g. garden sheds)
-																				1.8m away from openings (such as doors or windows) in a fire rated building or structure (e.g. brick-built house/garage)
-																				1.8m away from liquid fuel appliance flue terminals
-																				760mm away from a non-fire rated boundary, such as a wooden boundary fence
-																				600mm away from screening (e.g. trellis and foliage) that does not form part of the boundary.
-																				If separation distance is not possible then fire protection barrier with a minimum 30 min fire rating required.'''
-					]
+			'regulation':[													
+				'1.8m away from non-fire rated eaves of a building',
+				'1.8m away from a non-fire rated building or structure (e.g. garden sheds)',
+				'1.8m away from openings (such as doors or windows) in a fire rated building or structure (e.g. brick-built house/garage)',
+				'1.8m away from liquid fuel appliance flue terminals',
+				'760mm away from a non-fire rated boundary, such as a wooden boundary fence',
+				'600mm away from screening (e.g. trellis and foliage) that does not form part of the boundary.',
+				'If separation distance is not possible then fire protection barrier with a minimum 30 min fire rating required.',
+			]
 			},	
 
 		}
-}

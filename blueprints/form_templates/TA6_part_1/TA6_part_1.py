@@ -492,8 +492,25 @@ template={
 					{
 						"question_numbering":"" 
 						,"question_title":'Have any of the following changes been made to the property or any part of it (including the garden), during your ownership?',
+						'other_question_text':[
+							'-Part of the property is has not been used for residential occupation eg commercial use',
+
+							'-Installation of replacement windows, roof windows, roof lights, glazed doors since 1 April 2002',
+
+							'-Garage conversion',
+
+							'-Adding an extension',
+
+							'-Adding a conservatory',
+
+							'-Loft conversion',
+
+							'-Removal of internal walls',
+							'-Other building works or changes to the property',
+						],
 						"identifier":'works_and_alterations',
 						 "input_type":"multi_row",
+						 'object_type':'Property Alteration',
 						'sub_questions':[
 							{
 								'question_title':'',

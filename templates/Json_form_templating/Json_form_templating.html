@@ -79,7 +79,7 @@ var table_row=0;
 var submitable;
 var allow_details = true;
 var other_text_submittable;
-var form_objects = JSON.parse({{ main_form_data['objects'] | tojson }});
+var form_objects = {};
 
 var form_data = $("meta[id=form_data]").data();
 var linkage = {'form_name':form_data['form'], root_linkage:form_data['root_linkage'], root_linkage_id:form_data['root_linkage_id']}
@@ -210,7 +210,7 @@ var form_flow_controls = JSON.parse({{ main_form_data['flow_controls'] | tojson 
 			},
 			'multi_row':function(vari){
 				vari.rows = []
-				$(`tr[table_name=${id_or_name}]`).each(function(){
+				$(`tr[table_name=${id_or_name}][uploaded='no'`).each(function(){
 					//alert("row")
 					var row_data = {};
 					var row_num = $(this).attr("row_num") 
@@ -477,6 +477,7 @@ $(document).ready(function(){
 			$(opener).focus()
 			$(opener)[0].scrollIntoView();
 			if ($(current_section).attr('id') == 'flooding'){
+
 					
 			
 			}

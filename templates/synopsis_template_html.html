@@ -11,7 +11,7 @@
 
 {% block content %}
 <meta id="unique_selection_ID">
-<meta id="pydata" data-numselecsets="{{number_of_selec_sets}}" data-searchable={{searchable_data}} data-reached_section={{reached_section}} data-form_name={{form_name}} data-form = {{form}}>
+<meta id="pydata" data-searchable={{searchable_data}} data-reached_section={{reached_section}} data-form_name={{form_name}} data-form = {{form}}>
 <style>
 
 .fraud{
@@ -82,6 +82,20 @@ review versions
 		<input type="checkbox" name="Topic" value="fraud" set='fraud_comp_risk'/> Filter By Fraud
 		<input type="checkbox" name="Topic" value="competancy" set='fraud_comp_risk'/> Filter By competancy	
 	</form>
+	<div>
+		<div>Meaning Type</div>
+		<input name='meaning_type' type='radio' value='standard' set='meaning_type' label='Standard'> 
+		<input name='meaning_type' type='radio' value='pro' set='meaning_type' label='pro'> pro
+		<div>
+			<div id='prop_meaning_options'>
+				<p>Pro options</p>
+				<div>
+					<input name='prop_meaning_options' type="radio" value='standard'>
+					<input name='prop_meaning_options' type="radio" value='only_pro'> Only Pro
+				</div>
+			</div>
+		</div>
+	</div>
 		<br>
 	</div>
 	<div  style = 'display:flex;flex-direction:row;' >
@@ -125,7 +139,12 @@ review versions
 		</div> --> 
 		</div>
 		<div class="box" style='height:450px; width:100%'>
-			<button class='button is-warning' id='minimise_left_side_bar'>-</button>	
+			<div>
+			<span><button class='button is-warning' id='minimise_left_side_bar'>-</button></span>
+			{% if p_type != 'market_particular' or 'sale_particular'%}
+				<span><button id='see_full_disclose'class='button is-success'>See Full Disclosure</button></span>	
+			{% endif %}
+			</div>
 			<div>Notes</div>
 			<div>
 				<div><button class = 'button is-link' id='view_all_topic_toggle'>See All Topics</button></div>
@@ -207,7 +226,7 @@ review versions
 			</div>
 			<div id="meaning_body" align="left" style ='overflow:scroll;height:550px'>
 				<button id="loading"class="button is-primary is-loading hide">Loading</button>
-				<p id="meaning_string" form='{{form_name}}'>
+				<p id="meaning_string" form='{{form_set['form_name']}}'>
 
 				</p>
 			</div>
@@ -265,36 +284,242 @@ review versions
 		</div>
 	</div>
 </div>
-<script>
-//import { jsPDF } from "jspdf";
-//$pdf=new jsPDF();
+<script type="text/javascript">
+function colour_calc(section_counter){
+	if (!((section_counter + 2)%2)){
+		colour = 'grey'
+	} else{
+		colour = 'black'
+	}
+	return colour
+};
+var section_data = {'collated':{'risk':{'high':[],'standard':[]},'fraud':{'high':[],'standard':[]},'competancy':{'high':[],'standard':[]}}};
+var section_counter = 0;
+var total_count = 1;
 
-$(document).ready(function(){
+function colour_calc(section_counter){
+	if (!((section_counter + 2)%2)){
+		colour = 'grey'
+	} else{
+		colour = 'black'
+	}
+	return colour
+};
+
+function reached_section_loop(loop, form_data_set){
+//function reached_section_loop(loop, sections=sections, counter=form_data.reached_section,loop_parameters = undefined){
+	section_counter = 0;
+	counter = form_data_set['reached_section']
+	while (section_counter < counter && form_data_set['sections'].length > section_counter){
+		section = form_data_set['sections'][section_counter]
+		loop(section, form_data_set)
+		section_counter += 1
+	};
+};
+
+function all_sections(type){
+	var on_off = false
+	if (type == 'none'){
+		on_off = true
+	};
+	$('input[group=sections]').each(function(){
+			if ($(this).prop('checked') == on_off){
+				$(this).click()
+			};
+		}); 
+};
+
+function section_disable_check(){
+	var cur_shortcut
+	var cur_main_sec
+	$('input[group=sections]').each(function(){
+		var section = $(this).attr('name')
+		console.log(section)
+
+		var disable = true
+		$(`span[type=meaning][section_name=${section}]`).each(function(){
+			console.log($(this))
+			if ($(this).hasClass('hide') ===  false){
+				disable = false
+			}
+			if (disable == false){
+				return false
+			}
+		})
+		cur_shortcut = $(`button[group=sections_shortcut][name=${section}]`)
+		cur_main_sec = $(`button[group=sections][name=${section}]`)
+		if (disable == true){
+			console.log('truth')
+			$(cur_shortcut).prop('disabled','true')
+				.addClass('is-danger')
+				.text('X')
+			$(cur_main_sec).prop('disabled','true')
+			.addClass('is-danger')
+		} else{
+			$(cur_shortcut).prop('disabled',false)
+			.removeClass('is-danger')
+			if ($(cur_shortcut).hasClass('is-success')){
+				$(cur_shortcut).text('-')
+			} else if($(cur_shortcut).hasClass('is-warning')){
+				$(cur_shortcut).text('+')
+			}
+			$(cur_main_sec).prop('disabled',false)
+			.removeClass('is-danger')		
+		}
+	})
+}
+function if_result_relevant(ident_process, params = undefined){
+	if (results[selec_ident] != undefined) {
+		if (results[selec_ident]['relevant'] == 1){
+			if (params != undefined){
+				ident_process(params)
+			}else{
+				ident_process()
+			}
+		};
+	};
+};
+
+
+function meaning_span(data){
+	if (data['span_subject'] == undefined){
+		span_subject = cur_item
+	} else{
+		span_subject = data['span_subject'];
+	};
+	if (data['append_area'] == undefined){
+		append_area = current_meaning_section
+	} else{
+		append_area = data['append_area'];
+	};					
+
+	[['risk',max_risk],['fraud',max_fraud],['competancy',max_competancy]].forEach(function(type){
+		if (span_subject[`${type[0]}_potential`] == 1){
+			type[1] += 1;
+			section_data[`${section}`][type[0]]['max'] +=1;
+		};
+		if (span_subject[type[0]] != undefined){
+			calculated_competancy += span_subject[type[0]];
+			section_data[`${section}`][type[0]]['calculated'] += span_subject[type[0]];
+		};							
+	});				
+	if(span_subject['meanings'] != undefined){
+		if(span_subject['meanings']['meaning'] != ''){
+			//displayed_mean_count += 1;
+			/*var new_span = `
+				<span 
+					data-meaning="${results[item]['meanings']}" 
+					type="meaning"`
+				for (let s of searchable_data)*/
+			if (span_subject['input_type'] == 'detail_text'){
+				if (span_subject['non_format_text'] != undefined){
+					non_format_text = 'true'
+				};
+			};
+			var display_meaning
+			if (span_subject['meanings']['edit_meaning'] != undefined){
+				display_meaning = span_subject['meanings']['edit_meaning']
+			} else{
+				display_meaning = span_subject['meanings']['meaning'] +','
+			};
+			if (span_subject['fraud'] == undefined){
+				span_subject['fraud']= 0
+			}
+			if (span_subject['competancy'] == undefined){
+				span_subject['competancy']= 0
+			}
+			if (span_subject['risk'] == undefined){
+				span_subject['risk']= 0
+			}
+			if  (span_subject['pro_meanings'] == undefined){
+				span_subject['pro_meanings'] = {'pro_meaning':false}
+			} else if (span_subject['pro_meanings']['pro_meaning'] == undefined){
+				span_subject['pro_meanings']['pro_meaning'] == false
+			}
+			var meaning_span_html =`<span
+					data-styling = "{\'color\' : \'${colour}\', \'background-color\':\'transparent\' ,\'border\':\'none\'}"
+					data-color='${colour}'
+					data-background_color='transparent'
+					data-border='none'
+					class="stand_text" 
+					data-meaning="${span_subject['meanings']['meaning']}"
+					data-pro_meaning = "${span_subject['pro_meanings']['pro_meaning']}"
+					data-text = '${display_meaning}'
+					data-fraud="${span_subject['fraud']}"
+					data-competancy="${span_subject['competancy']}"
+					data-risk="${span_subject['risk']}"  
+					type="meaning"
+					data-identifier="${selec_ident}"
+					data-total_count = ${total_count}
+					data-form_name = '${curform_set['form_name']}'
+					data-form = '${curform_set['form']}'
+					section=${section_counter}
+					section_name =${curform_set['sections'][section_counter]}
+					data-object='false'
+					data-non_format_text = "${non_format_text}"
+					data-been_edited = 'false'
+					style='color:${colour};'
+				>
+						${display_meaning}
+				</span>`
+			$(append_area).append(meaning_span_html);
+
+			total_work_tasks += span_subject.work_tasks.length;
+			//console.log(total_work_tasks);
+			total_count += 1;
+		};
+	};
+};
+
+
+function create_meaning_span(){
+	var cur_item = curform_set['results'][selec_ident];
+	if (cur_item['input_type'] != 'multi_row'){
+		meaning_span({'span_subject':cur_item, 'append_area':current_meaning_section});
+	} else if(cur_item['input_type'] === 'multi_row'){
+		var multi_span = `<span type='multi' multi_group='${selec_ident}'></span>`
+		$(current_meaning_section).append(multi_span);
+		var cur_multi_span = $(`span[type=multi][multi_group=${selec_ident}]`)
+		meaning_span({'span_subject':cur_item, 'append_area':cur_multi_span});
+		if (cur_item['data_rows'] != 'none'){
+			/*var data_row_count = 0
+			var new_data_row = `<span type='data_row' multi_group='${cur_item.identifier}' row_count=${data_row_count}></span>`
+			cur_item['data_rows'].forEach(function(row){
+				$(cur_multi_span).append(new_data_row)
+				var cur_data_row = $(`span[type=data_row][multi_group=${cur_item.identifier}][row_count=${data_row_count}]`)
+				Object.keys(row).forEach(function(ident){
+					if_result_relevant(meaning_span,{'span_subject':row[ident], 'append_area':cur_data_row})
+				});
+				data_row_count += 1
+			});*/
+		};
+		};
+};
+
 	var work_task_html = `<div id='work_task_table_holder'><div id='work_task_table_wrapper'style="height:200px;overflow-y:auto;width:270px;"><table class='table' id='selec_work_task_table'><tr><th style='width:50px'>Task</th><th style='width:50px'>Completion Deadline</th></tr></table></div></div>`
 
 	var revert_css={'color':'','background-color':'', 'border':''}
-	var form_data = $('#pydata').data()
 	var max_competancy = 0;
 	var max_fraud = 0;
 	var max_risk = 0;
 	var calculated_competancy = 0;
 	var calculated_fraud = 0;
 	var calculated_risk = 0;
-	var results = JSON.parse({{results | tojson}})
-	var questions = JSON.parse({{questions | tojson}})
-	var sections = JSON.parse({{sections | tojson}})
-	var start_obj = JSON.parse({{objects | tojson}})
-	var section_names = JSON.parse({{section_names | tojson}})
-	var objects = {}
-	var total_work_tasks = 0
+	const p_type = '{{p_type}}';
+	const particular_id = {{particular_id}};
+	var form_set = JSON.parse({{form_set | tojson}});
+	var forms = [form_set];
+	var curform_set = form_set;
+	var total_work_tasks = 0;
 	var selec_ident;
-	const meaning_body = $('#meaning_body')
-	var meaning_string = $(`p[id=meaning_string][form=${form_data.form_name}]`)
+	const meaning_body = $('#meaning_body');
+	var meaning_string = $(`p[id=meaning_string]`);
 	var fraud_comp_risk = {'risk':{'colour':{'color':'purple'}},'fraud':{'colour':{'background-color':'red'}},'competancy':{'colour':{'border': '5px solid orange'}}};
-	Object.keys(start_obj).forEach(function(obj){
-		objects[obj] = JSON.parse(start_obj[obj])
-		console.log(objects[obj])
-	});
+	var section_data = {'collated':{'risk':{'high':[],'standard':[]},'fraud':{'high':[],'standard':[]},'competancy':{'high':[],'standard':[]}}};
+	var section_counter = 0;
+		function meaning_body_extend(){
+
+	}
 
 	//data_captures = {form_data['form_name']:{'results':results,'questions':questions,'sections':sections,'start_obj':start_obj,'section_names':section_names,'form_data':form_data}}
 
@@ -314,63 +539,38 @@ $(document).ready(function(){
 			}
 		}
 	}*/
-	function colour_calc(section_counter){
-		if (!((section_counter + 2)%2)){
-			colour = 'grey'
-		} else{
-			colour = 'black'
-		}
-		return colour
-	};
-	var section_data = {'collated':{'risk':{'high':[],'standard':[]},'fraud':{'high':[],'standard':[]},'competancy':{'high':[],'standard':[]}}};
-	var section_counter = 0;
-	var total_count = 1;
 
-	function reached_section_loop(loop, sections=sections, counter=form_data.reached_section,loop_parameters = undefined){
-		section_counter = 0;
-		total_count = 1
-		while (section_counter < counter){
-			var section = sections[section_counter]
-			if (loop_parameters != undefined){
-				loop(section, loop_parameters)
-			} else{
-				loop(section)
-			}
-			section_counter += 1
-		}
-	}
-
-	reached_section_loop(intiation, sections,form_data.reached_section,{'section_names':section_names, 'questions':questions, 'results':results})
-	function intiation(section, data){
-		var questions = data['questions']
-		var section_names = data['section_names']
-		var results = data['results']
+	function initiation(section){
+		var questions = curform_set['questions']
+		var section_names = curform_set['section_names']
+		console.log(section_counter)
+		var results = curform_set['results']
 		colour = colour_calc(section_counter);
 		//console.log(colour);
-		var section_container_html = `<input class='hide' group='sections' id='topic' type='checkbox' name=${section} checked>
-			<button class='button is-small is-success' group='sections' id='topic' type='checkbox' name=${section}>${section_names[section_counter]}</button>`
+		var section_container_html = `<input form='${curform_set['form_name']}' class='hide' group='sections' id='topic' type='checkbox' name=${section} checked>
+			<button form='${curform_set['form_name']}' class='button is-small is-success' group='sections' id='topic' type='checkbox' name=${section}>${section_names[section_counter]}</button>`
 		$(`#fil`).append(section_container_html);
 			section_data[`${section}`] = {};
 			//console.log(section)
-			var section_text_html = `<div style='display:flex;flex-direction:row;'><div><button class='button is-success is-small' group='sections_shortcut' name='${section}' t_name='${section_names[section_counter]}' style='margin-bottom:50%;margin-right:5px;height:100%'>-</button></div><div type='section_text' id=${section}><span><span></div>`
+			var section_text_html = `<div style='display:flex;flex-direction:row;'><div><button class='button is-success is-small' group='sections_shortcut' form='${curform_set['form_name']}' name='${section}' t_name='${section_names[section_counter]}' style='margin-bottom:50%;margin-right:5px;height:100%'>-</button></div><div type='section_text' id=${section}><span><span></div>`
 			$(meaning_string).append(section_text_html);
 			current_meaning_section = $(`div[type=section_text][id=${section}]`);
 			var displayed_mean_count = 0;
 			section_data[`${section}`]['risk'] = {'max':0,'calculated':0, 'percent':0};
 			section_data[`${section}`]['competancy'] = {'max':0,'calculated':0, 'percent':0};
 			section_data[`${section}`]['fraud'] = {'max':0,'calculated':0, 'percent':0};
-			//console.log(section, questions[section])
+			console.log(section, questions)
 			questions[section].forEach(function(item){
 				selec_ident = item.identifier
 				if (item['input_type'] == 'multi_row'){
 					selec_ident += '_count'
 				};
-				var non_format_text = 'false'
+				non_format_text = 'false'
 				//console.log(selec_ident)
 					if (item['object'] != undefined){
 		//if (objects['disclosure_address'] != undefined){
 					//console.log(objects['disclosure_address'])
-					var address = objects['disclosure_address'];
+					var address = curform_set['objects']['disclosure_address'];
 					var address_meaning = 'The address of the property being disclosed has been given as';
 					
 
@@ -398,116 +598,13 @@ $(document).ready(function(){
 						data-color='${colour}'
 						data-background-color ='transparent'
 						data-border='none'
+						data-meaning = '${address_meaning}'
 						class="stand_text"  type='meaning' data-identifier='disclosure_address' data-object='true' data-total_count = ${total_count} section=${section_counter}>${address_meaning}
 						</span>`
 					$(current_meaning_section).append(disclosure_address_html)
 					total_count += 1;
 		//}
 				};
-				function create_meaning_span(){
-					var cur_item = results[selec_ident];
-
-					function meaning_span(data){
-						if (data['span_subject'] == undefined){
-							span_subject = cur_item
-						} else{
-							span_subject = data['span_subject'];
-						};
-						if (data['append_area'] == undefined){
-							append_area = current_meaning_section
-						} else{
-							append_area = data['append_area'];
-						};					
-
-						[['risk',max_risk],['fraud',max_fraud],['competancy',max_competancy]].forEach(function(type){
-							if (span_subject[`${type[0]}_potential`] == 1){
-								type[1] += 1;
-								section_data[`${section}`][type[0]]['max'] +=1;
-							};
-							if (span_subject[type[0]] != undefined){
-								calculated_competancy += span_subject[type[0]];
-								section_data[`${section}`][type[0]]['calculated'] += span_subject[type[0]];
-							};							
-						});				
-						if(span_subject['meanings'] != undefined){
-							if(span_subject['meanings']['meaning'] != ''){
-								displayed_mean_count += 1;
-								/*var new_span = `
-									<span 
-										data-meaning="${results[item]['meanings']}" 
-										type="meaning"`
-									for (let s of searchable_data)*/
-								if (span_subject['input_type'] == 'detail_text'){
-									if (span_subject['non_format_text'] != undefined){
-										non_format_text = 'true'
-									};
-								};
-								var display_meaning
-								if (span_subject['meanings']['edit_meaning'] != undefined){
-									display_meaning = span_subject['meanings']['edit_meaning']
-								} else{
-									display_meaning = span_subject['meanings']['meaning'] +','
-								};
-								if (span_subject['fraud'] == undefined){
-									span_subject['fraud']= 0
-								}
-								if (span_subject['competancy'] == undefined){
-									span_subject['competancy']= 0
-								}
-								if (span_subject['risk'] == undefined){
-									span_subject['risk']= 0
-								}
-								var meaning_span_html =`<span
-										data-styling = "{\'color\' : \'${colour}\', \'background-color\':\'transparent\' ,\'border\':\'none\'}"
-										data-color='${colour}'
-										data-background_color='transparent'
-										data-border='none'
-										class="stand_text" 
-										data-meaning="${span_subject['meanings']['meaning']}"
-										data-text = '${display_meaning}'
-										data-fraud="${span_subject['fraud']}"
-										data-competancy="${span_subject['competancy']}"
-										data-risk="${span_subject['risk']}"  
-										type="meaning"
-										data-identifier="${selec_ident}"
-										data-total_count = ${total_count}
-										section=${section_counter}
-										data-object='false'
-										data-non_format_text = "${non_format_text}"
-										data-been_edited = 'false'
-										style='color:${colour};'
-									>
-											${display_meaning}
-									</span>`
-								$(append_area).append(meaning_span_html);
-
-								total_work_tasks += span_subject.work_tasks.length;
-								//console.log(total_work_tasks);
-								total_count += 1;
-							};
-						};
-					};
-					if (cur_item['input_type'] != 'multi_row'){
-						meaning_span({'span_subject':cur_item, 'append_area':current_meaning_section});
-					} else if(cur_item['input_type'] === 'multi_row'){
-						var multi_span = `<span type='multi' multi_group='${selec_ident}'></span>`
-						$(current_meaning_section).append(multi_span);
-						var cur_multi_span = $(`span[type=multi][multi_group=${selec_ident}]`)
-						meaning_span({'span_subject':cur_item, 'append_area':cur_multi_span});
-						if (cur_item['data_rows'] != 'none'){
-							/*var data_row_count = 0
-							var new_data_row = `<span type='data_row' multi_group='${cur_item.identifier}' row_count=${data_row_count}></span>`
-							cur_item['data_rows'].forEach(function(row){
-								$(cur_multi_span).append(new_data_row)
-								var cur_data_row = $(`span[type=data_row][multi_group=${cur_item.identifier}][row_count=${data_row_count}]`)
-								Object.keys(row).forEach(function(ident){
-									if_result_relevant(meaning_span,{'span_subject':row[ident], 'append_area':cur_data_row})
-								});
-								data_row_count += 1
-							});*/
-						};
- 					}
-				}
 				if_result_relevant(create_meaning_span);
 			});
 			Object.keys(fraud_comp_risk).forEach(function(marker){
@@ -528,17 +625,7 @@ $(document).ready(function(){
 			$(meaning_string).append(`</div><div style='margin-bottom:10px'></div>`)
 	};
 	$('#work_task_number').text(`${total_work_tasks}`)
-	function all_sections(type){
-		var on_off = false
-		if (type == 'none'){
-			on_off = true
-		};
-		$('input[group=sections]').each(function(){
-				if ($(this).prop('checked') == on_off){
-					$(this).click()
-				};
-			}); 
-	};
+
 
 	//console.log(max_competancy,max_fraud, max_risk)
 	//console.log(calculated_competancy,calculated_fraud,calculated_risk)
@@ -582,18 +669,6 @@ $(document).ready(function(){
 				.text('-')
 		};
 	}
-	$('input[type=checkbox][group=sections]').change(function(){
-		section_switcher(this)
-	});
-	$('button[group=sections_shortcut]').click(function(){
-		$(`input[name=${$(this).attr('name')}][group=sections]`).click()
-	});
-
-	$('button[group=sections_shortcut]').mouseenter()
-
-	$('#view_all_topic_toggle').click(function(){
-		all_sections('n')
-	});
 	/*Object.keys(results).forEach(function(item){
 		if (results[item]['relevant'] == 1 && results[item]['meanings'] != undefined){
 			if(results[item]['meanings']['meaning'] != ''){
@@ -639,7 +714,8 @@ $(document).ready(function(){
 	var document_viewer_tab = false;
 	var current_data = 1;
 	var old_data;
-
+	var non_format_text;
+	var section;
 	// allows text to be altered in the text editor sweet (chooses target)
 	var text_alter_pointer;
 
@@ -671,25 +747,6 @@ $(document).ready(function(){
 
 	side_and_modules();
 
-	/*Select Meanings using the stored left right values of the current selec_ans variable meaning
-	function meaning_lft_rgt(func){
-		$("span[type=meaning]").each(function(){
-			if ($(this).data("lft") > selec_ans.lft && $(this).data("rgt") < selec_ans.rgt){
-				func($(this))
-			}
-		});
-	}*/
-
-	/*function add_note_or_work_task(data,type){
-		$.ajax({
-			url : "/add_work_task_or_note"
-			data :{info : data, type : type}
-			type : "POST"
-			success : function(data){
-
-			}
-		})
-	}*/
 	function fraud_or_comp(f_or_c){
 		colour = fraud_comp_risk[f_or_c]['colour']
 		if ($(`input[type=checkbox][value=${f_or_c}]`).prop("checked") == true){
@@ -719,68 +776,7 @@ $(document).ready(function(){
 			});
 		};
 	};
-	/*function get_mp_selecs(){
-		$("button[id=loading]").removeClass("hide");
-		$("p[id=meaning_string").toggleClass("hide");
-		if (sets.selec_set_counter == undefined){
-			set  = JSON.parse(selection_sets[selec_set_counter])
-		}else{
-			sets.selec_set_counter=set
-		}
-		$.ajax({
-			data : {selec_set :set.set_ID},
-			type : 'POST',
-			url : "/get_mp_selection/revisions",
-			success: function(data){
-				cur_set = []
-				if (data == "no_selections"){
-					alert("no_selections")
-				}
-				set = data.selec_set
-				$("button[id=loading]").addClass("hide");
-				$("p[id=meaning_string").addClass("hide");
-				$("div[id=meaning_body]").empty();
-				for (let s of set){
-					s = JSON.parse(s)
-					if (s.auxilliary_data == "extra"){
-						var placeholder = "``````"
-						var extra_data_slice = s.answer_meaning.search(new RegExp(placeholder, "i"));
 
-						if (extra_data_slice != -1){
-							var slice_end = extra_data_slice + 6
-							var start = s.answer_meaning.substring(extra_data_slice, slice_end)
-							var end = s.answer_meaning.substring( slice_end)
-							s.answer_meaning = "" + start + s.ancilliary_data + end
-						}
-					}
-					$("div[id=meaning_body]").append(`
-							<span 
-								data-competancy="${s.competancy_imp}" 
-								type="meaning" 
-								data-fraud="${s.fraud_imp}" 
-								data-meaning="${s.answer_meaning}" 
-								class="stand_text" 
-								id="${s.unique_selection_ID}" 
-								data-ans="${s.answer}"
-								marked="0" 
-								data-parent_set='${s.parent_set}'
-								data-parent_unique_selection_ID='${s.parent_unique_selection_ID}'
-								data-selection_ans='${s.selection_ans}'
-								data-lft='${s.lft}'
-								data-rgt='${s.rgt}'
-								data-auxilliary_data='${s.auxilliary_data}'>
-									${s.answer_meaning},
-							</span>`
-					)
-					cur_set.push(s)
-				}
-				search_function()				
-			},
-			error: function(error) {
-				console.log(error);
-			}
-		});
-	};*/
 	Object.keys(fraud_comp_risk).forEach(function(marker){
 		fraud_or_comp(marker)
 	});
@@ -915,22 +911,28 @@ $(document).ready(function(){
 		//$('#main_body').addClass('stop-scrolling');
 
 		//$(new_focus).focus({ preventScroll: true })
-		$(new_focus).parentsUntil($('#meaning_string').parent()).each(function(){
-			console.log($(this).attr('id'))
-			console.log(x , y)
-		  x +=$(this).position().left;
-		  y +=$(this).position().top;
+		console.log(	$(new_focus).parentsUntil($('#meaning_body').parent()))
+		$(new_focus).parentsUntil($('#meaning_body')).each(function(){
+			var coords = $(this).position();
+			console.log(coords);
+			if (coords.left > 0){
+				x += coords.left;
+			};
+			//if (coords.top < 0){
+				y -= coords.top;
+			//};
 		});
 		//y+=$('#meaning_body').height()
-		console.log(x , y)
+		//console.log(x , y)
 		/*if (y>0){
 			y = y*-1
 		}*/
 		document.querySelector('#meaning_body').scrollTo({
 			  top: y,
-			  left: x,
+			  left: 0,
 			  behavior: "smooth",
-			})
+			});
+		document.querySelector('#meaning_body').scrollTo(x, y)
 		//$('#main_body').removeClass('stop-scrolling');
 	}
 	function arrow_meaning_scroll(){
@@ -979,9 +981,10 @@ $(document).ready(function(){
 			old_data = current_data
 			reserve_data = current_data
 			current_data += 1;
-			while ($(`span[type=meaning][data-total_count=${current_data}]`).parent().hasClass('hide') == true && current_data > total_count ==false){
+			while (($(`span[type=meaning][data-total_count=${current_data}]`).closest('div[type=section_text]').is(":hidden") == true) && (current_data > total_count ==false)){
 				current_data += 1
 			};
+			//console.log(current_data,total_count, 'data');
 			if (current_data < (total_count)){
 				arrow_meaning_scroll()
 			} else {
@@ -992,7 +995,7 @@ $(document).ready(function(){
 	}
 
 	function meaning_manip(){
-		$("span[type=meaning]").click(function(e){
+		$("span[type=meaning]").unbind('click').click(function(e){
 			if(text_alter_tool === true){
 				upload_new_meaning_text()
 				new_target_text_alter(this)
@@ -1033,22 +1036,32 @@ $(document).ready(function(){
 					} else {
 						$(side_markers[mark]).prop('disabled',true)
 					}
-				}) 
-				if (selec_ans.object == 'true'){
-					grabber = objects[selec_ans.identifier]
-				} else {
-					grabber = results[selec_ans.identifier]
-				}
+				})
+				forms.forEach(function(set){
+					if (selec_ans.form_name == set['form_name']){
+						//console.log(selec_ans.form_name,set['form_name'])
+						//console.log(selec_ans.identifier,results)
+							if (selec_ans.object == 'true'){
+								grabber = set['objects'][selec_ans.identifier]
+							} else {
+								grabber = set['results'][selec_ans.identifier]
+							};
+						}
+				})
 				close_work_task_module();
 				side_view_selec_meaning();
 				//if (selec_ans)
-				console.log(grabber)
-				if (grabber['work_tasks'].length > 0){
-					$('#selection_work_tasks').append(work_task_html)
-					grabber['work_tasks'].forEach(function(work_task){
-						add_work_task_to_table(work_task)
-					});
-				} else {
+				//console.log(grabber)
+				var graby = 0;
+				if (grabber['work_tasks'] != undefined){
+					if (grabber['work_tasks'].length > 0){
+						graby = 1
+						$('#selection_work_tasks').append(work_task_html)
+							grabber['work_tasks'].forEach(function(work_task){
+								add_work_task_to_table(work_task)
+						});
+					}
+				} else if (graby === 0) {
 					$('#selection_work_tasks').append('<div>No Active Tasks</div>')
 				}
 				$('button[function=view_specific_task]').click(function(){
@@ -1059,78 +1072,6 @@ $(document).ready(function(){
 				});
 			};
 
-		});
-
-		document.onkeydown = (e) =>{
-			if ($(document.activeElement).attr('id') != 'text_edit_new_box'){
-				var reserve_data = 0
-				e = e || window.event;
-				if (e.keyCode === 39){
-					scroll_forward()
-				} else if (e.keyCode === 37){
-					close_mark_box()
-					if (current_data > 1){
-						old_data = current_data
-						reserve_data = current_data
-						current_data -= 1;
-						while ($(`span[type=meaning][data-total_count=${current_data}]`).parent().hasClass('hide') == true && current_data < 1 == false){
-								current_data -= 1
-						};
-						if (current_data > 0){
-							arrow_meaning_scroll()
-						} else{
-							current_data = reserve_data
-							arrow_meaning_scroll()
-						};
-					};
-				};
-			};
-		};
-
-		$("span[type=meaning]").mouseenter(function(e){
-			hover_meaning(this)
-		});
-
-		$("#divId").mouseenter(function(e){
-			if (divmin == false){
-				divmin = true;
-			};
-		});
-
-		function close_divID(){
-			if (side_view == false){
-				$("#divId").addClass("hide");
-			  	//$("p[id=selec_competancy]").text("");
-			}else if (side_view == true){
-				$("#side_viewer").addClass("hide")
-			};
-			close_work_task_module();
-		};
-		$("#divId").mouseleave(function(){
-			if (getinfo == false){
-				if (divmin == true){
-		 			divmin = false;
-		 		};
-		 		if ($("#divId").hasClass("hide")==false){
-		 			close_divID()
-		  		};
-		 	};
-		 	if ($("#divId").hasClass("hide")==false){
-		  		close_divID()
-		  	};
-		});
-		$("span[type=meaning]").mouseleave(function() {
-			setTimeout(function(){
-				if (divmin == true){}
-				else if ($("#divId").hasClass("hide")==false){
-		  			$("#divId").toggleClass("hide");
-		  			getinfo = false
-				};
-			});
-			deselect_meaning(this)
-			if ((this == selec_meaning && side_view == true)== false){
-				deselect_meaning(this)
-			}
 		});
 		/*$("button[id=change_selec]").click(function(e){
 			if (infoid == undefined){alert("bb")}
@@ -1146,13 +1087,12 @@ $(document).ready(function(){
 
 		("button[id=change_selec]").click(function(e){});
 	*/
-		$("input[type=checkbox][set=fraud_comp_risk]").click(function(){
+		$("input[type=checkbox][set=fraud_comp_risk]").unbind('click').click(function(){
 			var marker = $(this).val()
 			fraud_or_comp(marker)
 		});
 
 	};
-	meaning_manip()
 
 	$("button[id=prev_selec_set").click(function(e){
 		selec_set_counter += 1;
@@ -1225,7 +1165,7 @@ $(document).ready(function(){
 		});
 	};
 
-	fraud_comp_risk_sec_div = { 'high_risk':function(count){
+var	fraud_comp_risk_sec_div = { 'high_risk':function(count){
 						var popup =`<div>
 							<p id='view_high_risk_sections'><span id='high_risk_sections_count'>${count}</span> sections<br> sections with a high level of potential risk<span></span></p>
 						</div>`
@@ -1289,28 +1229,7 @@ $(document).ready(function(){
 		});		
 	});*/
 
-	$('button[group=section_frc]').each(function(){
-		var marker = $(this).attr('frc');
-		var level = $(this).attr('level');
-		$(this).click(function(){
-			all_sections('none')
-			section_data['collated'][marker][level].forEach(function(section){
-				$(`input[group=sections][name=${section}]`).click();
-			});
-			if ($(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).prop('checked') == false){
-				$(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).click();
-			};			
-		});
-		var div_find = ''+level+'_'+marker
-		console.log(div_find)
-		var sec_no = section_data['collated'][marker][level].length;
-		if (sec_no == 0){
-			$('#'+$(this).attr('id')).prop('disabled',true)
-		} else{
-			box_popup('#'+$(this).attr('id'),fraud_comp_risk_sec_div[div_find](sec_no),true)
-		}
-	});
-	const side_view_col = `
+const side_view_col = `
 			<div class="column is-one-third" id="side_holder">
 				<div class="hide" id="side_viewer">
 					<div class="box" style='height:450px;'>
@@ -1374,45 +1293,36 @@ $(document).ready(function(){
 					</div>
 				</div>
 			</div>`
-	function toggle_side_view(){
-		if (side_view === false){
-			rh_tab_clearer('side_view')
-			$("#divId").addClass("hide")
-			$("#meaning_and_side").append(side_view_col);
-			side_and_modules();
-			$("#toggle_side_view").text("Hide side view");
-			side_view = true;
-			$(`span[type=meaning][data-total_count=${current_data}]`).click();
-			side_view_selec_meaning();
+function toggle_side_view(){
+	if (side_view === false){
+		rh_tab_clearer('side_view')
+		$("#divId").addClass("hide")
+		$("#meaning_and_side").append(side_view_col);
+		side_and_modules();
+		$("#toggle_side_view").text("Hide side view");
+		side_view = true;
+		$(`span[type=meaning][data-total_count=${current_data}]`).click();
+		side_view_selec_meaning();
 
-			Object.keys(mod_marks_pairs).forEach(function(marker){
-				box_popup(marker, mod_marks_pairs[marker]);
-			});
-
-			/*$('#change_selec').click(function(){
-
-			});*/
-			side_view = true;
-		}else if (side_view === true){
-			remove_selec_mean_grey()
-			$("#side_holder").remove()
-			$("#toggle_side_view").text("Open side view")
-			side_view = false;
-			non_side_selec_meaning()			
-		}
-		$("#create_work_task").click(function(){
-			work_task_data_sender()
+		Object.keys(mod_marks_pairs).forEach(function(marker){
+			box_popup(marker, mod_marks_pairs[marker]);
 		});
+
+		/*$('#change_selec').click(function(){
+
+		});*/
+		side_view = true;
+	}else if (side_view === true){
+		remove_selec_mean_grey()
+		$("#side_holder").remove()
+		$("#toggle_side_view").text("Open side view")
+		side_view = false;
+		non_side_selec_meaning()			
 	}
-
-	$("#toggle_side_view").click(function(){
-		toggle_side_view()
-	});
-
-	$("#create_work_task").click(function(){
+$("#create_work_task").click(function(){
 		work_task_data_sender()
 	});
-
+}
 
 		// Adding work tasks does not always update the table within the module correctly
 	function work_task_data_sender(){
@@ -1421,8 +1331,8 @@ $(document).ready(function(){
 		work_task_data.work_task_date = $("#work_task_date").val()
 		work_task_data.work_task_info = $("#work_task_info").val()
 		work_task_data.identifier = $(selec_meaning).data("identifier");
-		work_task_data.form_name = form_data.form_name
-		work_task_data.form = form_data.form
+		work_task_data.form_name = selec_ans.form_name
+		work_task_data.form = selec_ans.form
 		work_task_data.client_issue = 0
 		console.log(JSON.stringify(work_task_data))
 		//add_note_or_work_task(work_task_data)
@@ -1444,14 +1354,6 @@ $(document).ready(function(){
 			}
 		});
 	};
-
-	console.log(results)
-	search_function('#search_text', {
-		'variable_search' : 1,
-		'cur_set' : results,
-		'set_id_ident':'identifier',
-		'key_unit':dicty
-	});
 
 	// process requires duplication for the purposes of standard notes without work type element
 	// requirement of implication of looging of task completions
@@ -1495,14 +1397,6 @@ $(document).ready(function(){
 			})
 		});
 	};
-
-	$('button[group=further_disclosures][disc_name=solar]').mouseenter(function(){
-		$('span[data-identifier=solar_panels_bool]').css({'background-color':'red'})
-		meaning_scroller($('span[data-identifier=solar_panels_bool]'))
-	});
-	$('button[group=further_disclosures][disc_name=solar]').mouseleave(function(){
-		$('span[data-identifier=solar_panels_bool]').css({'background-color':'transparent'})
-	});
 
 	function deselect_query_tabs(){
 		$('li[group=query_tabs]').removeClass('is-active')
@@ -1594,17 +1488,20 @@ $(document).ready(function(){
 				rh_tab_clearer()
 				$("#meaning_and_side").append(unformatted_text_div);
 				unformatted_text_tab = true
-				Object.keys(results).forEach(function(result){
-					if (results[result]['non_format_text'] != undefined){
-					var unformat_text_display = `<tr question = '${result}' table='unformatted_text_table' style='margin-bottom:5px;'><td>
-						<div root='${result}' value='${results[result]['non_format_text']['value']}'>
-							${results[result]['non_format_text']['value']}
-						</div>
-						</td><td><button class='button'>mark</button><button func='add_unformat_text' root='${result}'class='button' add_val='${results[result]['non_format_text']['value']}'>Add Text to Report</button></td></tr>`
+				forms.forEach(function(form){
+					var results = form['results']
+					Object.keys(results).forEach(function(result){
+						if (results[result]['non_format_text'] != undefined){
+						var unformat_text_display = `<tr question = '${result}' table='unformatted_text_table' style='margin-bottom:5px;'><td>
+							<div root='${result}' value='${results[result]['non_format_text']['value']}'>
+								${results[result]['non_format_text']['value']}
+							</div>
+							</td><td><button class='button'>mark</button><button func='add_unformat_text' root='${result}'class='button' add_val='${results[result]['non_format_text']['value']}'>Add Text to Report</button></td></tr>`
 
-						$('#unformat_text_scroller').append(unformat_text_display);
-					};
-				});
+							$('#unformat_text_scroller').append(unformat_text_display);
+						};
+					});
+				})
 				$('tr[table=unformatted_text_table]').mouseenter(function(){
 					var no_form_parent = $(this).attr('question')
 					if ($(`span[type=meaning][data-identifier=${no_form_parent}]`)){
@@ -1701,11 +1598,11 @@ $(document).ready(function(){
 					var contains_docs =  false;
 					var section_doc_count = 0
 					function tally_section_documents(){
-						if (results[selec_ident]['documents'].length > 0){
-							section_doc_count += results[selec_ident]['documents'].length
+						if (curform_set['results'][selec_ident]['documents'].length > 0){
+							section_doc_count += curform_set['results'][selec_ident]['documents'].length
 						}
 					};
-					questions[section].forEach(function(item){
+					curform_set['questions'][section].forEach(function(item){
 						selec_ident = item.identifier;
 						if_result_relevant(tally_section_documents)
 					});
@@ -1714,7 +1611,7 @@ $(document).ready(function(){
 						<tr table='section_documents_table'>
 							<td>
 							<div>
-								${section_names[section_counter]}
+								${curform_set['section_names'][section_counter]}
 							</div>
 							</td>
 							<td>
@@ -1727,7 +1624,7 @@ $(document).ready(function(){
 						$('#document_viewer_scroller').append(section_contains_doc);
 					}
 				}
-				reached_section_loop(add_section_docu)
+				reached_section_loop(add_section_docu, curform_set)
 				/*Object.keys(results).forEach(function(result){
 					if (results[result]['documents'].length > 0){
 						var doc_list = ''
@@ -1756,6 +1653,7 @@ $(document).ready(function(){
 	};
 
 	function if_result_relevant(ident_process, params = undefined){
+		results = curform_set['results']
 		if (results[selec_ident] != undefined) {
 			if (results[selec_ident]['relevant'] == 1){
 				if (params != undefined){
@@ -1768,9 +1666,16 @@ $(document).ready(function(){
 	}; 
 	function report_constructor(){
 		return new Promise((resolve, reject) =>	{
+		curform_set = form_set
 		var report_constructor = {};
-		report_constructor.form = form_data.form
-		report_constructor.form_name = form_data.form_name
+		report_constructor.form = curform_set['form'];
+		report_constructor.form_name = curform_set['form_name'];
+		report_constructor.extra_forms = []
+		$('p[id=meaning_string]').each(function(){
+			if($(this).attr('form') != curform_set['form_name']) {
+				report_constructor.extra_forms.push($(this).attr('form'))
+			}
+		})
 		report_constructor= JSON.stringify(report_constructor);
 			$.ajax({
 				data:{data:report_constructor},
@@ -1786,17 +1691,6 @@ $(document).ready(function(){
 		});
 	}
 
-	$('li[group=query_tabs]').click(function(){
-		deselect_query_tabs()
-		$(this).addClass('is-active')
-		console.log($(this).attr('id'))
-		evaluate_query_tabs($(this).attr('id'))
-	})
-	.fail(function() {
-	  console.error("Error with query tab");
-	  deselect_query_tabs();
-	});
-
 	function rh_tab_clearer(ignore='none'){
 		var rh_tabs = {
 			'side_view':[side_view, toggle_side_view], 
@@ -1806,11 +1700,139 @@ $(document).ready(function(){
 			'report_previewer':[report_previewer, clear_report_previewer_tab]
 		};
 		Object.keys(rh_tabs).forEach(function(tab){
-			if (tab != ignore && rh_tabs[tab][0] ===true){
+			if (tab != ignore){
+				console.log(rh_tabs[tab])
+				if (rh_tabs[tab][0] ===true){
 					rh_tabs[tab][1]();
+				};
 			};
 		});
 	};
+
+function section_buttons(form){
+	$(`input[type=checkbox][group=sections][form=${form}]`).change(function(){
+		section_switcher(this)
+	});
+	$(`button[group=sections_shortcut][form=${form}]`).click(function(){
+		$(`input[name=${$(this).attr('name')}][group=sections][form=${form}]`).click()
+	});
+
+	$('button[group=sections_shortcut]').mouseenter()
+
+	$('#view_all_topic_toggle').click(function(){
+		all_sections('n')
+	});
+	$(`button[group=sections][form=${form}]`).click(function(){
+		$(`input[type=checkbox][group=sections][name=${$(this).attr('name')}][form=${form}]`).click()
+	});
+}
+
+function pro_meaning(form){
+	var form_names = [];
+	var pro_m_set = {'p_type':p_type, 'particular_id':particular_id}
+	form_set.forEach(function(set){
+		form_names.push(set['form_name'])
+	});
+	pro_m_set['form_names'] = form_names
+	$.ajax({
+		data:{'data': pro_m_set},
+		type:"POST",
+		url:'/pro_meanings',
+		success:function(data){
+			data.forEach(function(set){
+				pass
+			});
+		}
+	});
+}
+
+function close_divID(){
+	if (side_view == false){
+		$("#divId").addClass("hide");
+	  	//$("p[id=selec_competancy]").text("");
+	}else if (side_view == true){
+		$("#side_viewer").addClass("hide")
+	};
+	close_work_task_module();
+};
+
+function event_set(){
+
+	$("span[type=meaning]").unbind('mouseenter')
+		.mouseenter(function(e){
+		hover_meaning(this)
+	});
+
+	$("#divId").unbind('mouseenter')
+	.mouseenter(function(e){
+		if (divmin == false){
+			divmin = true;
+		};
+	});
+
+	$("#divId").unbind('mouseleave').mouseleave(function(){
+		if (getinfo == false){
+			if (divmin == true){
+	 			divmin = false;
+	 		};
+	 		if ($("#divId").hasClass("hide")==false){
+	 			close_divID()
+	  		};
+	 	};
+	 	if ($("#divId").hasClass("hide")==false){
+	  		close_divID()
+	  	};
+	});
+	$("span[type=meaning]").unbind('mouseleave')
+		.mouseleave(function() {
+		setTimeout(function(){
+			if (divmin == true){}
+			else if ($("#divId").hasClass("hide")==false){
+	  			$("#divId").toggleClass("hide");
+	  			getinfo = false
+			};
+		});
+		deselect_meaning(this)
+		if ((this == selec_meaning && side_view == true)== false){
+			deselect_meaning(this)
+		}
+	});
+		section_disable_check()
+}
+
+$(document).ready(function(){
+	$(meaning_string).attr('form', form_set['form_name'])
+
+	document.onkeydown = (e) =>{
+	if ($(document.activeElement).attr('id') != 'text_edit_new_box'){
+		var reserve_data = 0
+		e = e || window.event;
+		if (e.keyCode === 39){
+			scroll_forward()
+		} else if (e.keyCode === 37){
+			close_mark_box()
+			if (current_data > 1){
+				old_data = current_data
+				reserve_data = current_data
+				current_data -= 1;
+				while (($(`span[type=meaning][data-total_count=${current_data}]`).closest('div[type=section_text]').is(":hidden") == true) && (current_data > total_count ==false)){
+						current_data -= 1
+				};
+				if (current_data > 0){
+					arrow_meaning_scroll()
+				} else{
+					current_data = reserve_data
+					arrow_meaning_scroll()
+				};
+			};
+		};
+	};
+};
+
+event_set()
+
+	reached_section_loop(initiation, curform_set)
+	section_buttons(curform_set['form_name'])
 
 	$('#minimise_left_side_bar').click(function(){
 		if (!$('#open_left_margin').length){
@@ -1826,55 +1848,160 @@ $(document).ready(function(){
 		});
 	});
 
-	$('button[group=sub_disc]').click(function(){
-		var form_name = $(this).attr('sub_disc')
-		var exension_data = {form_name:form_name, root_linkage:'TA6_part_1',root_linkage_id:form_data.form}
-		$.ajax({
-			url:'/extend_synopsis',
-			data:{data:JSON.stringify(exension_data)},
-			type:'post',
-			success:function(data){
-				var data = JSON.parse(data)
-				$('#meaning_body').append(`<p id="meaning_string" form='${data[form_name]}'>`)
-				meaning_string = $(`p[id=meaning_string][form=${data[form_name]}]`)
-				results=data['results']
-				reached_section_loop(intiation, data['sections'], data['section_marker'],{'section_names':data['section_names'], 'questions':data['questions'], 'results':data['results']})
-			}
-		})
+	$('li[group=query_tabs]').click(function(){
+		deselect_query_tabs()
+		$(this).addClass('is-active')
+		console.log($(this).attr('id'))
+		evaluate_query_tabs($(this).attr('id'))
 	});
 
-	/*function meaning_colour_eval(meaning){
-	};*/
-	/*function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    var doc = new jsPDF('p', 'pt', 'letter');
-    var pdfjs = document.querySelector('#meaning_body');
-    var width = doc.internal.pageSize.getWidth();
-	var height = doc.internal.pageSize.getHeight();
-    doc.html(pdfjs, {
-        callback: function(doc) {
-            doc.save("newpdf.pdf");
-        },
-                margin: [72, 72, 72, 72],
-        autoPaging: 'text',
-        html2canvas: {
-            allowTaint: true,
-            dpi: 300,
-            letterRendering: true,
-            logging: false,
-            scale: .8
+	$('button[group=further_disclosures][disc_name=solar]').mouseenter(function(){
+		$('span[data-identifier=solar_panels_bool]').css({'background-color':'red'})
+		meaning_scroller($('span[data-identifier=solar_panels_bool]'))
+	});
+
+	$('button[group=further_disclosures][disc_name=solar]').mouseleave(function(){
+		$('span[data-identifier=solar_panels_bool]').css({'background-color':'transparent'})
+	});
+
+	search_function('#search_text', {
+		'variable_search' : 1,
+		'cur_set' : results,
+		'set_id_ident':'identifier',
+		'key_unit':dicty
+	});
+
+	$("#toggle_side_view").click(function(){
+		toggle_side_view()
+	});
+
+	$("#create_work_task").click(function(){
+		work_task_data_sender()
+	});
+
+	$('button[group=section_frc]').each(function(){
+		var marker = $(this).attr('frc');
+		var level = $(this).attr('level');
+		$(this).click(function(){
+			all_sections('none')
+			section_data['collated'][marker][level].forEach(function(section){
+				$(`input[group=sections][name=${section}]`).click();
+			});
+			if ($(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).prop('checked') == false){
+				$(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).click();
+			};			
+		});
+		var div_find = ''+level+'_'+marker
+		console.log(div_find)
+		var sec_no = section_data['collated'][marker][level].length;
+		if (sec_no == 0){
+			$('#'+$(this).attr('id')).prop('disabled',true)
+		} else{
+			box_popup('#'+$(this).attr('id'),fraud_comp_risk_sec_div[div_find](sec_no),true)
+		}
+	});
+
+	meaning_manip()
+
+	$('button[group=sub_disc]').click(function(){
+		var form_name = $(this).attr('sub_disc')
+		if ($(`p[form=${form_name}][id=meaning_string]`).length == 0){
+				var extension_data = {form_name:form_name, root_linkage:'TA6_part_1',root_linkage_id:form_set['form']}
+				//console.log(extension_data)
+				$.ajax({
+					url:'/extend_synopsis',
+					data:{data:JSON.stringify(extension_data)},
+					type:'post',
+					success:function(data){
+						var data = JSON.parse(data)
+						$('#meaning_body').append(`<p id="meaning_string" form='${data['form_name']}'>`)
+						meaning_string = $(`p[id=meaning_string][form=${data['form_name']}]`)
+						results=data['results']
+						curform_set =data
+						//console.log(data)
+						reached_section_loop(initiation, data)
+						section_buttons(curform_set['form_name'])
+						forms.push(data)
+						event_set()
+						meaning_manip()
+						//section_disable_check()
+					}
+				})
+			};
+	});	
+
+	$('#see_full_disclose').click(function(){
+
+	});
+//'pro'
+
+function pro_meaning_check( func_a, func_b){
+	$('span[type=meaning]').each(function(){
+		var m_data = $(this).data();
+		var new_text = m_data.pro_meaning
+		if ((new_text == false || new_text == '' || new_text == 'undefined'|| new_text == undefined) == true){
+				func_a(this, m_data)
+			} else{
+				func_b(this,  m_data)
+			}
+	});
+}
+$('#prop_meaning_options').slideUp()
+	$('input[name=meaning_type]').change(function(){
+		var m_data;
+		var new_text;
+		var new_mean_val = $(this).val();
+		if (new_mean_val == 'standard'){
+			$('span[type=meaning]').each(function(){
+				$(this).text($(this).data('meaning')+', ')
+			});
+			$('#prop_meaning_options').slideUp()
+			$('radio[name=prop_meaning_options]').val('standard')
+		} else if(new_mean_val == 'pro'){
+			pro_meaning_check(function(mean, m_data){
+					$(mean).text(m_data.meaning+', ')
+				},function(mean, m_data){
+					$(mean).text(m_data.pro_meaning+', ')
+				}
+			);
+			$('#prop_meaning_options').slideDown()
+		};
+	});
+
+	$('input[name=prop_meaning_options]').change(function(){
+		var pro_opt = $(this).val();
+		if ( pro_opt == 'only_pro'){
+			pro_meaning_check( function(mean,m_data){
+				$(mean).addClass('hide')
+			}, function(mean,m_data){
+				return(0)
+			});
+		} else {
+			$('span[type=meaning]').each(function(){
+			if ($(this).hasClass('hide')){
+					$(this).removeClass('hide')
+				};
+			});
+		};
+		section_disable_check()
+	});
+
+	section_disable_check()
+	/*curform_set['sub_forms'].forEach(function(form){
+		var cur_form = curform_set['sub_forms'][form]
+		var completion = false
+    var completion_eval
+    var disabled = ''
+     if (cur_form['section_marker'] == cur_form['element_relevances']['sections'].length){
+            completion = true
         }
-    });            
-};
-generatePDF();*/
+	});*/
+
 
 });
 
-/*$(document).keypress(function (eventObject) {
-    alert(eventObject.keyCode);
-});*/
-
 </script>
+
 </body
 
 {% endblock %}
