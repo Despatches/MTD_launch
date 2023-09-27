@@ -1,0 +1,65 @@
+{% macro colorTab(type) -%}
+     <div class='colour_tab {{type}}' stamp='{{stamp_ident}}' type='{{type}}'></div>
+{% endmacro %}
+
+{% macro mainFeed() -%}
+    {% for mark in marks %}
+        <div class='box' group='main_feed_content' stamp='{{stamp_ident}}'>
+            {% if mark == 'default' %}
+                {% for text in marks[mark] %}
+                    <p>{{text}}</p>
+                {% endfor %}
+            {% else if mark == 'new_disclose' %}
+                {% for disclose in marks['new_disclose'] %}
+                <div>
+                    <button class='button is-dark' type='issue_disclose' form = '{{disclose}}'>
+                        {{marks['new_disclose']['']}}
+                    </button>
+                </div>
+            {% else if %}
+        </div>
+    {% endfor %}
+{% endmacro  %}
+
+{% macro new_stamp(stamp) -%}
+    <div class='feed_box'>
+        <div class='row'>
+		      <div class='feed_box'>
+                    <div class='row'>
+                        <div class='colour_col'>
+                           {% for mark in stamp['marks']%}
+                                {{ colorTab(type) }}
+                        </div>
+                        <div class=feed_content>
+
+                        </div>
+                    </div>
+                 </div>
+            {% endif %}
+        </div>
+    <div>
+{%- endmacro %}
+
+
+        <div class='row'>
+            <div class='colour_col'>
+            	{% for tab in stamp['tabbies'] %}
+                	<div class='colour_tab' class={{tab}}></div>
+                {% endfor %}
+            </div>
+             <div class='box feed_content'>
+             	{% for effect in effects %}
+             		{% include ('mp_views_and_profiles/mp_profile.html
+             		launch/templates/mp_views_and_profiles/mp_profile_sub_components/stamp_stream/'+ effect['type']) %}
+            	{% endfor %}
+            </div>
+{% endfor %}
+  <div class='column'>
+        <div style='overflow:scroll;height:600px'>
+
+        {% for stamp in stamps %}
+            {% set stamp_ident = stamp %}
+            {% set stamp = stamps[stamp] %}
+            {% set marks = stamp['marks'] %}
+            {% new_stamp(stamps[stamp]) %}
+        {% endfor %}

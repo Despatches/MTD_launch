@@ -42,14 +42,14 @@
 </div>
 <body id='main_body'>
 		<div>
-			{% if p_type == 'market_particulars'%}
+			{% if p_type == 'market_particular'%}
 				<a
 					button class='button is-link' href="{{ url_for('mp.selectedmp',particular_id=particular_id )}}" id='return_to_particular'>Back to Particular</button>
 				</a>
 			    <a
-			        button class="button is-link" href="{{ url_for('TA6_forms.template_form', particular_id=particular_id, p_type='market_particulars', form_name='TA6_part_1') }}" >Alter form</button>
+			        button class="button is-link" href="{{ url_for('TA6_forms.template_micro_form',root_linkage='market_particular', root_linkage_id=particular_id, form_name='TA6_Part_1') }}">Alter form</button>
 			    </a>				
-			{% elif p_type == 'sale_particulars' %}
+			{% elif p_type == 'sale_particular' %}
 				<button></button>
 				<button></button>				
 			{% endif %}
@@ -86,6 +86,15 @@ review versions
 		<div>Meaning Type</div>
 		<input name='meaning_type' type='radio' value='standard' set='meaning_type' label='Standard'> 
 		<input name='meaning_type' type='radio' value='pro' set='meaning_type' label='pro'> pro
+		<div>
+			<div id='prop_meaning_options'>
+				<p>Pro options</p>
+				<div>
+					<input name='prop_meaning_options' type="radio" value='standard'>
+					<input name='prop_meaning_options' type="radio" value='only_pro'> Only Pro
+				</div>
+			</div>
+		</div>
 	</div>
 		<br>
 	</div>
@@ -183,6 +192,12 @@ review versions
 		<div class='stand_text'>
 			<div class="tabs is-boxed">
 			  <ul>
+			    <li id='std_rh'group = 'query_tabs' class="is-active">
+			      <a>
+			        <span class=" is-small is-active"><i class="fas" aria-hidden="true"></i></span>
+			        <span>Default</span>
+			      </a>
+			    </li>			  
 			    <li id='text_alter_tool_selector'group = 'query_tabs' class="">
 			      <a>
 			        <span class=" is-small"><i class="fas" aria-hidden="true"></i></span>
@@ -298,6 +313,7 @@ function colour_calc(section_counter){
 };
 
 function reached_section_loop(loop, form_data_set){
+	console.log(form_data_set)
 //function reached_section_loop(loop, sections=sections, counter=form_data.reached_section,loop_parameters = undefined){
 	section_counter = 0;
 	counter = form_data_set['reached_section']
@@ -320,6 +336,45 @@ function all_sections(type){
 		}); 
 };
 
+function section_disable_check(){
+	var cur_shortcut
+	var cur_main_sec
+	$('input[group=sections]').each(function(){
+		var section = $(this).attr('name')
+		console.log(section)
+
+		var disable = true
+		$(`span[type=meaning][section_name=${section}]`).each(function(){
+			console.log($(this))
+			if ($(this).hasClass('hide') ===  false){
+				disable = false
+			}
+			if (disable == false){
+				return false
+			}
+		})
+		cur_shortcut = $(`button[group=sections_shortcut][name=${section}]`)
+		cur_main_sec = $(`button[group=sections][name=${section}]`)
+		if (disable == true){
+			console.log('truth')
+			$(cur_shortcut).prop('disabled','true')
+				.addClass('is-danger')
+				.text('X')
+			$(cur_main_sec).prop('disabled','true')
+			.addClass('is-danger')
+		} else{
+			$(cur_shortcut).prop('disabled',false)
+			.removeClass('is-danger')
+			if ($(cur_shortcut).hasClass('is-success')){
+				$(cur_shortcut).text('-')
+			} else if($(cur_shortcut).hasClass('is-warning')){
+				$(cur_shortcut).text('+')
+			}
+			$(cur_main_sec).prop('disabled',false)
+			.removeClass('is-danger')		
+		}
+	})
+}
 function if_result_relevant(ident_process, params = undefined){
 	if (results[selec_ident] != undefined) {
 		if (results[selec_ident]['relevant'] == 1){
@@ -383,6 +438,11 @@ function meaning_span(data){
 			if (span_subject['risk'] == undefined){
 				span_subject['risk']= 0
 			}
+			if  (span_subject['pro_meanings'] == undefined){
+				span_subject['pro_meanings'] = {'pro_meaning':false}
+			} else if (span_subject['pro_meanings']['pro_meaning'] == undefined){
+				span_subject['pro_meanings']['pro_meaning'] == false
+			}
 			var meaning_span_html =`<span
 					data-styling = "{\'color\' : \'${colour}\', \'background-color\':\'transparent\' ,\'border\':\'none\'}"
 					data-color='${colour}'
@@ -399,7 +459,9 @@ function meaning_span(data){
 					data-identifier="${selec_ident}"
 					data-total_count = ${total_count}
 					data-form_name = '${curform_set['form_name']}'
+					data-form = '${curform_set['form']}'
 					section=${section_counter}
+					section_name =${curform_set['sections'][section_counter]}
 					data-object='false'
 					data-non_format_text = "${non_format_text}"
 					data-been_edited = 'false'
@@ -420,26 +482,60 @@ function meaning_span(data){
 function create_meaning_span(){
 	var cur_item = curform_set['results'][selec_ident];
 	if (cur_item['input_type'] != 'multi_row'){
-		meaning_span({'span_subject':cur_item, 'append_area':current_meaning_section});
+		if (cur_item['parent_obj'] != 0 && cur_item['parent_obj'] in curform_set['objects']){
+			var obj_ident = cur_item['parent_obj']
+			var object = curform_set['objects'][obj_ident]
+			if ($(`span[type=obj][obj=${object['type']}][identifier=${obj_ident}]`).length < 1){
+				var new_obj = `<span type='obj' obj='${object['type']}' identifier='${obj_ident}'></span>`
+				current_meaning_section.append(new_obj)
+			};
+			meaning_span({'span_subject':cur_item, 'append_area':$(`span[type=obj][obj=${object['type']}][identifier=${obj_ident}]`)});
+			
+		} else{
+			meaning_span({'span_subject':cur_item, 'append_area':current_meaning_section});
+		}
 	} else if(cur_item['input_type'] === 'multi_row'){
 		var multi_span = `<span type='multi' multi_group='${selec_ident}'></span>`
 		$(current_meaning_section).append(multi_span);
 		var cur_multi_span = $(`span[type=multi][multi_group=${selec_ident}]`)
 		meaning_span({'span_subject':cur_item, 'append_area':cur_multi_span});
 		if (cur_item['data_rows'] != 'none'){
-			/*var data_row_count = 0
-			var new_data_row = `<span type='data_row' multi_group='${cur_item.identifier}' row_count=${data_row_count}></span>`
-			cur_item['data_rows'].forEach(function(row){
+			var data_row_count = 0
+			cur_item['rows'].forEach(function(row){
+				var new_data_row = `<span type='data_row' multi_group='${cur_item.identifier}' row_count=${data_row_count}></span>`
 				$(cur_multi_span).append(new_data_row)
 				var cur_data_row = $(`span[type=data_row][multi_group=${cur_item.identifier}][row_count=${data_row_count}]`)
+				if (cur_item['row_wrap'] != undefined){
+					var wrap = cur_item['row_wrap']
+					if(wrap['preface'] != undefined){
+						if (wrap['preface'] == 'increment'){
+							cur_data_row.append(`<span type='row_wrap'>${data_row_count+1}. </span>`)
+						}
+					}
+				}
 				Object.keys(row).forEach(function(ident){
 					if_result_relevant(meaning_span,{'span_subject':row[ident], 'append_area':cur_data_row})
+					console.log(row[ident])
 				});
 				data_row_count += 1
-			});*/
+			});
 		};
 		};
 };
+
+function obj_setting(){
+	console.log(curform_set['objects'])
+	 Object.keys(curform_set['objects']).forEach(function(obj){
+	 		obj_holder = $(`span[type=obj][obj=${curform_set['objects'][obj]['type']}][identifier=${obj}]`)
+	 		if($(obj_holder).length === 1){
+	 			obj_type = curform_set['objects'][obj]['type']
+	 			switch (obj_type){
+	 				case 'address':
+	 					$(obj_holder).prepend(`<span>The address of the property is;</span>`)
+	 			}
+	 		}
+	});
+}
 
 	var work_task_html = `<div id='work_task_table_holder'><div id='work_task_table_wrapper'style="height:200px;overflow-y:auto;width:270px;"><table class='table' id='selec_work_task_table'><tr><th style='width:50px'>Task</th><th style='width:50px'>Completion Deadline</th></tr></table></div></div>`
 
@@ -485,7 +581,7 @@ function create_meaning_span(){
 		}
 	}*/
 
-	function intiation(section){
+	function initiation(section){
 		var questions = curform_set['questions']
 		var section_names = curform_set['section_names']
 		console.log(section_counter)
@@ -504,11 +600,12 @@ function create_meaning_span(){
 			section_data[`${section}`]['risk'] = {'max':0,'calculated':0, 'percent':0};
 			section_data[`${section}`]['competancy'] = {'max':0,'calculated':0, 'percent':0};
 			section_data[`${section}`]['fraud'] = {'max':0,'calculated':0, 'percent':0};
-			console.log(section, questions)
+			//console.log(section, questions)
 			questions[section].forEach(function(item){
 				selec_ident = item.identifier
 				if (item['input_type'] == 'multi_row'){
-					selec_ident += '_count'
+					console.log(results[selec_ident])
+					//selec_ident += '_count'
 				};
 				non_format_text = 'false'
 				//console.log(selec_ident)
@@ -543,6 +640,7 @@ function create_meaning_span(){
 						data-color='${colour}'
 						data-background-color ='transparent'
 						data-border='none'
+						data-meaning = '${address_meaning}'
 						class="stand_text"  type='meaning' data-identifier='disclosure_address' data-object='true' data-total_count = ${total_count} section=${section_counter}>${address_meaning}
 						</span>`
 					$(current_meaning_section).append(disclosure_address_html)
@@ -591,6 +689,7 @@ function create_meaning_span(){
 		})
 	});*/
 
+ //hide and show sections of main div text
 	function section_switcher(changer){
 		var sec_name = $(changer).attr('name')
 		if ($(changer).prop('checked') == false){
@@ -939,7 +1038,7 @@ function create_meaning_span(){
 	}
 
 	function meaning_manip(){
-		$("span[type=meaning]").click(function(e){
+		$("span[type=meaning]").unbind('click').click(function(e){
 			if(text_alter_tool === true){
 				upload_new_meaning_text()
 				new_target_text_alter(this)
@@ -1031,7 +1130,7 @@ function create_meaning_span(){
 
 		("button[id=change_selec]").click(function(e){});
 	*/
-		$("input[type=checkbox][set=fraud_comp_risk]").click(function(){
+		$("input[type=checkbox][set=fraud_comp_risk]").unbind('click').click(function(){
 			var marker = $(this).val()
 			fraud_or_comp(marker)
 		});
@@ -1173,6 +1272,7 @@ var	fraud_comp_risk_sec_div = { 'high_risk':function(count){
 		});		
 	});*/
 
+//alternate side view column 
 const side_view_col = `
 			<div class="column is-one-third" id="side_holder">
 				<div class="hide" id="side_viewer">
@@ -1237,9 +1337,11 @@ const side_view_col = `
 					</div>
 				</div>
 			</div>`
+
+
 function toggle_side_view(){
 	if (side_view === false){
-		rh_tab_clearer('side_view')
+		$('li[group=query_tabs][id=std_rh]').click();
 		$("#divId").addClass("hide")
 		$("#meaning_and_side").append(side_view_col);
 		side_and_modules();
@@ -1266,7 +1368,7 @@ function toggle_side_view(){
 $("#create_work_task").click(function(){
 		work_task_data_sender()
 	});
-}
+};
 
 		// Adding work tasks does not always update the table within the module correctly
 	function work_task_data_sender(){
@@ -1275,8 +1377,8 @@ $("#create_work_task").click(function(){
 		work_task_data.work_task_date = $("#work_task_date").val()
 		work_task_data.work_task_info = $("#work_task_info").val()
 		work_task_data.identifier = $(selec_meaning).data("identifier");
-		work_task_data.form_name = form_data.form_name
-		work_task_data.form = form_data.form
+		work_task_data.form_name = selec_ans.form_name
+		work_task_data.form = selec_ans.form
 		work_task_data.client_issue = 0
 		console.log(JSON.stringify(work_task_data))
 		//add_note_or_work_task(work_task_data)
@@ -1347,7 +1449,6 @@ $("#create_work_task").click(function(){
 	};
 
 	function clear_unformatted_text(){
-		deselect_query_tabs();
 		unformatted_text_tab = false
 		$("#unformatted_text_checker").remove();
 		$(`span[type=meaning][data-non_format_text=true]`).each(function(){
@@ -1355,19 +1456,16 @@ $("#create_work_task").click(function(){
 		});
 	};
 	function clear_text_alter_tool(){
-		deselect_query_tabs();
 		$('#text_alter_tool').remove();
 		text_alter_tool=false;
 	};
 
 	function clear_document_viewer_tab(){
-		deselect_query_tabs();
 		$('#document_viewer').remove();
 		document_viewer_tab=false;
 	};
 
 	function clear_report_previewer_tab(){
-		deselect_query_tabs();
 		$('#report_previewer').addClass('hide');
 		$('#meaning_body').removeClass('hide');
 		report_previewer =false;
@@ -1426,6 +1524,8 @@ $("#create_work_task").click(function(){
 			edit_meaning_text(text_alter_pointer)
 		});
 	};
+
+	//decide query unit shown as the right hand tab
 	function evaluate_query_tabs(tab){
 		if (tab == 'unformatted_text_tab'){
 			if (unformatted_text_tab == false){
@@ -1465,7 +1565,7 @@ $("#create_work_task").click(function(){
 					$('#text_alter_tool_selector').click();
 					var new_focus = $(`span[type=meaning][data-identifier=${unformat_text_add}]`);
 					$(new_focus).click();
-					$('#text_edit_new_box').val(add_val)
+					$('#text_edit_new_box').val($(new_focus).text() + `and follows: \'${add_val}\'`)
 					edit_meaning_text(new_focus);
 				});
 			};
@@ -1635,6 +1735,7 @@ $("#create_work_task").click(function(){
 		});
 	}
 
+//clears out currently open right hand tab to allow for new tab or tab closure
 	function rh_tab_clearer(ignore='none'){
 		var rh_tabs = {
 			'side_view':[side_view, toggle_side_view], 
@@ -1690,6 +1791,60 @@ function pro_meaning(form){
 	});
 }
 
+function close_divID(){
+	if (side_view == false){
+		$("#divId").addClass("hide");
+	  	//$("p[id=selec_competancy]").text("");
+	}else if (side_view == true){
+		$("#side_viewer").addClass("hide")
+	};
+	close_work_task_module();
+};
+
+function event_set(){
+
+	$("span[type=meaning]").unbind('mouseenter')
+		.mouseenter(function(e){
+		hover_meaning(this)
+	});
+
+	$("#divId").unbind('mouseenter')
+	.mouseenter(function(e){
+		if (divmin == false){
+			divmin = true;
+		};
+	});
+
+	$("#divId").unbind('mouseleave').mouseleave(function(){
+		if (getinfo == false){
+			if (divmin == true){
+	 			divmin = false;
+	 		};
+	 		if ($("#divId").hasClass("hide")==false){
+	 			close_divID()
+	  		};
+	 	};
+	 	if ($("#divId").hasClass("hide")==false){
+	  		close_divID()
+	  	};
+	});
+	$("span[type=meaning]").unbind('mouseleave')
+		.mouseleave(function() {
+		setTimeout(function(){
+			if (divmin == true){}
+			else if ($("#divId").hasClass("hide")==false){
+	  			$("#divId").toggleClass("hide");
+	  			getinfo = false
+			};
+		});
+		deselect_meaning(this)
+		if ((this == selec_meaning && side_view == true)== false){
+			deselect_meaning(this)
+		}
+	});
+		section_disable_check()
+}
+
 $(document).ready(function(){
 	$(meaning_string).attr('form', form_set['form_name'])
 
@@ -1719,55 +1874,10 @@ $(document).ready(function(){
 	};
 };
 
-$("span[type=meaning]").mouseenter(function(e){
-	hover_meaning(this)
-});
+event_set()
 
-$("#divId").mouseenter(function(e){
-	if (divmin == false){
-		divmin = true;
-	};
-});
-
-function close_divID(){
-	if (side_view == false){
-		$("#divId").addClass("hide");
-	  	//$("p[id=selec_competancy]").text("");
-	}else if (side_view == true){
-		$("#side_viewer").addClass("hide")
-	};
-	close_work_task_module();
-};
-$("#divId").mouseleave(function(){
-	if (getinfo == false){
-		if (divmin == true){
- 			divmin = false;
- 		};
- 		if ($("#divId").hasClass("hide")==false){
- 			close_divID()
-  		};
- 	};
- 	if ($("#divId").hasClass("hide")==false){
-  		close_divID()
-  	};
-});
-$("span[type=meaning]").mouseleave(function() {
-	setTimeout(function(){
-		if (divmin == true){}
-		else if ($("#divId").hasClass("hide")==false){
-  			$("#divId").toggleClass("hide");
-  			getinfo = false
-		};
-	});
-	deselect_meaning(this)
-	if ((this == selec_meaning && side_view == true)== false){
-		deselect_meaning(this)
-	}
-});
-
-	reached_section_loop(intiation, curform_set)
+	reached_section_loop(initiation, curform_set)
 	section_buttons(curform_set['form_name'])
-
 
 	$('#minimise_left_side_bar').click(function(){
 		if (!$('#open_left_margin').length){
@@ -1783,11 +1893,20 @@ $("span[type=meaning]").mouseleave(function() {
 		});
 	});
 
+  //add function  to qury tab buttons
 	$('li[group=query_tabs]').click(function(){
-		deselect_query_tabs()
-		$(this).addClass('is-active')
-		console.log($(this).attr('id'))
-		evaluate_query_tabs($(this).attr('id'))
+		var tab = $(this)
+		if ($(tab).hasClass('is-active') || $(tab).attr('id') == 'std_rh'){
+			deselect_query_tabs()
+			rh_tab_clearer()
+			$('li[group=query_tabs][id=std_rh]').addClass('is-active')
+		} else{
+			$.when(deselect_query_tabs()).done(function () {
+	   		 $(tab).addClass('is-active')
+	   		 evaluate_query_tabs($(tab).attr('id'))
+	  	});
+		//console.log($(this).attr('id'))
+		}
 	});
 
 	$('button[group=further_disclosures][disc_name=solar]').mouseenter(function(){
@@ -1801,7 +1920,7 @@ $("span[type=meaning]").mouseleave(function() {
 
 	search_function('#search_text', {
 		'variable_search' : 1,
-		'cur_set' : results,
+		'cur_set' : form_set['results'],
 		'set_id_ident':'identifier',
 		'key_unit':dicty
 	});
@@ -1854,9 +1973,12 @@ $("span[type=meaning]").mouseleave(function() {
 						results=data['results']
 						curform_set =data
 						//console.log(data)
-						reached_section_loop(intiation, data)
+						reached_section_loop(initiation, data)
 						section_buttons(curform_set['form_name'])
 						forms.push(data)
+						event_set()
+						meaning_manip()
+						//section_disable_check()
 					}
 				})
 			};
@@ -1865,29 +1987,70 @@ $("span[type=meaning]").mouseleave(function() {
 	$('#see_full_disclose').click(function(){
 
 	});
-'pro'
+//'pro'
+
+function pro_meaning_check( func_a, func_b){
+	$('span[type=meaning]').each(function(){
+		var m_data = $(this).data();
+		var new_text = m_data.pro_meaning
+		if ((new_text == false || new_text == '' || new_text == 'undefined'|| new_text == undefined) == true){
+				func_a(this, m_data)
+			} else{
+				func_b(this,  m_data)
+			}
+	});
+}
+$('#prop_meaning_options').slideUp()
 	$('input[name=meaning_type]').change(function(){
 		var m_data;
 		var new_text;
 		var new_mean_val = $(this).val();
 		if (new_mean_val == 'standard'){
 			$('span[type=meaning]').each(function(){
-				m_data = $(this).data();
-				$(this).text(m_data.meaning)
-			})
-		} else if(new_mean_val == 'pro'){
-			$('span[type=meaning]').each(function(){
-				m_data = $(this).data();
-				new_text = m_data.pro_meaning
-				console.log(new_text)
-				if (new_text == undefined || new_text == ''){
-					$(this).text(m_data.meaning + ', ')
-				} else{
-					$(this).text(new_text +', ')
-				}
+				$(this).text($(this).data('meaning')+', ')
 			});
+			$('#prop_meaning_options').slideUp()
+			$('radio[name=prop_meaning_options]').val('standard')
+		} else if(new_mean_val == 'pro'){
+			pro_meaning_check(function(mean, m_data){
+					$(mean).text(m_data.meaning+', ')
+				},function(mean, m_data){
+					$(mean).text(m_data.pro_meaning+', ')
+				}
+			);
+			$('#prop_meaning_options').slideDown()
 		};
 	});
+
+	$('input[name=prop_meaning_options]').change(function(){
+		var pro_opt = $(this).val();
+		if ( pro_opt == 'only_pro'){
+			pro_meaning_check( function(mean,m_data){
+				$(mean).addClass('hide')
+			}, function(mean,m_data){
+				return(0)
+			});
+		} else {
+			$('span[type=meaning]').each(function(){
+			if ($(this).hasClass('hide')){
+					$(this).removeClass('hide')
+				};
+			});
+		};
+		section_disable_check()
+	});
+
+	section_disable_check()
+	/*curform_set['sub_forms'].forEach(function(form){
+		var cur_form = curform_set['sub_forms'][form]
+		var completion = false
+    var completion_eval
+    var disabled = ''
+     if (cur_form['section_marker'] == cur_form['element_relevances']['sections'].length){
+            completion = true
+        }
+	});*/
+obj_setting()
 
 });
 

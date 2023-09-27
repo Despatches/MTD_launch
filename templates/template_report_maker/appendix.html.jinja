@@ -13,6 +13,16 @@
 			<p><span>{{appendix.main_count}}.</span><span>{{section['section_name']}}</span></p>
 		</div>
 		{% endfor %}
+		{% if form_object.sub_forms | length > 0%}
+			<div>
+				<div><p>Additional Disclosures</p></div>
+			{% for form in form_object.sub_forms %}
+				<div>
+					{{form_object.sub_forms[form]['form_name']}}
+				</div>
+			{% endfor %}
+			</div>
+		{% endif %}
 		<div>
 			Documents
 		</div>
@@ -20,7 +30,7 @@
 			{% for ident in form_object.data %}
 				{% if form_object.data[ident]['documents'] | length > 0 %}
 					{% set appendix.docu_count = appendix.docu_count+1%}
-					{% set appendix.docu_sub = 0%}
+					{% set appendix.docu_sub = 0 %}
 					{% for doc in form_object.data[ident]['documents'] %}
 						{% set appendix.docu_sub = appendix.docu_sub+1%}
 							<div><span>{{appendix.docu_count}}.{{appendix.docu_sub}}</span><span>{{doc['document_name']}}</span></div>

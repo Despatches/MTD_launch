@@ -3,7 +3,7 @@
 
   </head>
 
-<h1 class="title is-1" align='center' style="color:black;">Freehold:{{reference_name}}</h1>
+<h1 class="title is-1" align='center' style="color:black;">{{reference_name}}</h1>
 <table>
 	<tr>
 		<td>
@@ -60,12 +60,12 @@
     <button> edit map data </button>
   {% endif %}
   </div>
-<a 
-  <button href="{{ url_for("mp.mp_object_props",particular_id=particular_id,selec_set_ID=selec_set_ID, holding_ID=holding_ID)}}" type ="submit" class="button is-block is-info is-large ">Define Freehold</button>
+<a>
+  <!--<button href=" url_for("mp.mp_object_props",particular_id=particular_id,selec_set_ID=selec_set_ID, holding_ID=holding_ID)}}" type ="submit" class="button is-block is-info is-large ">Define Freehold</button>-->
  </a>
 <div style="color:black;">
 search for existing disclosure components
-<a
+<a>
 	<button>
 		go
 	</button>
@@ -78,7 +78,7 @@ search for existing disclosure components
 </tr>
 </table>
 	<script>
-	var latlong = JSON.parse({{ location_data | tojson }})
+	/*var latlong = JSON.parse({ location_data | tojson }})
 	map =Initialize_map(latlong[0],latlong[1],16);
 	L.marker([latlong[0],latlong[1]]).addTo(map);
 
@@ -112,5 +112,5 @@ $(".accordion").click(function(e) {
     });
     $(target).css({"border-bottom-right-radius":"0", "border-bottom-left-radius":"0"});
   }
-});
+});*/
 </script>

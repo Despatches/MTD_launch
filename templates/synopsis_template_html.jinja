@@ -1445,6 +1445,7 @@ $(document).ready(function(){
 		});
 	};
 
+	console.log(results)
 	search_function('#search_text', {
 		'variable_search' : 1,
 		'cur_set' : results,
@@ -1790,6 +1791,10 @@ $(document).ready(function(){
 		$(this).addClass('is-active')
 		console.log($(this).attr('id'))
 		evaluate_query_tabs($(this).attr('id'))
+	})
+	.fail(function() {
+	  console.error("Error with query tab");
+	  deselect_query_tabs();
 	});
 
 	function rh_tab_clearer(ignore='none'){
@@ -1801,11 +1806,8 @@ $(document).ready(function(){
 			'report_previewer':[report_previewer, clear_report_previewer_tab]
 		};
 		Object.keys(rh_tabs).forEach(function(tab){
-			if (tab != ignore){
-				console.log(rh_tabs[tab])
-				if (rh_tabs[tab][0] ===true){
+			if (tab != ignore && rh_tabs[tab][0] ===true){
 					rh_tabs[tab][1]();
-				};
 			};
 		});
 	};

@@ -12,10 +12,10 @@
 							{% endif %}
 							{% if question['question_set'] is defined %}
 
-									<p class="q_title"><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
+									<p class="q_title" style='background-color:#ede6e6;'><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
 									{% for other_text in question['other_question_text'] %}
 
-										<p>{{other_text}}</p>	
+										<p style='background-color:#ede6e6;'>{{other_text}}</p>	
 									{% endfor %}	
 
 									{% include "Json_form_templating/subquestion_loop.html"%}

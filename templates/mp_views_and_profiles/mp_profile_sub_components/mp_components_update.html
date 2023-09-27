@@ -1,6 +1,8 @@
 
             {% if mp.total_derivatives == 0 %}
-            <div> No objects assigned</div>
+            <div class='feed_box' style="height:100%">
+                <div style="margin:auto;text-align: center;"> No objects assigned</div>
+            </div>
             {% else %}
         <meta id="object_types" data-freehold="{{ mp.title_derivatives['freeholds'] }}" data-leaseholds="{{ mp.title_derivatives['leaseholds']}}" data-cns= "{{ mp.title_derivatives['c_n_s'] }}" data-freehold_share = "{{ mp.title_derivatives['freehold_shares'] }}">
             {% if mp.total_derivatives > 1 %}
@@ -64,8 +66,12 @@
 
     </div>
      {% elif mp.total_derivatives == 1 %}
-        {% include "create_mp_objects/general_freehold.html" %}
+        {% if  mp.title_derivatives['freeholds']['data']|length > 0 %}
+            {% include "create_mp_objects/general_freehold.html" %}
+        {% elif  mp.title_derivatives['leaseholds']['data']|length > 0 %}
+             {% include "mp_views_and_profiles/general_leasehold.html.jinja" %}
         {% endif %}
+    {% endif %}
 
 
 

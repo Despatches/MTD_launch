@@ -13,7 +13,7 @@
    	{% endif %}
 {%- endmacro %}
  {% block content %}
-<meta id="form_data" data-flow_controls='{{ main_form_data['flow_controls'] | tojson }}' data-form_id="{{main_form_data['form_id']}}"  data-questions='{{ main_form_data['questions'] | tojson }}' data-form ="{{template['form_identifier'] }}" data-results={{main_form_data['results'] | default('none')}} data-section_marker={{ main_form_data['section_marker']}} data-submission_Sequence = '{{submission_sequence | default('sections')}}'data-submission_url='{{submission_url|default('/TA6_Part_1_submit')}}' data-test = {{test|default('no')}} data-process="{{ template['process'] |default('bulk')}}" data-template_type ={{main_form_data['template_type']|default('TA6')}} data-root_linkage={{root_linkage|default('none')}} data-root_linkage_id={{root_linkage_id|default('none')}}>
+<meta id="form_data" data-flow_controls='{{ main_form_data['flow_controls'] | tojson }}' data-form_id="{{main_form_data['form_id']}}"  data-questions='{{ main_form_data['questions'] | tojson }}' data-form ="{{template['form_identifier'] }}" data-results={{main_form_data['results'] | default('none')}} data-section_marker={{ main_form_data['section_marker']}} data-submission_Sequence = '{{submission_sequence | default('sections')}}'data-submission_url='{{submission_url|default('/TA6_Part_1_submit')}}' data-test = '{{test|default('no')}} 'data-process='{{ template['process'] |default('bulk')}}' data-template_type ={{main_form_data['template_type']|default('TA6')}} data-root_linkage={{root_linkage|default('none')}} data-root_linkage_id={{root_linkage_id|default('none')}}>
 <style>
 .pillar{
 	display:flex;
@@ -74,11 +74,12 @@
 {%block scripts%}
 
 <script>
+var form_col_type='{{col_type}}'
 var table_row=0;
 var submitable;
 var allow_details = true;
 var other_text_submittable;
-var form_objects = {};
+var form_objects = JSON.parse({{ main_form_data['objects'] | tojson }});
 
 var form_data = $("meta[id=form_data]").data();
 var linkage = {'form_name':form_data['form'], root_linkage:form_data['root_linkage'], root_linkage_id:form_data['root_linkage_id']}
@@ -209,7 +210,7 @@ var form_flow_controls = JSON.parse({{ main_form_data['flow_controls'] | tojson 
 			},
 			'multi_row':function(vari){
 				vari.rows = []
-				$(`tr[table_name=${id_or_name}][uploaded='no'`).each(function(){
+				$(`tr[table_name=${id_or_name}]`).each(function(){
 					//alert("row")
 					var row_data = {};
 					var row_num = $(this).attr("row_num") 
@@ -296,6 +297,7 @@ var form_flow_controls = JSON.parse({{ main_form_data['flow_controls'] | tojson 
 	}
 
 $(document).ready(function(){
+
 	var window_width = $(window).width();
 	$(window).on('resize', function() {
 		if ($(this).width() !== window_width) {
@@ -330,6 +332,20 @@ $(document).ready(function(){
 				gt_height = gs_height
 				spacer_height = 0
 			}
+			/*function animateGuidanceText() {
+			  return new Promise(function(resolve, reject) {
+			    $(guidance_text).css('color', 'transparent')
+			      .removeClass('hide')
+			      .slideUp('fast', function() {
+			        resolve();
+			      });
+			  });
+			}
+
+			animateGuidanceText().then(function() {
+			  $(guidance_text).css('color', 'black').slideDown();
+			});*/
+
 			$(guidance_text).css('color','transparent')
 				.removeClass('hide')
 				.slideUp()
@@ -461,7 +477,6 @@ $(document).ready(function(){
 			$(opener).focus()
 			$(opener)[0].scrollIntoView();
 			if ($(current_section).attr('id') == 'flooding'){
-
 					
 			
 			}

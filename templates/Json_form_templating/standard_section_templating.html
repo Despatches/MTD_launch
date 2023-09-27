@@ -1,6 +1,11 @@
 {% set subsections= namespace(count=0, ident_prefix='') %}
 {% set sections= namespace(count=0, ident_prefix='') %}
 <div class="columns">
+	{% if return |default('none') != 'none' %}
+		<button id='return_to_button'>
+			{{ return['name'] }}
+		</button>
+	{% endif %}
 	<div class="column is-one-fifth" style="background-color:#ede6e6;color:#135e7c">
 		<aside class="menu is-warning">
 			<p class="menu-heading">
@@ -43,6 +48,13 @@
 		</aside>
 	</div>
 	<div class="column" style="color:black;">
+		{% if parent_data |default('none') != 'none'%}
+			<div style="background-color:#ede6e6;    position:sticky;top:0px;width:100%;z-index:1;" id='marker_name_tag'>
+				<div style="text-align: center; height:25px;">
+						<b>{{ parent_data['name'] }}</b>
+				</div>
+			</div>
+		{% endif %}
 		{% if submission_sequence | default('sections') == 'single' %}
 			<div id='single_submission_sender' style='background-color:green;height:80px;' class='hide'>
 				<div>Submit Form</div>
@@ -62,6 +74,7 @@
 			{% endif %}
 		{% endfor %}
 
-
+	</div>
+	<div style='height: 300px;'>
 	</div>
 </div>

@@ -1,7 +1,7 @@
 {% set subsections.count = 0 %}
 	{% macro other_q_text(question) -%}
 		{% if question['other_question_text'] is defined %}
-			<div>
+			<div style='background-color:#ede6e6;'>
 			{% for other_text in question['other_question_text'] %}
 				<p class="q_title">{{other_text}}</p>	
 			{% endfor %}
@@ -69,10 +69,12 @@
 				{% else %}
 				
 					{% if question['question_set'] is defined %}
+						<div style='background-color:#ede6e6;'>
 
-						<p class="q_title"><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
+							<p class="q_title" ><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
 
-						{{other_q_text(question)}}
+							{{other_q_text(question)}}
+						</div>
 
 						{% include "Json_form_templating/subquestion_loop.html"%}
 
