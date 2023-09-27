@@ -1,5 +1,3 @@
-from flask_googlemaps import GoogleMaps
-from flask_googlemaps import Map
 from launch import db
 from flask_login import login_user , current_user, login_required
 from launch.Objects.selections import market_particular_selection
