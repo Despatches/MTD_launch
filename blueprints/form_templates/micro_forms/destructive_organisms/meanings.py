@@ -37,4 +37,3 @@ meanings = {
             'no': {'meaning':''},
         },
     }
-  }
