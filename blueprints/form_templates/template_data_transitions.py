@@ -1,5 +1,6 @@
-from launch import db, templates
+from launch import db
 from flask_login import login_user , current_user, login_required
+from launch.models.models import User, market_particulars, answer, templates
 from launch.functions.data_base_procedures import add_to_selections_with_parents, counter,last_input_to_select_set, find_propagations,delete_last_from_queue, sort_answers_and_add,add_to_selections_without_parents,get_selection_keys, check_selection_set,delete_last_from_object_queue, sort_answers_and_add_objects, add_to_selections_without_parents_objects,add_to_selections_with_parents_objects,collect_object_selections,update_last_data_entry_mp
 from launch.functions.access_record_procedures import update_last_user_access
 from launch.blueprints.form_templates.standard_TA6.standard_TA6 import template as standard_ta6_template, bounds_radio_options
@@ -9,7 +10,6 @@ from launch.blueprints.form_templates.new_db_sql_code_writer import create_new_s
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session,json,jsonify
 import mysql.connector
 import string, random, datetime, ast
-from launch.blueprints.form_templates.templates import templates
 
 def print_for_eqivilents(template):
 	equiv_list = []
@@ -89,7 +89,7 @@ def collect_form_data(query_column, form_id, db_table= '`form_data`.`TA6_Part_1_
 
 	query = f'SELECT {query_column}, section_marker, user_initiator, ceation_moment FROM {db_table}\
 				WHERE form_id = %s'
-	#print(query)
+	print(query)
 
 	cursor.execute(query, params)
 
@@ -122,6 +122,7 @@ class work_task:
 class template_question:
 	def __init__(self, identifier, value):
 		return None
+
 # form_result_collection represents one line of a given database for a specified template
 
 class form_results_collection:
@@ -142,7 +143,7 @@ class form_results_collection:
 				data[key]['input_type'] = ini_type
 				"""if ini_type == 'detail_text' or 'docu':
 					value = db_true_false_transition(value)
-				if ini_type == 'bool' or 'checkbox' or 'bool_extra':
+				if ini_type == 'bool' or 'cheakbox' or 'bool_extra':
 					value = output_py_return(value, 'bool')"""
 				data[key]['value'] = value
 				data[key]['work_tasks'] = []
@@ -161,7 +162,7 @@ class form_results_collection:
 			root_linkage = results
 			#type that sub form is linked to e.g market patrticular or TA6_Part_1 form
 			self.root_linkage = root_linkage
-			root_linkage_id = form
+			root_linkage_id= form
 			#id of specific root_linkage object
 			self.root_linkage_id = root_linkage_id
 			query = """SELECT 
@@ -198,7 +199,6 @@ class form_results_collection:
 							self.data[key] = self.results['form_results'][s][key]
 							self.data[key]['work_tasks'] = []
 							self.data[key]['documents'] =[]
-							self.data[key]['section'] = s
 				else: self.data = None
 				self.section_marker = result[5]
 				self.user_initiator = result[6]
@@ -243,7 +243,6 @@ class form_results_collection:
 		#list of section names and identifiers in template
 		self.sections = [{"section_name":sec['section_name'],"section_identifier":sec['section_identifier']} for sec in self.template_set['template']['Sections']]
 
-
 	def sub_forms_gather(self, create= False):
 		cursor = db.cursor()
 		query = """SELECT DISTINCT(`form_identifier`) FROM  `form_data`.`ancilliary_forms`
@@ -255,7 +254,7 @@ class form_results_collection:
 		results =cursor.fetchall()
 		for r in results:
 			if create == False:
-				self.sub_forms[r[0]] = {'form':templates[r[0]]['template']['form_identifier'], 'form_name':templates[r[0]]['template']['Form']}
+				self.sub_forms[r[0]] = {'form_name':templates[r[0]]['template']['Form']}
 			else:
 				self.sub_forms[r[0]] = form_results_collection(self.form_name, self.form,r[0], 'ancilliary_form')
 				self.sub_forms[r[0]].bulk_micro_collect()
@@ -266,13 +265,6 @@ class form_results_collection:
 		self.append_data(template_set['meanings'], 'meanings')
 		self.add_element_relevances()
 		self.exclude_irrelevants()
-		self.unanswered_questions()
-		self.work_tasks()
-		self.template_sort = json_form_templates.template_sort(template_set['template'], True)['questions']
-		for ident in self.data:
-			for q in self.template_sort[self.data[ident]['section']]:
-				if q['identifier'] == ident:
-					self.data[ident]['question_title'] = q['question_title']
 		if 'comp_risk_fraud' in template_set:
 			self.append_data_group(template_set['comp_risk_fraud'])
 		if 'object_links' in template_set:
@@ -372,27 +364,25 @@ class form_results_collection:
 
 			cursor.execute(query, params)
 			sub_data = cursor.fetchall()
-			self.data[table_route] = self.data[f'{table_route}_count']
 			if len(sub_data) > 0:
 				"""for sub_d in sub_data:
 					ref = sub_d[-1]
 					self.sub_tables[table_route]['data'][ref] = {}
 					for key in sub['table_key']:
 						self.sub_tables[table_route]['data'][ref][key] = sub_d[sub['table_key'][key]['db_position']]"""
-				self.data[f'{table_route}_count']['rows'] = []
+				self.data[f'{table_route}_count']['data_rows'] = []
 				for sub_d in sub_data:
 					new_row = {}
 					for key in sub['table_key']:
-						new_row[key] = {'value':sub_d[sub['table_key'][key]['db_position']]}
+						new_row[key] = sub_d[sub['table_key'][key]['db_position']]
 
-					self.data[f'{table_route}_count']['rows'].append(new_row)	
+					self.data[f'{table_route}_count']['data_rows'].append(new_row)	
 
 				#self.data[f'{table_route}_count']['data_rows'] = self.sub_tables[table_route]['data']
 
 			else: 
 				#self.sub_tables[table_route] = 'empty'
-				self.data[f'{table_route}_count']['rows'] = 'none'
-				self.data[table_route]['rows'] = 'none'
+				self.data[f'{table_route}_count']['data_rows'] = 'none'
 
 			#print(self.sub_tables[table_route])
 		#print(self.sub_tables)
@@ -480,7 +470,6 @@ class result:
 	def add_element_relevances(self):
 		self.element_relevances = element_relevancy(self.template_set['template'])
 
-
 # add relevancy markers to data pieces based off of element relevances so they are not displayed or processed"""
 	def exclude_irrelevants(self):
 		#print(self.element_relevances['flow_controls'])
@@ -493,13 +482,6 @@ class result:
 				else:self.data[key]['relevant'] = 0
 			else:
 				self.data[key]['relevant'] = 1
-
-	def unanswered_questions(self):
-		self.empty = 0
-		for key in self.data:
-			if self.data[key]['relevant'] == 1:
-				if self.data[key]['false'] == 1:
-					self.empty +=1
 
 	"""def evaluate_objects(self, object_set):
 		self.objects = {}
@@ -687,9 +669,9 @@ def input_type_jiggling(e, data, form, docu_det, ident):
 					if sub_row_matches['form'] in r and r[sub_row_matches['form']]['value'] != False:
 
 						#sub_row_matches['data'].append(r[sub_row_matches['form']])
-						#print(r[sub_row_matches['form']])
+						print(r[sub_row_matches['form']])
 						returns = input_type_jiggling('none',r[sub_row_matches['form']], form, sub_table_docu_det, sub_row_matches['form'])
-						#print(returns)
+						print(returns)
 						def alter_date(output):
 							if output == False:
 								return 'null'

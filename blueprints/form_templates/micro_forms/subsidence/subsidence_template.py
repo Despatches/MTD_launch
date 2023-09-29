@@ -49,7 +49,7 @@ template = {
 														{
 															'question_title':'Confirm details of the prior subsidence repair including: date, values, extent of damage/repair.',
 															'identifier':'prior_remedy_detail',
-															'input_type':'detail_text',
+															'input_type':'text',
 															'display_reliance':[{'identifier':'parent','value':['1']}],
 														},
 														{
@@ -93,7 +93,7 @@ template = {
 						},
 						{
 							'question_title':'Has the prior subsidence damage been declare to underwriters when obtaining buildings insurance protection?',
-							'display_reliance':[{'identifier':'insurance_special_terms','value':['0']}],
+							'display_reliance':[{'identifier':'insurance_special_terms','display_value':['0']}],
 							'identifier':'subsidence_insurance_declaration',
 							'input_type':'text',
 						},

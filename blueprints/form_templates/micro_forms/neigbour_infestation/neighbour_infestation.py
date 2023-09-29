@@ -16,7 +16,7 @@ template = {
 				}
 
 				{
-					'question_title':'If you are aware of an adjacent neighbour property ever suffereing infestation within the last 6 years confirm the following:',
+					'question_title':'If you are aware of an adjacent neighbour property ever suffering infestation within the last 6 years confirm the following:',
 					'input_type':'bool_extra',
 					'display_reliance':{'identifier':'neighbouring_infestation','display_value':['1']},
 					'identifier':'ever_suffered_infestation'

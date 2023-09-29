@@ -1,0 +1,289 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"r",
+				"radio_text"
+			],
+			[
+				"radio",
+				"radio_value"
+			],
+			[
+				"question",
+				"question_set"
+			],
+			[
+				"in",
+				"input_type"
+			],
+			[
+				"di",
+				"display_reliance"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Snippet: ",
+				"Snippet: __magic__"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": true,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/micro_forms/attic/attic/attic.py",
+		"/Users/Nedd/Desktop/A_PROJECT/Launch_current/launch/templates/Json_form_templating/Json_form_templating_section.html",
+		"/Users/Nedd/Desktop/A_PROJECT/Launch_current/launch/blueprints/form_templates/micro_forms/residential_basements/residential_basements.py",
+		"/Users/Nedd/Downloads/micro_forms/attic/attic/meanings.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/micro_forms/attic/attic_development/meanings.py",
+		"/Users/Nedd/Desktop/A_PROJECT/Launch_current/launch/blueprints/TA6.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/micro_forms/attic/attic_development/attic_development.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/micro_forms/attic/attic_development/attic_development_meanings_.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/micro_forms/attic/attic_development/attic_dev_meanings_unformat.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/micro_forms/attic/attic/attic_meanings.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/TA6/TA6_part_1_basic_risk_types_indemnity.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/TA6/TA6_part_1_basic_risk_types_post_sale_claim-PII_estate_agent.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/TA6/TA6_part_1_basic_risk_types#1.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/structures/attic_prospective.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/actor_templates/out_vendor_tempates/masts_pilons_antenna.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/actor_templates/out_vendor_tempates/local_events.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/actor_templates/out_vendor_tempates/smells yells.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/structures/residential_basements.vendor.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/actor_templates/in_surveyor_templates/basement_residential_surveyor.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/actor_templates/in_surveyor_templates/residential_to_rail_bound_surveyor.py",
+		"/Users/Nedd/Desktop/A_PROJECT/eh_microform_templates/Templates/development/Listed and Historic building Extentions.py",
+		"/Users/Nedd/Desktop/PROJECT/A_PROJECT/eh_Project-microform_templates/water_supply.py",
+		"/Users/Nedd/Desktop/PROJECT/A_PROJECT/eh_Project-microform_templates/basement_design.py",
+		"/Users/Nedd/Desktop/PROJECT/A_PROJECT/eh_Project-microform_templates/Listed and Historic building Extentions.py",
+		"/Users/Nedd/Desktop/PROJECT/title_residential_to_rail_bounds.py",
+		"/Users/Nedd/Desktop/PROJECT/title_residential_to_rail_bounds",
+		"/Users/Nedd/Downloads/launch_backup_version#5/MORTGAGE_regulation/mortgage_schematic.dev-eh.py",
+		"/Users/Nedd/Downloads/launch_backup_version#5/MORTGAGE_regulation/mortgage_schematic.py",
+		"/Users/Nedd/Downloads/launch_backup_version#5/MORTGAGE_regulation/party_structure_nomenclature_glossary.py",
+		"/Users/Nedd/Desktop/PROJECT/Refined_project_development/cd/lib/python3.9/site-packages/debugpy/launcher/handlers.py",
+		"/Users/Nedd/Desktop/PROJECT/Refined_project_development/cd/lib/python3.9/site-packages/debugpy/launcher/__init__.py",
+		"/Users/Nedd/Desktop/PROJECT/ material_title_disclosure_report_index.py",
+		"/Users/Nedd/Downloads/TA6_part_1_basic_risk_types_indemnity.estagent.py",
+		"/Users/Nedd/Downloads/standard_TA6.py",
+		"/Users/Nedd/Downloads/mortgage_schematic#2.py",
+		"/Users/Nedd/Downloads/mortgage_schematic#1.py",
+		"/Users/Nedd/Documents/resi_power_system_statement.py",
+		"/Users/Nedd/Documents/private drainage servicing",
+		"/Users/Nedd/Documents/shared_private_sewage_system.py",
+		"/Users/Nedd/Documents/sewage_and_waste_leasehold",
+		"/Users/Nedd/Documents/title_residential_to_rail_bounds",
+		"/Users/Nedd/Documents/map_basement_template.py",
+		"/Users/Nedd/Documents/residential_basements.py",
+		"/Users/Nedd/Documents/sewage_and_waste_v.1.3_3oct-2022_basic",
+		"/Users/Nedd/Documents/sewage_contractor.py",
+		"/Users/Nedd/Documents/access_entry_egress",
+		"/Users/Nedd/Documents/Template_component_templates",
+		"/Users/Nedd/Documents/contractor_sewage_and_waste",
+		"/Users/Nedd/Documents/sewage_and_waste_v.1.2",
+		"/Users/Nedd/Documents/fuel_and_utility",
+		"/Users/Nedd/Documents/HGV Skills Bootcamp Tutor is inviting you to a sch",
+		"/Users/Nedd/Downloads/TA6_part_1_implications.py",
+		"/Users/Nedd/Documents/fuel_storage_disclosure.py",
+		"/Users/Nedd/Documents/material-informrmation_disclosure_indemnity",
+		"/Users/Nedd/Documents/sewage_and_waste",
+		"/Users/Nedd/Downloads/TA6_part_1_negative_attributes.1.5.1py",
+		"/Users/Nedd/Desktop/party_wall_lodgement.py",
+		"/Users/Nedd/Documents/party_wall_disclosure.mini.py",
+		"/Volumes/TOSHIBA/emmabaldwin/Library/Messages/Archive/2016-12-18/Johnny-1 on 2016-11-27 at 12.35.14.ichat",
+		"/Users/Nedd/Documents/Material_Discosure_Controller_files/rsAA2YrTsYklP8lcczE-ijd6RDYU_tD3G0Ag.js",
+		"/Users/Nedd/Downloads/TA6_part_1#1.py",
+		"/Users/Nedd/Downloads/launch#1/blueprints/form_templates/standard_TA6.py",
+		"/Users/Nedd/Downloads/form_equivelance.py",
+		"/Users/Nedd/Downloads/launch#1/blueprints/form_templates/template_data_transitions.py",
+		"/Users/Nedd/Downloads/data_exchange#3.5.1.html",
+		"/Users/Nedd/Downloads/TA6_part_1_meanings#1.5.py",
+		"/Users/Nedd/Downloads/TA6_part_1_template_formed_db_code.sql",
+		"/Users/Nedd/Downloads/TA6_part_1.py",
+		"/Users/Nedd/Downloads/TA6_saved_selections#1.sql",
+		"/Users/Nedd/Downloads/TA6_saved_selections.sql",
+		"/Users/Nedd/Documents/Material_Discosure_Controller_files/cbgapi.js",
+		"/Users/Nedd/Downloads/templating example#1.js",
+		"/Users/Nedd/Desktop/PROJECT/Json_form_templating/Json_form_templating_section.html",
+		"/Users/Nedd/Desktop/PROJECT/guidance_section.P1.html",
+		"/Users/Nedd/Desktop/TA6_6_saved_selections#EHVversion_1.sql",
+		"/Users/Nedd/Desktop/Converged2ButtonPoll_POCv2.html",
+		"/Users/Nedd/Downloads/app/__init__.py",
+		"/Users/Nedd/Documents/DATA ENVIRONMENT CONSTRUCT PRINCIPLES 2",
+		"/Users/Nedd/Documents/DESPATCHES is the world leader in securing materia",
+		"/Users/Nedd/Documents/Seller Property Information Statement or SPIS :  O",
+		"/Users/Nedd/Desktop/Fuels",
+		"/Users/Nedd/Desktop/Pitch: Disclosure",
+		"/Users/Nedd/Desktop/Bike",
+		"/Users/Nedd/Desktop/Deployment options:",
+		"/Transactions involving;",
+		"/Users/Nedd/Documents/Alliances TEXT.1.1",
+		"/Users/Nedd/Documents/land registry offie contacts europe",
+		"/Users/Nedd/Downloads/market_partics|_and_sales.sql",
+		"/Users/Nedd/Documents/Malta - Notaries",
+		"/Users/Nedd/Documents/Tanks Mailer",
+		"/var/folders/73/yhdwq9sj27x4w_dw3xxhpgdw0000gp/T/com.apple.iChat/Messages/Transfers/Spec mark fuck knows how many",
+		"/var/folders/73/yhdwq9sj27x4w_dw3xxhpgdw0000gp/T/com.apple.iChat/Messages/Transfers/The unified database (material title register)",
+		"/var/folders/73/yhdwq9sj27x4w_dw3xxhpgdw0000gp/T/com.apple.iChat/Messages/Transfers/Users.sql",
+		"/Users/Nedd/Desktop/TEXTS TEXTS /Alliances TEXT",
+		"/private/var/folders/73/yhdwq9sj27x4w_dw3xxhpgdw0000gp/T/com.apple.iChat/Messages/Transfers/test subline doc"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 122.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 49.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "object_views.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 376.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

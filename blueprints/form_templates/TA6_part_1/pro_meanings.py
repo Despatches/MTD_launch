@@ -1,25 +1,25 @@
 
-pro_meanings = {
+meanings = {
 'data_providers_count' : {
      'value' : {
             'equation':{
                 'larger_than' : {
                 	'vari':1, 
-                	'meaning':"The disclosure representing the vendor interest in this property has been provided by {} people",
-			  		"dd_task": ["Ensure the disclosing parties are legally entitled to represent the vendor interest and obligations."],
-			        "pro_meaning": "The disclosure representing the vendor interest in this property has been provided by {} people"
+                	'meaning':"This data has been provided by {} people",
+			  		"dd_task": [""],
+			        "pro_meaning": ""
                 },
                 'less_than' : {
                 	'vari':1, 
-                	'meaning':'The number of persons providing this data has not been specified',
-			  		"dd_task": ["Ensure all required parties have made a disclosure or endorsed this document"],
-			        "pro_meaning": "The number of persons providing this data has not been specified"               	
+                	'meaning':'then number of persons providing this data has not been specified',
+			  		"dd_task": [""],
+			        "pro_meaning": ""               	
                 }
                 },
             'default':{
             	'meaning' : "This data has been provided by one individual",
             	"dd_task": ["Determine if any other individual is a proprietory party to the sale.", "Secure disclosure from any other proprietory parties to the sale"],
-			    "pro_meaning": "This data has been provided by one individual"
+			    "pro_meaning": ""
 			   },
         }
 
@@ -30,8 +30,8 @@ pro_meanings = {
      'none' : {
 
          'meaning' : "",
- 		"dd_task": ["Ensure address declarations are complete and valid."],
-        "pro_meaning": "The address details are incomplete"
+ 		"dd_task": [""],
+        "pro_meaning": ""
      },
 
      'value' : {
@@ -98,8 +98,8 @@ pro_meanings = {
      'none' : {
 
          'meaning' : "A UPRN has not been specified",
- 		"dd_task": ["Locate and update the UPRN to enable the disclosure search features to operate effectively"],
-        "pro_meaning": "Missing UPRN may undermine searches designed to locate important data about this property"
+ 		"dd_task": [""],
+        "pro_meaning": ""
      },
 
      'value' : {
@@ -116,22 +116,22 @@ pro_meanings = {
 
          'meaning' : "The tenure applicable to this Title has not been specified",
 #		3 Inject "dd_task": [""],
-        "pro_meaning":  "the Title Number into a new combined sentence if known."
-#3 SPecimen sentence " The tenure applicable to Title {} has not been specified"
+        "pro_meaning":  "the Title Number into a new combined sentance if known."
+#3 SPecimen sendance " The tenure applicable to Title {} has not been specified"
      },
 
      'Leasehold' : {
 
          'meaning' : "The ownership status in this title is Leasehold",
- 		"dd_task": ["Propagate disclosures to the Freeholder and or managing agent"],
-        "pro_meaning": "The property is Leasehold: verification shall be required from the Freehold interest."
+ 		"dd_task": [""],
+        "pro_meaning": ""
      },
 
      'Freehold' : {
 
          'meaning' : "The ownership status in this title is Freehold",
  		"dd_task": [""],
-        "pro_meaning": "The ownership status in this title is Freehold"
+        "pro_meaning": ""
      },
 
  } ,
@@ -141,14 +141,14 @@ pro_meanings = {
          'meaning' : "The number of years remaining (unexpired) on this Leasehold have not been specified",
  		"dd_task": ["The discloser must confirm the number of years remaining upon the lease. "],
         "pro_meaning": ["Without a declaration stating the number of years that remain on the lease the lending security disclosure obligation will not be fulfilled", 
-                        ],
+                        "Failure to disclose the number of years remaing on a lease can be an indication of fraudulent conduct."],
      },
 
      'value' : {
 
-         'meaning' : "The Leasehold has {} Years remaining on the agreement",
- 		"dd_task": ["Evaluate the requirement to extend the leasehold term and verify the opportunity and cost to do so if required"],
-        "pro_meaning": "The Leasehold has {} Years remaining on the agreement"
+         'meaning' : "The Leashold has {} Years remaining on the agreement",
+ 		"dd_task": [""],
+        "pro_meaning": ""
      },
 
  } ,
@@ -156,16 +156,16 @@ pro_meanings = {
 
      'none' : {
 
-         'meaning' : "No Ground Rent value has been stated",
+         'meaning' : "No Ground Rent value has not been stated",
  		"dd_task": ["The discloser must confirm the value of the ground rent if the lease document is not (yet) available for inspection. "],
-        "pro_meaning": "No Ground Rent value has been stated"
+        "pro_meaning": ""
      },
 
      'value' : {
 
-         'meaning' : "The Ground Rent value chargeable each year is {}",
+         'meaning' : "The Ground Rent value chageable each year is {}",
  		"dd_task": [""],
-        "pro_meaning": "The Ground Rent value chargeable each year is {}"
+        "pro_meaning": ""
      },
 
  } ,
@@ -173,27 +173,23 @@ pro_meanings = {
 
      'empty' : {
 
-         'meaning' : ["It is not stated whether the lease specifies when the Ground Rent will be increased",]
- 		"dd_task": ["Inspect the lease agreement to verify if the date of the next ground rent increase is stated",
-                    "Enter in MTD Ledger"],
-        "pro_meaning": "It is not stated whether the lease specifies the date Ground rent will be increased"
+         'meaning' : "It is not stated whether the frequency of each Ground Rent increase is specified in the lease agreement",
+ 		"dd_task": ["Inspect the lease agreement to verify the frequency status of ground rent increases."],
+        "pro_meaning": ""
      },
 
      'yes' : {
 
-         'meaning' : ["The date of each Ground Rent increase is specified in the lease agreement", 
-                    "Enter in MTD Ledger"],
- 		"dd_task": ["Inspect the lease agreement and identify the date of the next Ground Rent increase", 
-                    "Enter in MTD Ledger"],
-        "pro_meaning": "The frequency of each Ground Rent increase is specified in the lease agreement"
+         'meaning' : "The frequency of each Ground Rent increase is specified in the lease agreement",
+ 		"dd_task": [""],
+        "pro_meaning": ""
      },
 
      'no' : {
 
-         'meaning' : "The date of each Ground Rent increase is not specified in the lease agreement",
- 		"dd_task": ["Inspect the Leasehold agreements to identify where the frequency of Ground Rent increases is specified", "Enter in MTD Ledger"],
-        "pro_meaning": ["The date of each Ground Rent increase is not specified in the lease agreement",
-                        "Other documentation must be located to verify the date any Ground Rent will increase"]
+         'meaning' : "The frequency of each Ground Rent increase is not specified in the lease agreement",
+ 		"dd_task": ["Determine the document status format and origing that specifies each Ground Rent increase"],
+        "pro_meaning": ""
      },
 
  } ,
@@ -202,16 +198,15 @@ pro_meanings = {
      'none' : {
 
          'meaning' : "The date of any Ground Rent increase has not been stated",
- 		"dd_task": ["Inspect the Lease document to verify the date of the next ground rent increase", 
-                    "Enter in MTD Ledger"],
-        "pro_meaning": "The date of the next Ground Rent increase has not been stated"
+ 		"dd_task": ["Inspect the Lease document to verify the value of ground rent increase"],
+        "pro_meaning": ""
      },
 
      'value' : {
 
          'meaning' : "The next Ground Rent increase occurs on the: {}",
  		"dd_task": [""],
-        "pro_meaning": "The next Ground Rent increase occurs on the: {}"
+        "pro_meaning": ""
      },
 
  } ,
@@ -219,16 +214,16 @@ pro_meanings = {
 
      'none' : {
 
-         'meaning' : "The frequency of Ground Rent increase is not specified",
+         'meaning' : "The frequency of Ground Rent increase occurs in an unspecified manner",
  		"dd_task": ["A declaration from the Freeholder is required to verify the frequency of any Ground Rent increase "],
-        "pro_meaning": "The frequency of Ground Rent increase is not unspecified"
+        "pro_meaning": ""
      },
 
      'value' : {
 
          'meaning' : "Ground Rent increases take place: {}",
  		"dd_task": [""],
-        "pro_meaning": "Ground Rent increases take place: {}"
+        "pro_meaning": ""
      },
 
  } ,
@@ -238,28 +233,28 @@ pro_meanings = {
 
          'meaning' : "The Type of Rent Increase has not been specified",
  		"dd_task": ["In the absence of confirmation within the lease document a declaration from the Freeholder is required to verify the Type of Rent Increase applicable"],
-        "pro_meaning": "The Type of Rent Increase has not been specified"
+        "pro_meaning": ""
      },
 
      'Fixed' : {
 
          'meaning' : "The Ground rent increase is fixed",
  		"dd_task": [""],
-        "pro_meaning": "The Ground rent increase is fixed"
+        "pro_meaning": ""
      },
 
      'Variable' : {
 
          'meaning' : "Ground Rent increases are variable and not fixed",
- 		"dd_task": [""],
-        "pro_meaning": "Ground Rent increases are variable and not fixed"
+ 		"dd_task": ["The variable mode of Ground Rent increase must be determined"],
+        "pro_meaning": ""
      },
 
      'Other' : {
 
          'meaning' : "The type of rent increase has been defined as:{}",
  		"dd_task": [""],
-        "pro_meaning": "The type of rent increase has been defined as:{}"
+        "pro_meaning": ""
      },
 
  } ,
@@ -267,17 +262,16 @@ pro_meanings = {
 
      'true' : {
 
-         'meaning' : "Extra information has been provided regarding the rent increase type",
- 		"dd_task": ["Ensure the increment by which rent increase is applied complies with existing regulations", 
-                    "Enter in MTD Ledger"],
-        "pro_meaning": "Extra information has been provided regarding the rent increase type"
+         'meaning' : "extra information has been provided regarding the rent increase type",
+ 		"dd_task": ["Ensure the increment by which rent increase is appied complies with existing regulations"],
+        "pro_meaning": ""
      },
 
      'false' : {
 
-         'meaning' : "No extra information has been provided regarding the rent increase type",
+         'meaning' : "no extra information has been provided regarding the rent increase type",
  		"dd_task": ["Unless the Rent Increase Type is specified within the lease the rent increase type must be confirmed by the Freeholder"],
-        "pro_meaning": "No extra information has been provided regarding the rent increase type"
+        "pro_meaning": ""
      },
 
  } ,
@@ -285,26 +279,23 @@ pro_meanings = {
 
      'empty' : {
 
-         'meaning' : [ "It has not been confirmed that Service charge payments have been paid and are currently up to date",
-                        ""],
- 		"dd_task": ["Confirmation from the Freeholder or managing agent is required to determine if service charge payments have been paid and are currently up to date"],
-        "pro_meaning": "It has not been confirmed that Service charge payments have been paid and are currently up to date"
+         'meaning' : "It has not been specified if Service Charges have been paid or become due",
+ 		"dd_task": ["Where the status of Service charges are not declared, confirmation from the Freeholder or managing agent is appropriate"],
+        "pro_meaning": ""
      },
 
      'yes' : {
 
-         'meaning' : "Service charge payments have been paid and are currently up to date",
- 		"dd_task": ["Locate a statement of the service charges balance confirming the account status as satisfied",
-                    "Confirm in MTD Ledger"],
-        "pro_meaning": "Service charge payments have been paid and are currently up to date"
+         'meaning' : "Service Charges have been paid or become due",
+ 		"dd_task": [""],
+        "pro_meaning": ""
      },
 
      'no' : {
 
-         'meaning' : "The Service Charges now due have not been paid",
- 		"dd_task": ["Confirmation of Service Charge account status can be obtained from the freeholder or associated managing agent",
-                    "Obtain a contemporaneous Service Charge statement detailing all outstanding fees, costs and charges"],
-        "pro_meaning": "The Service Charges now due have not been paid"
+         'meaning' : "No Service Charges have been paid or become due",
+ 		"dd_task": ["Confirmation of Service Charges status can be obtained from the freeholder or associated managing agent"],
+        "pro_meaning": ""
      },
 
  } ,
@@ -313,8 +304,7 @@ pro_meanings = {
      'none' : {
 
          'meaning' : "The value of the last service charge has not been specified",
- 		"dd_task": ["Obtain a Service Charge statement detailing all outstanding fees, costs and charges",
-                    "The service charge statement can be obtained from the freeholder or associated managing agent"],
+ 		"dd_task": ["Confirmation of the last service charge can be obtained from the freeholder or associated managing agent"],
         "pro_meaning": "In the absence of a budget for future service charges the purchaser may be exposed to substantial unforseen costs and potential stress",
      },
 
@@ -571,21 +561,21 @@ pro_meanings = {
 
      'empty' : {
 
-         'meaning' : "The vendor has not declared whether the sale of the property is dependent on the purchase of a seperate property",
- 		"dd_task": ["Obtain confirmation from the vendor regarding the dependency of this sale to any other transaction purchase or sale of another property"],
+         'meaning' : "The vendor has not declared whether the sale of the property is dependant on the purchase of a seperate property",
+ 		"dd_task": ["Obtain confirmation from the vendor regarding the dependancy of this sale to any other transaction purchase or sale of another property"],
         "pro_meaning": ""
      },
 
      'yes' : {
 
-         'meaning' : "The sale is dependent upon the vendor's successful purchase of another property",
+         'meaning' : "The sale is dependant upon the vendor's successful purchase of another property",
  		"dd_task": [""],
         "pro_meaning": ""
      },
 
      'no' : {
 
-         'meaning' : "The vendor states that the sale of the property is not dependent on the purchase of another property",
+         'meaning' : "The vendor states that the sale of the property is not dependant on the purchase of another property",
  		"dd_task": [""],
         "pro_meaning": ""
      },
@@ -603,7 +593,7 @@ pro_meanings = {
      'false' : {
 
          'meaning' : "",
- 		"dd_task": ["Details of the vendor's dependent transaction need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
+ 		"dd_task": ["Details of the vendor's dependant transaction need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
         "pro_meaning": ""
      },
 
@@ -619,7 +609,7 @@ pro_meanings = {
 
      'yes' : {
 
-         'meaning' : "The sale is dependent upon school calendar commitments and/ or schedules",
+         'meaning' : "The sale is dependant upon school calendar commitments and/ or schedules",
  		"dd_task": [""],
         "pro_meaning": ""
      },
@@ -636,7 +626,7 @@ pro_meanings = {
 
      'none' : {
 
-         'meaning' : "Details of the vendors dependent school term dates need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer",
+         'meaning' : "Details of the vendors dependant school term dates need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer",
         "pro_meaning": ""
      },
 
@@ -677,7 +667,7 @@ pro_meanings = {
      'none' : {
 
          'meaning' : "The date of the forthcoming holiday affecting the sale time has not been described",
- 		"dd_task": ["Details of the vendor's dependent upcoming holiday schedule need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
+ 		"dd_task": ["Details of the vendor's dependant upcoming holiday schedule need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
         "pro_meaning": ""
      },
 
@@ -725,7 +715,7 @@ pro_meanings = {
      'value' : {
 
          'meaning' : "",
- 		"dd_task": ["Details of the vendor's dependent job move date and confirmed status need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
+ 		"dd_task": ["Details of the vendor's dependant job move date and confirmed status need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
         "pro_meaning": ""
      },
 
@@ -841,7 +831,7 @@ pro_meanings = {
      'none' : {
 
          'meaning' : "",
- 		"dd_task": ["Details of the vendor's dependent notice to tenant and confirmed future vacant possession status need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
+ 		"dd_task": ["Details of the vendor's dependant notice to tenant and confirmed future vacant posession status need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
         "pro_meaning": ""
      },
 
@@ -923,7 +913,7 @@ pro_meanings = {
      'none' : {
 
          'meaning' : "",
- 		"dd_task": ["Details of the vendor's dependent build completion date and the confirmed present build progression status need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
+ 		"dd_task": ["Details of the vendor's dependant build completion date and the confirmed present build progression status need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
         "pro_meaning": ""
      },
 
@@ -971,7 +961,7 @@ pro_meanings = {
      'value' : {
 
          'meaning' : "",
- 		"dd_task": ["Details of the vendor's dependent other move factor date and confirmed status need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
+ 		"dd_task": ["Details of the vendor's dependant other move factor date and confirmed status need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
         "pro_meaning": ""
      },
 
@@ -988,7 +978,7 @@ pro_meanings = {
      'false' : {
 
          'meaning' : "",
- 		"dd_task": ["Details of the vendor's dependent other move factor details need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
+ 		"dd_task": ["Details of the vendor's dependant other move factor details need to be verified to evaluate potential; completion risks, impact upon negotiations, ongoing cost, potential delays and associated costs for the buyer"],
         "pro_meaning": ""
      },
 
@@ -1021,7 +1011,7 @@ pro_meanings = {
 
      'yes' : {
 
-         'meaning' : "one or more breaches of planning conditions have occurred",
+         'meaning' : "one or more breaches of planning conditions have occured",
  		"dd_task": [""],
         "pro_meaning": ""
      },
@@ -1045,7 +1035,7 @@ pro_meanings = {
 
      'false' : {
 
-         'meaning' : "No description of the breaches of planning conditions that have occurred at this property have been disclosed",
+         'meaning' : "No description of the breaches of planning conditions that have occured at this property have been disclosed",
  		"dd_task": ["The nature of each breach needs to be disclosed by the vendor, including: the date of each breach, whether the has been observed or recorded by a planning officer, whether enforcement has been applied"],
         "pro_meaning": ""
      },
@@ -1056,7 +1046,7 @@ pro_meanings = {
      'empty' : {
 
          'meaning' : "It has not been stated whether there have been no breaches of Building Regulation conditions",
- 		"dd_task": ["A statement from the vendor is required to determine the status of Building Regulations conformity"],
+ 		"dd_task": ["A claratitive statement from the vendor is required to determine the status of Building Regulations conformity"],
         "pro_meaning": ""
      },
 
@@ -1087,7 +1077,7 @@ pro_meanings = {
      'false' : {
 
          'meaning' : "There has been no provision of details regarding the building regulation breaches that have occured at this property",
- 		"dd_task": ["A statement from the vendor is required to determine details of the Building Regulations breach: including: the date of each breach, whether the has been observed or recorded by a planning officer, whether enforcement has been applied"],
+ 		"dd_task": ["A claratitive statement from the vendor is required to determine detils of the Building Regulations breach: including: the date of each breach, whether the has been observed or recorded by a planning officer, whether enforcement has been applied"],
         "pro_meaning": ""
      },
 
@@ -1097,7 +1087,7 @@ pro_meanings = {
      'empty' : {
 
          'meaning' : "It has not been stated whether any works have been undertaken that presently remain unfinished",
- 		"dd_task": ["A statement from the vendor is required to confirm whether any works have been undertaken that presently remain unfinished"],
+ 		"dd_task": ["A claratitive statement from the vendor is required to confirm whether any works have been undertaken that presently remain unfinished"],
         "pro_meaning": ""
      },
 
@@ -1128,7 +1118,7 @@ pro_meanings = {
      'false' : {
 
          'meaning' : "There has been no provision of details regarding the unfinished building work at this property",
- 		"dd_task": ["A statement from the vendor is required to confirm each of the works that have been undertaken that presently remain unfinished"],
+ 		"dd_task": ["A claratitive statement from the vendor is required to confirm each of the works that have been undertaken that presently remain unfinished"],
         "pro_meaning": "There ae incomplete building works for which it is possible building regulations conformity has not been achieved",
      },
 
@@ -1161,14 +1151,14 @@ pro_meanings = {
 
      'true' : {
 
-         'meaning' : "Details have been provided regarding the works undertaken without all necessary consent",
+         'meaning' : "Details have been provided regarding the works undertaken without all neccassary consent",
  		"dd_task": [""],
         "pro_meaning": ""
      },
 
      'false' : {
 
-         'meaning' : "Details have not been provided regarding the works that have been undertaken without necessary consent",
+         'meaning' : "Details have not been provided regarding the works that have been undertaken without neccassary consent",
  		"dd_task": ["Determine the nature of the missing consents"],
         "pro_meaning": "The actuality of works undertaken without the necessary consents may expose the purchaser to; enforcement action , potential regularisation costs,lending security delays, indemnity costs (where avaialable), potenital transaction failure if these details are not declared",
      },
@@ -1179,7 +1169,7 @@ pro_meanings = {
      'empty' : {
 
          'meaning' : "It has not been stated whether any solar panels have been installed",
- 		"dd_task": ["Determine whether solar panels have been installed"],
+ 		"dd_task": ["Determine whether solat panels have been installed"],
         "pro_meaning": ""
      },
 
@@ -1244,7 +1234,7 @@ pro_meanings = {
      'empty' : {
 
          'meaning' : "It has not been stated whether a long lease of the roof / air space has been granted to a solar panel provider",
- 		"dd_task": ["Determine how long the long lease of the roof / air space has been granted to the provider"],
+ 		"dd_task": ["Determine hw long hte long lease of the roof / ais space hasbeen granted to the provider"],
         "pro_meaning": ""
      },
 
@@ -1267,15 +1257,15 @@ pro_meanings = {
 
      'true' : {
 
-         'meaning' : "Documentation regarding the solar electrical tariff or other information regarding the solar panel array at the property has been provided",
+         'meaning' : "Documentation regarding the solar electrical tarriff or other information regarding the solar panel array at the property has been provided",
  		"dd_task": [""],
         "pro_meaning": ""
      },
 
      'false' : {
 
-         'meaning' : "Documentation regarding the solar electrical tariff or other information regarding the solar panel array at the property has not provided",
- 		"dd_task": ["The vendor must disclose the applicable solar electric tariff assigned to this sola panel array"],
+         'meaning' : "Documentation regarding the solar electrical tarriff or other information regarding the solar panel array at the property has not provided",
+ 		"dd_task": ["The vendor must disclose the applicable solar electric tarrif assigned to this sola panel array"],
         "pro_meaning": ""
      },
 
@@ -1333,7 +1323,7 @@ pro_meanings = {
      'empty' : {
 
          'meaning' : "It has not been stated whether the property (or any part of it) is in a conservation area",
- 		"dd_task": ["The vendor should disclose if any part of the property is located within a conservation area"],
+ 		"dd_task": ["The vendor should disclose if any part of the property is located within aconservation area"],
         "pro_meaning": ""
      },
 
@@ -1381,7 +1371,7 @@ pro_meanings = {
      'empty' : {
 
          'meaning' : "It has not been stated whether any trees on the property are subject to a Tree Preservation Order",
- 		"dd_task": ["The vendor should disclose if any trees on the property have been identified and protected by a Tree Preservation Order"],
+ 		"dd_task": ["The vendor should disclose if ny tres ont he property have been ideitified and protected by a Tree Preservation Order"],
         "pro_meaning": ""
      },
 
@@ -1401,7 +1391,7 @@ pro_meanings = {
 
      'not_known' : {
 
-         'meaning' : "The vendor should disclose if any trees on the property have been identified and protected by a Tree Preservation Order",
+         'meaning' : "The vendor should disclose if any trees on the property have been ideitified and protected by a Tree Preservation Order",
  		"dd_task": [""],
         "pro_meaning": ""
      },
@@ -1580,16 +1570,15 @@ pro_meanings = {
      'true' : {
 
          'meaning' : "Details of the Road maintenance payment have been provided",
- 		"dd_task": ["Inspect the disclosure to ensure the provisioned data provides an clear indication of frequency and cost calculations"],
-        "pro_meaning": "Under disclosure of costs contributions often result in protracted renegotiation and or abandonment of the transaction"
+ 		"dd_task": [""],
+        "pro_meaning": ""
      },
 
      'false' : {
 
          'meaning' : "Details of the Road maintenance payment have not been provided",
  		"dd_task": ["Details of any Road maintenance payment needs to be provided "],
-        "pro_meaning": "It is essential to disclose to a prospective buyer any potential costs that may arise in relation to the access to the property"
-    
+        "pro_meaning": ""
      },
 
  } ,
@@ -1630,8 +1619,7 @@ pro_meanings = {
 
          'meaning' : "It has not been specified whether the roads leading to the property are maintained at public expense",
  		"dd_task": ["it needs to be determined whether the road providing access to the property is maintained at public expense"],
-        "pro_meaning": "It is essential to disclose to a prospective buyer any potential costs that may arise in relation to the access to the property"
-    
+        "pro_meaning": ""
      },
 
      'yes' : {
@@ -1644,8 +1632,8 @@ pro_meanings = {
      'no' : {
 
          'meaning' : "The roads leading to your property are maintained at public expense",
- 		"dd_task": ["Determine how the maintenance of the road leading to the property is funded"],
-        "pro_meaning": "It is essential to disclose to a prospective buyer any potential costs that may arise in relation to the access to the property"
+ 		"dd_task": [""],
+        "pro_meaning": ""
      },
 
      'not_known' : {
@@ -1659,29 +1647,25 @@ pro_meanings = {
 
 'mains_drainage' : {
 
- 	 'empty' : {  
+ 	 'empty' : {
 
  		 'meaning' : "It has not been stated whether the property benefits from a mains drainage network connection",
- 		"dd_task": ["The vendor needs to confirm whether the property is connected to mains drainage",
-                    "If connected, identify the sellers satisfaction and any relevant performance history with the mains drainage supply",
-                    "If not connected, determine whether any prior proposition to connect to the mains drainage network has been abandoned or declined"],
-        "pro_meaning": ["A failure to disclose any deficiencies concerning the reliability, provision and or quality of the mains drainage may result in a Seller liability and professional indemnity exposure",
-                        "A failure to disclose any practical or financial barriers preventing the connection to the mains drainage network may result in a Seller liability and professional indemnity exposure]"]
+ 		"dd_task": ["The vendor needs to confirm whether the property is connected to mains drainage "],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
  		 'meaning' : "The property benefits from a connection to a mains drainage network",
- 		"dd_task": ["Identify the sellers satisfaction and any relevant performance history with the mains drainage supply"],
-        "pro_meaning": ["A failure to disclose any deficiencies concerning the reliability, provision and or quality of the electricity supply may result in a Seller liability and professional indemnity exposure",
-                        ""]
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'no' : {
 
  		 'meaning' : "The property does not have a mains drainage network connection",
- 		"dd_task": ["Determine whether any prior proposition to connect to the mains drainage network has been abandoned or declined"],
-        "pro_meaning": ["A failure to disclose any practical or financial barriers preventing a connection to the mains drainage network may result in a Seller liability and professional indemnity exposure"],
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -1690,26 +1674,22 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been stated whether the property benefits from a connection to an electrical supply",
- 		"dd_task": ["The vendor needs to confirm whether the property is connected to mains electricity",
-                    "Determine whether any prior proposition to connect to the mains electricity network has been abandoned or declined"],
-        "pro_meaning": ["A failure to disclose any deficiencies concerning the reliability, provision and or quality of the electricity supply may result in a Seller liability and professional indemnity exposure",
-                        ""]
+ 		"dd_task": ["The vendor needs to confirm whether the property is connected to mains electricity "],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
  		 'meaning' : "The property benefits from a connection to a mains electricity supply",
- 		"dd_task": ["Identify the sellers satisfaction and any relevant performance history with the electricity supply"],
-        "pro_meaning": "A failure to disclose any deficiencies concerning the reliability, provision and or quality of the electricity supply may result in a Seller liability and professional indemnity exposure",
-                        
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'no' : {
 
  		 'meaning' : "The property does not benefit from a connection to a mains electricity supply",
- 		"dd_task": ["It should be determined whether the infrastructure required to support a live connection to the mains electricity supply is installed at the property"],
-        "pro_meaning": ["A failure to disclose any deficiencies concerning the reliability, provision and or quality of the electricity supply may result in a Seller liability and professional indemnity exposure",
-                        "A failure to disclose any practical or financial barriers preventing the provision of the electricity supply may result in a Seller liability and professional indemnity exposure"]
+ 		"dd_task": ["It should be determined whether the infrastructure required to support a live connection to the mains electricity suppply is installed at the property"],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -1718,25 +1698,22 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been stated whether the property benefits from a connection to a water supply",
- 		"dd_task": ["The vendor needs to confirm whether the property benefits from a connection to a water supply",
-                    "Identify the sellers satisfaction and any relevant performance history with the water supply supply"],
-        "pro_meaning": ["A failure to disclose any deficiencies concerning the provision and or quality of an existing water supply may result in a Seller liability and professional indemnity exposure"
-                    "A failure to disclose any practical or financial barriers preventing the provision of a mains water supply may result in a Seller liability and professional indemnity exposure",]
+ 		"dd_task": ["The vendor needs to confirm whether the property benefits from a connection to a mains water supply"],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
  		 'meaning' : "The property benefits from a connection to a water supply",
- 		"dd_task": ["Confirm the quality, reliability and pressure of the water supply",
-                    "Identify the sellers satisfaction and any relevant performance history with the water supply"],
-        "pro_meaning": "A failure to disclose any deficiencies concerning the provision and or quality of the water supply may result in a Seller liability and professional indemnity exposure",
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'no' : {
 
  		 'meaning' : "The property does not benefit from a connection to a water supply",
  		"dd_task": ["It should be determined whether the infrastructure required to support a mains water supply is installed at the property"],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of a mains water supply may result in a Seller liability and professional indemnity exposure",
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -1746,7 +1723,7 @@ pro_meanings = {
 
  		 'meaning' : "It has not been stated whether the property benefits from a connection to a mains gas supply",
  		"dd_task": ["The vendor needs to confirm whether the property benefits from a connection to a mains gas supply"],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of mains gas may result in a Seller liability and professional indemnity exposure",
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
@@ -1760,7 +1737,7 @@ pro_meanings = {
 
  		 'meaning' : "The property does not benefit from a connection to a mains gas supply",
  		"dd_task": [""],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of mains gas may result in a Seller liability and professional indemnity exposure",
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -1770,21 +1747,21 @@ pro_meanings = {
 
  		 'meaning' : "It has not been stated whether the property benefits from a connection to a broadband connection",
  		"dd_task": ["The vendor should confirm whether the property benefits from a broadband connection"],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of Broadband may result in a Seller liability and professional indemnity exposure"
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
  		 'meaning' : "The property has the benefit of a broadband connection",
- 		"dd_task": ["Determine the mode of connectivity by which the broadband connection is provided"],
+ 		"dd_task": [""],
         "pro_meaning": ""
  	 },
 
  	 'no' : {
 
  		 'meaning' : "The property does not currently benefit from a broadband connection",
- 		"dd_task": ["The vendor needs to confirm whether the property has previously benefited from a broadband connection and the speed of the connection"],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of a broadband may result in a Seller liability and professional indemnity exposure"
+ 		"dd_task": ["The vendor needs to confirm whether the property has previously benefitted from a broadband connection and the speed of the connection"],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -1794,7 +1771,7 @@ pro_meanings = {
 
  		 'meaning' : "It has not been stated whether the property benefits from a connection to a private sewage plant",
  		"dd_task": ["The vendor needs to confirm whether the property benefits from a connection to a private sewage plant"],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of a private sewage plant may result in a Seller liability and professional indemnity exposure"
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
@@ -1807,7 +1784,7 @@ pro_meanings = {
  	 'no' : {
 
  		 'meaning' : "The property does not benefits from a private sewage plant",
- 		"dd_task": ["In the absence of a viable mains sewage connection confirm the property is capable of sustaining a private sewage plant"],
+ 		"dd_task": ["In the absence of a vialbe mains sewage connection confirm the property is capable of sustaining a private sewage plant"],
         "pro_meaning": ""
  	 },
 
@@ -1817,8 +1794,8 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been stated whether the property benefits from a connection to Telephone Landlines",
- 		"dd_task": ["Determine from the seller whether a telephone line is now or has previously been installed"],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of a telephone may result in a Seller liability and professional indemnity exposure",
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
@@ -1841,24 +1818,22 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been stated whether the property benefits from a connection to Solar Panels",
- 		"dd_task": ["Determine the existing and the potential solar capacity for this property",
-                    ],
-        "pro_meaning": ["A failure to disclose any practical or financial barriers preventing the provision of Solar Panels may result in a Seller liability and professional indemnity exposure",
-                        "Buyers seeking to implement or enhance sustainability credentials can expect disclosure of the potential solar capacity""]
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
  		 'meaning' : "The property benefits from connected Solar Panels",
- 		"dd_task": ["Identify whether there is sufficient space to increase the number of solar panels on the existing mounting location"],
-        "pro_meaning": "Buyers seeking to improve the sustainability credentials can expect disclosure of the potential solar capacity "
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'no' : {
 
  		 'meaning' : "The property does not benefit from a connection to solar panels",
  		"dd_task": ["Determine whether information is available to confirm whether the property contains the necessary attributes to support a viable installation of solar panels"],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of Solar Panels may result in a Seller liability and professional indemnity exposure"
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -1868,14 +1843,14 @@ pro_meanings = {
 
  		 'meaning' : "It has not been stated whether the property benefits from a connection to Ground or Air Heat Pumps",
  		"dd_task": ["Confirmation of any installed Ground or Air Heat Pumps is required including their operational status"],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of Ground or Air Heat Pumps may result in a Seller liability and professional indemnity exposure"
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
  		 'meaning' : "The property benefits from connected Ground or Air Heat Pumps",
- 		"dd_task": ["Confirmation of the operational status o any installed Ground or Air Heat Pumps is required",
-                    "Confirmation of condition, operating performance / capacity, servicing cost and warranty is desirable "],
+ 		"dd_task": ["Confirmation of the operational status of any installed Ground or Air Heat Pumps is required",
+                    "Confirmation of condition, operatiing performance / capacity, servicing cost and warranty is desirable "],
         "pro_meaning": ""
  	 },
 
@@ -1883,7 +1858,7 @@ pro_meanings = {
 
  		 'meaning' : "The property does not benefit from the connection of Ground or Air Heat Pumps",
  		"dd_task": [""],
-        "pro_meaning": "A failure to disclose any practical or financial barriers preventing the provision of Ground or Air Heat Pumps may result in a Seller liability and professional indemnity exposure"
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -1893,9 +1868,7 @@ pro_meanings = {
 
  		 'meaning' : "No other additional provisioned services have been disclosed",
  		"dd_task": ["Confirmation of any additional provisioned service is required (type, active status, periodic operational cost)"],
-        "pro_meaning": ["If the property does not benefit from any other provisioned services there is a riding obligation to confirm",
-                    "Buyers can reasonably expect to be notified of any service; sought but not installed,  the reason the service was not installed",
-                    "A failure to disclose any practical or financial barriers preventing a service provision may result in a Seller liability and professional indemnity exposure "]
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
@@ -1908,11 +1881,8 @@ pro_meanings = {
  	 'no' : {
 
  		 'meaning' : "The property does not benefit from any other provisioned services beyond those already disclosed",
- 		"dd_task": ["Where commonly provisioned services are absent but desired by the purchaser a confirmation of availability may be considered appropriate", 
-                    "Where a commonly available or trending emergent service is not in place identify whether the application was declined or refused"],
-        "pro_meaning": ["The property does not benefit from any other provisioned services",
-                    "Buyers can reasonably expect to be notified of any service; sought but not installed,  the reason the service was not installed",
-                    "A failure to disclose any practical or financial barriers preventing a service provision may result in a Seller liability and professional indemnity exposure"]
+ 		"dd_task": ["Where commonly provisioned services are absent but desired by the purchaser a confirmation of availability and or any prior refusal should be confirmed "],
+        "pro_meaning": "The property does not benefit from any other provisioned services beyond those already disclosed",
  	 },
 
  } ,
@@ -1921,19 +1891,15 @@ pro_meanings = {
  	 'true' : {
 
  		 'meaning' : "Details regarding the additional provisioned services have been provided",
- 		"dd_task": ["The details provided should be checked to confirm all additional services were included in the data provided",
-                    "Check each service disclosure contains appropriate data (such as)  ; performance, operating or periodic cost, and other data "],
+ 		"dd_task": ["The details provided should be checked to confirm relevant; performance, operating or periodic cost, and other data "],
         "pro_meaning": "Confirmation of the additional provisioned services has been provided",
  	 },
 
  	 'false' : {
 
  		 'meaning' : "No details regarding the additional provisioned services have been provided",
- 		"dd_task": ["Details of additional provisioned services must be provided to a prospective buyer"],
-        "pro_meaning": ["Confirmation of the additional provisioned services has not yet been provided",
-                        "the existence of other services will be deemed material information to the Material Title Disclosure",
-                        "undisclosed installed services may impact upon a buyer and the viability and or cost of execute plans",
-                        "failure to disclose services may create a seller liability and exposure to Professional Liability claim "],
+ 		"dd_task": ["Confirmation of the additional provisioned services should be provided"],
+        "pro_meaning": "Confirmation of the additional provisioned services has not yet been provided",
  	 },
 
  } ,
@@ -1941,23 +1907,21 @@ pro_meanings = {
 
  	 'empty' : {
 
- 		 'meaning' : "It has not been disclosed as to whether there are any areas or facilities shared with neighbour (excluding common parts of a leasehold block or estate)",
- 		"dd_task": ["Any areas or facilities shared with neighbour should be confirmed by the vendor, in the absence of disclosure, confirmation may be obtained from the freeholder or managing agent"],
-        "pro_meaning": ["A prospective buyer will reasonably expect declaration of any shared facilities",
-                        "Absence of a declaration of shared services may be sufficient to found a claim in the event the property is later considered devalued or a transaction does not proceed after identifying a shared facility status"]
+ 		 'meaning' : "It has not been disclosed as to whether there are any areas or facilities shared with neighbours (excluding common parts of a leasehold block or estate)",
+ 		"dd_task": ["Any areas or facilities shared with neighbours should be confirmed by the vendor, in the absence of disclosure, confirmation may be obtained from the freeholder or managing agent"],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
- 		 'meaning' : "There are areas or facilities shared with neighbour (excluding common parts of a leasehold block or estate)",
- 		"dd_task": ["The areas or facilities shared with neighbour should be confirmed" ,
-                    "in the absence of disclosure, confirmation may be obtained from the freeholder or managing agent"],
-        "pro_meaning": "The property does share areas or facilities with neighbour "
+ 		 'meaning' : "There are areas or facilities shared with neighbours (excluding common parts of a leasehold block or estate)",
+ 		"dd_task": ["The areas or facilities shared with neighbours should be confirmed by the vendor, in the absence of disclosure, confirmation may be obtained from the freeholder or managing agent"],
+        "pro_meaning": "The property does share areas or facilities with neighbours "
  	 },
 
  	 'no' : {
 
- 		 'meaning' : "There are not any areas or facilities shared with neighbour (excluding common parts of a leasehold block or estate)",
+ 		 'meaning' : "There are not any areas or facilities shared with neighbours (excluding common parts of a leasehold block or estate)",
  		"dd_task": [""],
         "pro_meaning": "  "
  	 },
@@ -1968,7 +1932,7 @@ pro_meanings = {
  	 'true' : {
 
  		 'meaning' : "Details of the shared facilities have been provided",
- 		"dd_task": ["Determine which facilities are shared and the terms applicable to their use."],
+ 		"dd_task": [""],
         "pro_meaning": ""
  	 },
 
@@ -1976,7 +1940,7 @@ pro_meanings = {
 
  		 'meaning' : "No details of the facilities this property shares with other properties have been provided",
  		"dd_task": ["A plan showing the location of facilities this property shares with other properties should be disclosed"],
-        "pro_meaning": "The mode, convenience and impact of shared facilities may impact a buyers evaluation of the property, full details should be established"
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -1985,8 +1949,8 @@ pro_meanings = {
  	 'true' : {
 
  		 'meaning' : "Details regarding the parking arrangements of the property have been provided",
- 		"dd_task": ["Determine from the parking arrangement details provided: annual costs, restrictions and limitations, assignment and usage conditions "],
-        "pro_meaning": "Information has been provided regarding parking arrangements: the detail and completeness of data needs to be assessed",
+ 		"dd_task": ["Determine from the parking arrangemnt details provided: annual costs, restrictions and limitations, assignment and usage conditions "],
+        "pro_meaning": "Information has been provided reagarding parking arrangements: the detail and completeness of data needs to be assessed",
  	 },
 
  	 'false' : {
@@ -2001,10 +1965,9 @@ pro_meanings = {
 
  	 'empty' : {
 
- 		 'meaning' : "It has not been disclosed whether the property is in a controlled parking zone or within a local authority parking scheme",
+ 		 'meaning' : "It has not been disclosed as to whether the property is in a controlled parking zone or within a local authority parking scheme",
  		"dd_task": ["Details of any controlled parking arrangements for the property should be provided"],
-        "pro_meaning": ["The impact of controlled parking upon the convenience or enjoyment and value of the property cannot be determined without further information",
-                        ""]
+        "pro_meaning": "The impact of controlled parking upon the convenience or enjoyment and value of the property cannot be determined without further information",
  	 },
 
  	 'yes' : {
@@ -2023,7 +1986,7 @@ pro_meanings = {
 
  	 'not_known' : {
 
- 		 'meaning' : "The disclosure provider does not know if the property is in a controlled parking zone or within a local authority parking scheme",
+ 		 'meaning' : "The diclosure provider does not know if the property is in a controlled parking zone or within a local authority parking scheme",
  		"dd_task": ["The local authority and any private road management agent may determine the location of any controlled parking zone "],
         "pro_meaning": "The impact of controlled parking upon the convenience or enjoyment and value of the property cannot be determined without further information",
  	 },
@@ -2035,10 +1998,8 @@ pro_meanings = {
 
  		 'meaning' : "It has not been disclosed as to whether the disclosure provider lives at the property",
  		"dd_task": ["The discloser should declare if they reside at the property",
-                        "A person making a disclosure and not resident should clarify their familiarity and level of knowledge of the property"
-                        "Determine whether the discloser has a detailed knowledge of the; property history, the locality, events that have effected the property and residents thereto "],
-        "pro_meaning": ["Without further information the discloser has not at face value established they are able to make a comprehensive statement regarding all details about the property",
-                        "Professionals are on warning to carefully consider the likely transparency and clarity the disclosures can provide if the provider has and or does not live at the property "]
+                        "A person makng a disclosure and not resident should clarify thier familiarity and level of knowledge of the property"],
+        "pro_meaning": "Without further information the discloser has not at face value established they are able to make a comprehensive statement regarding all details about the property",
  	 },
 
  	 'yes' : {
@@ -2051,7 +2012,7 @@ pro_meanings = {
  	 'no' : {
 
  		 'meaning' : "The disclosure provider does not live at the property",
- 		"dd_task": ["The person making this disclosure should clarify their familiarity and level of knowledge of the property"],
+ 		"dd_task": ["The person makng this disclosure should clarify thier familiarity and level of knowledge of the property"],
         "pro_meaning": "Without further information the discloser has not at face value established they are able to make a comprehensive statement regarding all details about the property",
  	 },
 
@@ -2060,7 +2021,7 @@ pro_meanings = {
 
  	 'empty' : {
 
- 		 'meaning' : "It has not been disclosed as to whether anyone other then the disclosure provider aged 17 or over live at the property",
+ 		 'meaning' : "It has not been disclosed as to whether anyone other then the diclosure provider aged 17 or over live at the property",
  		"dd_task": ["Confirm whether any other person aged 17 or over lives at this property"],
         "pro_meaning": ""
  	 },
@@ -2093,21 +2054,21 @@ pro_meanings = {
 
  	 'empty' : {
 
- 		 'meaning' : "It has not been disclosed as to whether any of the occupiers aged 17 or over (other then the disclosees) are tenants or lodgers",
- 		"dd_task": ["Confirmation is required to determine if any occupiers aged 17 or over (other then the disclosees) are tenants or lodgers at this property"],
+ 		 'meaning' : "It has not been disclosed as to whether any of the occupiers aged 17 or over other then the disclosees are tennants or lodgers",
+ 		"dd_task": ["Confirmation is required to determine if any occupiers aged 17 or over other then the disclosees are tennants or lodgers at this property"],
         "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
- 		 'meaning' : "Some or all of the occupiers aged 17 or over are tenants or lodgers",
+ 		 'meaning' : "Some or all of the occupiers aged 17 or over are tennants or lodgers",
  		"dd_task": [""],
         "pro_meaning": ""
  	 },
 
  	 'no' : {
 
- 		 'meaning' : "None of the occupiers aged 17 or over are tenants or lodgers",
+ 		 'meaning' : "None of the occupiers aged 17 or over are tennants or lodgers",
  		"dd_task": [""],
         "pro_meaning": ""
  	 },
@@ -2134,7 +2095,7 @@ pro_meanings = {
  		 'meaning' : "Not all or none of occupiers aged 17 and over have agreed to leave the property before completion of the sale",
  		"dd_task": ["More information is required to determine why the occupier/s aged 17 and over have not agreed to leave before completion",
                      "An undertaking by the occupiers to leave the property before the property sale completion takes place will be required"],
-        "pro_meaning": " "
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -2144,7 +2105,7 @@ pro_meanings = {
 
  		 'meaning' : "It has not been disclosed whether all the occupiers aged 17 and over have agreed to sign the sale contract",
  		"dd_task": ["Confirmation is required that all the occupiers aged 17 and over have agreed to sign the sale contract"],
-        "pro_meaning": "A liability may arise if this matter remains unresolved and subsequently results in delays costs or abandonment of the transaction"
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
@@ -2168,7 +2129,7 @@ pro_meanings = {
 
  		 'meaning' : "It has not been disclosed as to whether this property is being sold with vacant possession",
  		"dd_task": ["Confirmation is required that this property is being sold with vacant possession"],
-        "pro_meaning": "Professionals acting in this transaction may be exposed to liability should transaction delays or costs or abandonment transpire because vacant possession cannot be achieved and insufficient inquiries have been pursued with regard thereto"
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
@@ -2182,7 +2143,7 @@ pro_meanings = {
 
  		 'meaning' : "This property is not being sold with vacant possession",
  		"dd_task": ["Confirmation is required detailing why this property is not being sold with vacant possession",
-                    "Details are required of the tenure and status of any occupier of the property that intends to remain at the property after the sale"],
+                    "Details are required of the tenure and ir status of any occupier of the property that intends to remain at the property after the sale"],
         "pro_meaning": ""
  	 },
 
@@ -2209,14 +2170,13 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been disclosed as to whether this property has ever flooded",
- 		"dd_task": ["Undertake independent checks to assess whether local flood risks exist,"
-                    "Determine whether there is a history of flooding in the area"],
-        "pro_meaning": "All professionals acting in this transaction must exhibit extra care to identify any previous flood event and continues flood risk"
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
- 		 'meaning' : "This property has previously suffered flooding",
+ 		 'meaning' : "This property has previoulsy suffered flooding",
  		"dd_task": [""],
         "pro_meaning": ""
  	 },
@@ -2224,8 +2184,8 @@ pro_meanings = {
  	 'no' : {
 
  		 'meaning' : "This property has as far as is known not suffered from flooding",
- 		"dd_task": ["Verify whether the discloser has a local knowledge (and for how long) to determine the extent of their awareness of local flood events"],
-        "pro_meaning": "Professionals with local knowledge and access to verification tools to identify local flood events not known to the discloser"
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -2249,16 +2209,16 @@ pro_meanings = {
 
  	 'yes' : {
 
- 		 'meaning' : "A flood risk report has been created for the property",
+ 		 'meaning' : "A floood risk report has been ctreated for the property",
  		"dd_task": [""],
-        "pro_meaning": "Ensure the flood risk report is clearly referenced in the Market Particulars"
+        "pro_meaning": ""
  	 },
 
  	 'no' : {
 
  		 'meaning' : "A flood risk report has not been created for the property",
- 		"dd_task": ["Determine from the discloser whether any mitigations measures have been undertaken to negative the flood risk "],
-        "pro_meaning": "Buyers can expect Professionals to provide clarity regarding the existence of any recurrent flood risks "
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -2267,10 +2227,7 @@ pro_meanings = {
  	 'true' : {
 
  		 'meaning' : "",
- 		"dd_task": ["Check documentation to identify any obvious omissions",
-                    "If a flood report cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity",
-                    "Determine whether any insurance claims documentation is available from the flood incident",
-                    "Determine whether any repair works documentation or warranty certificates are available from repairs "],
+ 		"dd_task": [""],
         "pro_meaning": ""
  	 },
 
@@ -2278,10 +2235,8 @@ pro_meanings = {
 
  		 'meaning' : "",
  		"dd_task": ["A copy of a food report is required",
-                    "If a flood report cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity",
-                    "Determine whether any insurance claims documentation is available from the flood incident",
-                    "Determine whether any repair works documentation or warranty certificates are available from repairs "],
-        "pro_meaning": "Most floods result in documentation, an under-disclosure of flood events may lead to profound liability implications"
+                    "If a flood report cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity"],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -2298,15 +2253,15 @@ pro_meanings = {
  	 'yes' : {
 
  		 'meaning' : "There are plans for development or buildings that may affect someone's ability to peacefully use and enjoy the property",
- 		"dd_task": ["Check the details for any inadvertent under-disclosure where local development plans are public knowledge but not known by the discloser"],
+ 		"dd_task": [""],
         "pro_meaning": ""
  	 },
 
  	 'no' : {
 
  		 'meaning' : "There are no known plans for development or buildings that may affect someone's ability to peacefully use and enjoy the property",
- 		"dd_task": [" "],
-        "pro_meaning": ["It may be that local development plans exist that are common knowledge but unknown to the discloser, a duty to assist to remedy any under-disclosure must be assumed"]
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -2315,17 +2270,15 @@ pro_meanings = {
  	 'true' : {
 
  		 'meaning' : "",
- 		"dd_task": ["Details of the plans for development or buildings that may affect someone's ability to peacefully use and enjoy the property are required",
-                    "Check the discloser provides sufficient and accurate details of local plans that may affect the property"],
-        "pro_meaning":[ "Agents are deemed to possess an elevated awareness of development within their locale sufficient to impose a duty to disclose nearby development",
-                        ""]
+ 		"dd_task": ["Details of the plans for development or buildings that may affect someone's ability to peacefully use and enjoy the property are required "],
+        "pro_meaning": ""
  	 },
 
  	 'false' : {
 
- 		 'meaning' : "No additional documentation has been provided in relation to nearby development",
- 		"dd_task": ["Ensure the disclosure of any relevant plans for future local development are notified to prospective buyers"],
-        "pro_meaning": "Agents are deemed to possess an elevated awareness of development within their locale sufficient to impose a duty to disclose nearby development"
+ 		 'meaning' : "",
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -2334,7 +2287,7 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been stated whether there have been any complaints about the property or a property nearby",
- 		"dd_task": ["A statement confirming the existence of any complaints either past and present is required"],
+ 		"dd_task": ["A statement confirming the existance of any complaints either past and present is required"],
         "pro_meaning": ""
  	 },
 
@@ -2374,7 +2327,7 @@ pro_meanings = {
 
  	 'empty' : {
 
- 		 'meaning' : "It has not been stated if any of the disclosure providers are aware of anything that might lead to a dispute about your property or a property nearby",
+ 		 'meaning' : "It has not been stated if any of the disclosure providers are aware of anything that might lead to a dipute about your property or a property nearby",
  		"dd_task": ["A statement is required to confirm the risk of any factor or matter presently being or developing into a dispute"],
         "pro_meaning": ""
  	 },
@@ -2398,9 +2351,9 @@ pro_meanings = {
 
  	 'true' : {
 
- 		 'meaning' : "Details have been provided in relation to the disputes that have arisen",
+ 		 'meaning' : "",
  		"dd_task": [""],
-        "pro_meaning": "Any under disclosure of disputes may have sustained negative implications"
+        "pro_meaning": ""
  	 },
 
  	 'false' : {
@@ -2415,16 +2368,16 @@ pro_meanings = {
 
  	 'empty' : {
 
- 		 'meaning' : "It has not been stated whether the property is affected by Japanese Knotweed",
- 		"dd_task": ["Confirmation of any past and present knotweed infestations are required",
-                    "If a statement confirming the knotweed existence status cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity"],
-        "pro_meaning": "It has not been stated whether the property is affected by Japanese Knotweed, the absence of full disclosure represents a significant risk to the buyer"
+ 		 'meaning' : "It has not ben stated whether the property is affected by Japanese Knotweed",
+ 		"dd_task": ["Confirmation of any past and present knoteed infestations are required",
+                    "If a statement confirming the knotweed existance status cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity"],
+        "pro_meaning": "It has not ben stated whether the property is affected by Japanese Knotweed, the absence of full disclosure represents a significant risk to the buyer"
  	 },
 
  	 'yes' : {
 
  		 'meaning' : "The property is affected by Japanese Knotweed",
- 		"dd_task": ["Confirmation of the knotweed infestation and past works to remove the infestation are required,",
+ 		"dd_task": ["Confirmation of the knoteed infestation and past works to remove the infestation are required,",
                     "It is normally appropriate for a professional to assess the degree of infestation and determine the costs associated with removal"],
         "pro_meaning": ""
  	 },
@@ -2432,7 +2385,7 @@ pro_meanings = {
  	 'no' : {
 
  		 'meaning' : "The property is not affected by Japanese Knotweed",
- 		"dd_task":   [""],
+ 		"dd_task": [""],
         "pro_meaning": ""
  	 },
 
@@ -2442,17 +2395,15 @@ pro_meanings = {
  	 'true' : {
 
  		 'meaning' : "",
- 		"dd_task": ["Ensure a clear plan identifying the location of the Knotweed is provided"],
-        "pro_meaning": "Apply extra care to identify for signs of knotweed around all parts of the property especially near buildings"
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'false' : {
 
  		 'meaning' : "",
- 		"dd_task": ["If a statement confirming the knotweed existence status cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey
-                    "There is a likelihood that a specialised indemnity may be required"],
-        "pro_meaning": ["There are substantial risks associated with not providing full disclosure in respect to Knotweed",
-                        "A failure to take all reasonable steps to declare and report knotweed can have Professional Indemnity implications"]
+ 		"dd_task": ["If a statement confirming the knotweed existance status cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity"],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -2461,15 +2412,15 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been stated whether the property is in a mining area",
- 		"dd_task": ["A search of; ground / geological stability / Con29 / mining activity may be appropriate",
+ 		"dd_task": ["A search of; ground / geological stabilty / Con29 / mining activity may be appropriate",
                     "If a statement confirming the status of mining cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity"],
-        "pro_meaning": "The absence of the mining status in the area may delay administration"
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
  		 'meaning' : "The property is in a mining area",
- 		"dd_task": ["A search of; ground / geological stability / Con29 / mining activity may be appropriate and or required by lenders for the transaction to progress",
+ 		"dd_task": ["A search of; ground / geological stabilty / Con29 / mining activity may be appropriate",
                     "If a statement confirming the status of mining cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity"],
         "pro_meaning": ""
  	 },
@@ -2478,7 +2429,7 @@ pro_meanings = {
 
  		 'meaning' : "The property is not in a mining area",
  		"dd_task": ["If the statement confirming the status of mining is insufficient for this purchase the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity"],
-        "pro_meaning": "A formal determination confirming the status of ground stability may still be required propagating a need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity",
+        "pro_meaning": "A formal determination confirming the status of ground stability may still be required propogating a need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity",
  	 },
 
  } ,
@@ -2487,13 +2438,13 @@ pro_meanings = {
  	 'true' : {
 
  		 'meaning' : "information regarding this properties status as within a mining area has been provided",
- 		"dd_task": ["A moe detailed determination confirming the status of ground stability may likely be required propagating a need to rely upon a contemporary assessment from a formal search resource or otherwise a custom survey and or specialised indemnity"],
+ 		"dd_task": ["A moe detailed determination confirming the status of ground stability may likely be required propogating a need to rely upon a contemporary assessment from a formal search resource or otherwise a custom survey and or specialised indemnity"],
         "pro_meaning": ""
  	 },
 
  	 'false' : {
 
- 		 'meaning' : "No documents have been provided in relation to mining in the area ",
+ 		 'meaning' : "",
  		"dd_task": ["If a statement confirming the status of mining cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey and or specialised indemnity"],
         "pro_meaning": ""
  	 },
@@ -2504,8 +2455,8 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been stated whether anything has happened in the property that a buyer might want to know or that might influence their decision to purchase the property",
- 		"dd_task": ["Ensure the discloser understands the impact of not completing this section"],
-        "pro_meaning": "Unless disclosed any subsequent information that comes to light is likely to negatively impact the prospect of a sale progressing and or the value at which a transaction completes "
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
@@ -2517,7 +2468,7 @@ pro_meanings = {
 
  	 'no' : {
 
- 		 'meaning' : "Nothing has happened in the property that is known that a buyer might want to know or that might influence their decision to purchase the property",
+ 		 'meaning' : "Nothing has happed in the property that is known that a buyer might want to know or that might influence their decision to purchase the property",
  		"dd_task": [""],
         "pro_meaning": ""
  	 },
@@ -2528,66 +2479,60 @@ pro_meanings = {
  	 'true' : {
 
  		 'meaning' : "",
- 		"dd_task": ["Inspect the documents to ensure the information is clear and sufficiently complete to convey any potential risk or negative impact"],
+ 		"dd_task": [""],
         "pro_meaning": ""
  	 },
 
  	 'false' : {
 
  		 'meaning' : "",
- 		"dd_task": ["Verify with the discloser what information can be provided to better explain the other implied matters could influence a buyer",
-                    "Encourage the discloser to carefully detail any additional matters of importance that may have a negative impact upon a purchaser evaluation of the property"],
-        "pro_meaning": "A failure to disclose underlying matters that could negatively influence a potential buyer decision may result in liability and potential failure of the transaction"
+ 		"dd_task": [""],
+        "pro_meaning": ""
  	 },
 
  } ,
-'neighbour_access_bool' : {
+'neighbours_access_bool' : {
 
  	 'empty' : {
 
- 		 'meaning' : "It has not been stated whether any neighbour or members of the public do or do not have the right to enter the property or any part of it",
- 		"dd_task": ["A statement is required to specify if any neighbour or class of public person are entitled to enter onto the property"
-                    "Inspect the Title document to determine if any 3rd party access rights have been registered against the property"],
-        "pro_meaning": "Without a declaration regarding the status of 3rd party access to the property the value may be impaired and conveyance elements may become protracted"
+ 		 'meaning' : "It has not been stated whether any neighbours or members of the public do or do not have the right to enter the property or any part of it",
+ 		"dd_task": ["A statement is required to specify if any neighbours or class of public person are entitled to enter onto the property"],
+        "pro_meaning": ""
  	 },
 
  	 'yes' : {
 
- 		 'meaning' : "Some neighbour or members of the public have a right to enter the some or all of the property",
- 		"dd_task": ["Determine the extent the rights of access have been exercised"],
-        "pro_meaning": "Third party access rights over the property may negatively impact the quiet, peaceful enjoyment and privacy of the property"
+ 		 'meaning' : "Some neighbours or members of the public have a right to enter the some or all of the property",
+ 		"dd_task": [""],
  	 },
 
  	 'no' : {
 
- 		 'meaning' : "No neighbour or members of the public have a right to enter onto any part of the property",
+ 		 'meaning' : "No neighbours or members of the public have a right to enter onto any part of the property",
  		"dd_task": [""],
-        "pro_meaning": "The absence of third party access rights over the property improves the privacy value of the property"
+        "pro_meaning": ""
  	 },
 
  } ,
-'neighbour_access' : {
+'neighbours_access' : {
 
  	 'true' : {
 
  		 'meaning' : "",
 
-        "dd_task": ["A statement is required to specify the identity of the neighbour and class of public persons entitled to enter onto the property",
+        "dd_task": ["A statement is required to specify the identity of the neighbours and class of public persons entitled to enter onto the property",
                     "A confirmation plan and statement is required to specify the location of the property and the means of entry onto the property that may be exercised by any neighbour or member of the public ",
-                    "Disclosure required of: any terms rights or restrictions that apply to any neighbour or member of the public seeking to rely upon a right to enter onto the property must be disclosed",
-                    "Documenting and the extent of any 3rd party access",
-                    "Evaluate the negative impact resulting from the 3rd party access rights if exercised to their full extent"],
-        "pro_meaning":
-                 [  "Ensure prospective buyers understand the possible impact 3rd party access rights may have upon the quiet and peaceful enjoyment and privacy of the property"]		
+                    "Discloure required of: any terms rights or restrictions that apply to amy neighbour or member of the public seeking to rely upon a right to enter onto the property must be disclosed"],
+        "pro_meaning": ""		
  	 },
 
  	 'false' : {
 
  		 'meaning' : "",
- 		"dd_task": ["A statement is required to specify the identity of the neighbour and class of public persons entitled to enter onto the property",
+ 		"dd_task": ["A statement is required to specify the identity of the neighbours and class of public persons entitled to enter onto the property",
                     "A confirmation plan and statement is required to specify the location of the property and the means of entry onto the property that may be exercised by any neighbour or member of the public ",
-                    "Disclosure required of: any terms rights or restrictions that apply to any neighbour or member of the public seeking to rely upon a right to enter onto the property must be disclosed"],
-        "pro_meaning": "Undisclosed rights of access that emerge during the sale process or subsequent to a transaction may result in; 1. professional indemnity exposure, and  2. client liability"
+                    "Discloure required of: any terms rights or restrictions that apply to amy neighbour or member of the public seeking to rely upon a right to enter onto the property must be disclosed"],
+        "pro_meaning": ""
  	 },
 
  } ,
@@ -2595,9 +2540,8 @@ pro_meanings = {
 
  	 'empty' : {
 
- 		 'meaning' : "It has not been declared if there is anything else that the buyer might want to know that may influence their decision to buy or sell the property",
- 		"dd_task": ["The buyer should be consulted to determine if the absence of an answer an oversight",
-                    "Explain to the buyer the consequences not disclosing information could have in regard to a sale progressing to completion"],
+ 		 'meaning' : "It has not been declared if there is anything else that the buyer might want to know that may influence thier decision to buy or sell the property",
+ 		"dd_task": [""],
         "pro_meaning": ""
  	 },
 
@@ -2610,7 +2554,7 @@ pro_meanings = {
 
  	 'no' : {
 
- 		 'meaning' : "It has been declared that there is no other information that has not already been disclosed that a buyer might want to know about the property or that might influence their decision to buy the property",
+ 		 'meaning' : "It has been declared that there is not other information not already disclosed that a buyer might want to know about the property or that might influence their decision to buy the property",
  		"dd_task": [""],
         "pro_meaning": ""
  	 },
@@ -2620,16 +2564,16 @@ pro_meanings = {
 
  	 'true' : {
 
- 		 'meaning' : "Additional information has been provided that is relevant to the buyer and may influence their evaluation of the property",
+ 		 'meaning' : "",
  		"dd_task": ["Full disclosure is required of any information the vendor believes that the buyer might want to know or might influence their decision to buy the property"],
         "pro_meaning": ""
  	 },
 
  	 'false' : {
 
- 		 'meaning' : "The documentation regarding the existence of other factors has not been provided",
+ 		 'meaning' : "",
  		"dd_task": [""],
-        "pro_meaning": "Missing documentation regarding the additional information may delay or undermine the prospective buyer's assessment of the property"
+        "pro_meaning": ""
  	 },
 
  }
