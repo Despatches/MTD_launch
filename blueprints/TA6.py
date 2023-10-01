@@ -4,7 +4,7 @@ from launch.models.models import User, market_particulars , new_form_object, tem
 from launch.functions.data_base_procedures import add_to_selections_with_parents, counter,last_input_to_select_set, find_propagations,delete_last_from_queue, sort_answers_and_add,add_to_selections_without_parents,get_selection_keys, check_selection_set,delete_last_from_object_queue, sort_answers_and_add_objects, add_to_selections_without_parents_objects,add_to_selections_with_parents_objects,collect_object_selections,update_last_data_entry_mp
 from launch.functions.access_record_procedures import update_last_user_access
 from launch.blueprints.form_templates.standard_TA6.standard_TA6 import template as standard_ta6_template, bounds_radio_options
-from launch.blueprints.form_templates.json_form_templates import template_sort, basic_template_render, create_meaning_lists
+from launch.blueprints.form_templates.json_form_templates import template_sort, basic_template_render
 from launch.blueprints.form_templates.new_db_sql_code_writer import create_new_sql_table, element_relevancy
 from launch.blueprints.form_templates.template_data_transitions import collect_form_data, form_results_collection, input_type_jiggling,form_equals_evaluation, multi_line_input, generic_input, flow_control_tiers, bool_java_conversion, print_for_eqivilents, print_text_modifier, work_task as work_task_class, evaluate_form_mp_relation
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session,json,jsonify
@@ -149,9 +149,6 @@ def template_form_collect():
 
 	equals = pairings[section]
 
-	#print(equals)
-	#print(inputs)
-
 	final_inputs = form_equals_evaluation(equals, inputs, form)
 
 	pairs += final_inputs['pairs']
@@ -238,29 +235,6 @@ def create_form_db_table():
 			new_list = characteristics_of_risk(sets)
 			return json.dumps(new_list)
 
-	elif call == 'meaning':
-		sub_type = request.form.get('sub_type')
-		sub_data = {}
-		exec(sub_type, sub_data)
-		if 'add_on' in sub_data:
-			add_on = sub_data['add_on']
-		else: add_on = None
-		if 'sub_type' in sub_data:
-			if sub_data['sub_type'] == 'duplicate':
-				meanings = create_meaning_lists(template, sub_data['sub_type'], add_on=add_on)
-		else:
-			meanings = create_meaning_lists(template, add_on=add_on)
-			if 'meanings' in tp:
-				old_means = tp['meanings']
-				for mean in meanings:
-					if mean not in old_means:
-						old_means[mean] = meanings[mean]
-					else:
-						for ans in meanings[mean]:
-							if ans not in old_means[mean]:
-								old_means[mean] = meanings[mean]
-								break
-				return json.dumps(old_means)
 		return json.dumps(meanings)
 
 	"""elif call == 'gpt_training':
@@ -474,7 +448,7 @@ def bulk_form_collect(form, template_set, *args):
 
 @TA6_forms.route("/synopsis_temp/<form_name>/<p_type>/<particular_id>")
 def collect_synopsis_data(form_name,p_type, particular_id):
-	if form_name == 'TA6_Part_1':
+	if form_name == 'TA6_Par_1':
 		template_set = templates[form_name]
 		template = template_set['template']
 		results = form_particular_creation(form_name, p_type, particular_id)
@@ -514,7 +488,7 @@ def collect_synopsis_data(form_name,p_type, particular_id):
 	else:
 		data = micro_synop_return({'form_name':form_name, 'root_linkage':p_type,'root_linkage_id':particular_id})
 		data['form'] = particular_id
-		print(data['form_name'])
+		#print(data['form_name'])
 		return render_template('synopsis_template_html.html', form_set=json.dumps(data), p_type = p_type, particular_id = particular_id)
 
 """@TA6_forms.route("/synopsis_temp", methods=['POST'])

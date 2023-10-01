@@ -152,9 +152,11 @@ class market_particulars:
 		if self.TA6[0] != None:
 			form = self.TA6[0]
 			template_set = templates['TA6_Part_1']
-			self.TA6 = form_data.form_results_collection(form_data.collect_form_data(template_set['query_columns'],form), form, 'TA6_Part_1')
+			self.TA6 = form_data.form_results_collection("market_particular", self.id, 'TA6_Part_1' ,"ancilliary_form")
 			#TA6_part_1_set.fraud_risk_comp(templates)
-			self.TA6.append_data_group(template_set['comp_risk_fraud'])
+			if template_set['comp_risk_fraud'] != None:
+				self.TA6.append_data_group(template_set['comp_risk_fraud'])
+			
 			self.TA6.add_element_relevances()
 			self.TA6.exclude_irrelevants()
 			self.TA6.sub_forms_gather(True)

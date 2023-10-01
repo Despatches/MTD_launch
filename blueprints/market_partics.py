@@ -54,7 +54,6 @@ def mp_proceed():
 
 	cover_image = 'none'
 	filename = 'none'
-	print(request.files)
 	if 'cover_image' not in request.files:
 		cover_image = 'none'
 	elif request.files['cover_image'].filename == '':
@@ -178,7 +177,6 @@ def display_mp_vendor():
 	get_mps.execute(query,params)
 	data = get_mps.fetchall()
 	row_count = len(data)
-	#print(data)
 	if not row_count == 0:
 		d=[]
 	
@@ -220,18 +218,14 @@ def selectedmp(particular_id):
 		mp.TA6_and_subs()
 		mp.stamp_evaluation()
 		mp.auto_objects()
-		print(mp.title_derivatives)
 		if not  mp.TA6 == None:
-			#print(mp.TA6, 'bb')
 			TA6_data = json.dumps({'data':mp.TA6.data,'sub_forms':mp.TA6.sub_forms, 'form':mp.TA6.form})
 		else: TA6_data = None
-		print(mp.stamps.__dict__)
 
 		return render_template("mp_views_and_profiles/mp_profile.html" ,sudo_name = mp.sudo_name ,creation_date = mp.creation, 
 									mid=mp.id, particular_id=particular_id,
 									mp = mp, headings = headings, TA6_data = TA6_data)
 	else:
-		print(current_user.id, mp.user_creator, mp.vendor)
 		return redirect(url_for('main.profile', userid=current_user.id))	
 
 # selection page to select data for the market particulars selections table

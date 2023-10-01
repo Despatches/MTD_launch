@@ -1,6 +1,5 @@
-from launch import db
+from launch import db, templates
 from flask_login import login_user , current_user, login_required
-from launch.models.models import User, market_particulars, answer, templates
 from launch.functions.data_base_procedures import add_to_selections_with_parents, counter,last_input_to_select_set, find_propagations,delete_last_from_queue, sort_answers_and_add,add_to_selections_without_parents,get_selection_keys, check_selection_set,delete_last_from_object_queue, sort_answers_and_add_objects, add_to_selections_without_parents_objects,add_to_selections_with_parents_objects,collect_object_selections,update_last_data_entry_mp
 from launch.functions.access_record_procedures import update_last_user_access
 from launch.blueprints.form_templates.standard_TA6.standard_TA6 import template as standard_ta6_template, bounds_radio_options
@@ -128,6 +127,7 @@ class template_question:
 class form_results_collection:
 	def __init__(self, results, form, form_name, collection_type = 'query_pairings', **kwargs):
 	# template and accompanying files e.g meanings
+		print(templates)
 		self.template_set = templates[form_name]
 
 		if collection_type == 'query_pairings':
@@ -669,9 +669,9 @@ def input_type_jiggling(e, data, form, docu_det, ident):
 					if sub_row_matches['form'] in r and r[sub_row_matches['form']]['value'] != False:
 
 						#sub_row_matches['data'].append(r[sub_row_matches['form']])
-						print(r[sub_row_matches['form']])
+						#print(r[sub_row_matches['form']])
 						returns = input_type_jiggling('none',r[sub_row_matches['form']], form, sub_table_docu_det, sub_row_matches['form'])
-						print(returns)
+						#print(returns)
 						def alter_date(output):
 							if output == False:
 								return 'null'
@@ -805,7 +805,7 @@ def multi_line_input(pairs, table, **kwargs):
 	query = f"INSERT into {table}\
 				({rows})\
 				VALUES{values};"
-	print(query)
+	#print(query)
 	cursor.execute(query)
 
 	db.commit()

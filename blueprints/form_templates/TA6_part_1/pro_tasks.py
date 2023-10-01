@@ -172,8 +172,7 @@ pro_meanings = {
 'ground_rent_increase_bool' : {
 
      'empty' : {
-
-         'meaning' : ["It is not stated whether the lease specifies when the Ground Rent will be increased",]
+         'meaning' : ["It is not stated whether the lease specifies when the Ground Rent will be increased",],
  		"dd_task": ["Inspect the lease agreement to verify if the date of the next ground rent increase is stated",
                     "Enter in MTD Ledger"],
         "pro_meaning": "It is not stated whether the lease specifies the date Ground rent will be increased"
@@ -1844,7 +1843,7 @@ pro_meanings = {
  		"dd_task": ["Determine the existing and the potential solar capacity for this property",
                     ],
         "pro_meaning": ["A failure to disclose any practical or financial barriers preventing the provision of Solar Panels may result in a Seller liability and professional indemnity exposure",
-                        "Buyers seeking to implement or enhance sustainability credentials can expect disclosure of the potential solar capacity""]
+                        "Buyers seeking to implement or enhance sustainability credentials can expect disclosure of the potential solar capacity"]
  	 },
 
  	 'yes' : {
@@ -2449,7 +2448,7 @@ pro_meanings = {
  	 'false' : {
 
  		 'meaning' : "",
- 		"dd_task": ["If a statement confirming the knotweed existence status cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey
+ 		"dd_task": ["If a statement confirming the knotweed existence status cannot be provided by the vendor the Buyer may need to rely upon a contemporary assessment from another resource or otherwise a custom survey"
                     "There is a likelihood that a specialised indemnity may be required"],
         "pro_meaning": ["There are substantial risks associated with not providing full disclosure in respect to Knotweed",
                         "A failure to take all reasonable steps to declare and report knotweed can have Professional Indemnity implications"]
@@ -2546,7 +2545,7 @@ pro_meanings = {
  	 'empty' : {
 
  		 'meaning' : "It has not been stated whether any neighbour or members of the public do or do not have the right to enter the property or any part of it",
- 		"dd_task": ["A statement is required to specify if any neighbour or class of public person are entitled to enter onto the property"
+ 		"dd_task": ["A statement is required to specify if any neighbour or class of public person are entitled to enter onto the property",
                     "Inspect the Title document to determine if any 3rd party access rights have been registered against the property"],
         "pro_meaning": "Without a declaration regarding the status of 3rd party access to the property the value may be impaired and conveyance elements may become protracted"
  	 },

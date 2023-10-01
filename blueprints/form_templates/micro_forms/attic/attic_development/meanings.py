@@ -88,5 +88,4 @@ meanings = {
         'true': {'meaning':'The potential value uplift has been provided by a professional, who specified a prospective loft or eaves conversion proposal would yield {}'},
         'false': {'meaning':'a professional has not provided a figure to indicate the prospective value a loft or eaves conversion could create'},
      },
-     }
 }
