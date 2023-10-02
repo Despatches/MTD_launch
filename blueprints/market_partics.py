@@ -221,6 +221,8 @@ def selectedmp(particular_id):
 		if not  mp.TA6 == None:
 			TA6_data = json.dumps({'data':mp.TA6.data,'sub_forms':mp.TA6.sub_forms, 'form':mp.TA6.form})
 		else: TA6_data = None
+		for stamp in mp.stamps.stamps:
+			mp.stamps.stamps[stamp] = mp.stamps.stamps[stamp].__dict__
 
 		return render_template("mp_views_and_profiles/mp_profile.html" ,sudo_name = mp.sudo_name ,creation_date = mp.creation, 
 									mid=mp.id, particular_id=particular_id,

@@ -213,7 +213,6 @@ def template_sort(template, full_q = False):
 
 				if 'input_type' in q and ('question_set' not in q or q['question_set'] != 'true'):
 					if 'element' in q:
-						print(q['element'])
 						form_object['element'] = q['element']
 					if full_q == True:
 						questions.cur_focus.append(q)

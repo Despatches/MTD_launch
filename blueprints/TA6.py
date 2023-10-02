@@ -162,7 +162,6 @@ def template_form_collect():
 	if len(pairs) > 0:
 		"""update_statement(pairs, form, "`TA6`.`TA6_Part_1_records`")"""
 		if sec_status != 'steady':
-			print(sec_status)
 			pairs.append({'row':'section_marker', 'value':sec_status})
 		update_statement(pairs, form, "`form_data`.`TA6_Part_1_data`")
 	"""if len(pairs) > 0:
@@ -265,7 +264,6 @@ def create_form_db_table():
 def test_template():
 
 	tempy = request.form.get('template')
-	print(tempy)
 	
 	tp = {}
 	exec(tempy, tp)
@@ -370,7 +368,6 @@ def TA6_Part_1_results(form_id):
 
 	# documents whereby the flow control route would have made this question answerable
 	relevant_documents = input_type_list_sorts(document_list, flow_controls)
-	print(document_list)
 
 
 			#flow_controlled_documents[doc['identifier']] = doc_controllers
@@ -507,7 +504,6 @@ def synopsis_temp_create_new_work_task():
 @TA6_forms.route('/create_form_work_task', methods=['POST'])
 def create_work_task():
 	work_task = json.loads(request.form.get("data"))
-	print(work_task)
 	cursor = db.cursor()
 	query = "INSERT INTO `form_data`.`work_tasks`(\
 					form,\
@@ -579,7 +575,6 @@ def complete_work_task():
 # prep generic form data to send to templating system
 def template_send_prep(form_name):
 	form_set = templates[form_name]
-	print(form_set)
 	template = form_set['template']
 	returns = template_sort(template)
 	flow_controls = json.dumps(returns['flow_controls'])

@@ -88,7 +88,6 @@ def collect_form_data(query_column, form_id, db_table= '`form_data`.`TA6_Part_1_
 
 	query = f'SELECT {query_column}, section_marker, user_initiator, ceation_moment FROM {db_table}\
 				WHERE form_id = %s'
-	print(query)
 
 	cursor.execute(query, params)
 
@@ -127,7 +126,6 @@ class template_question:
 class form_results_collection:
 	def __init__(self, results, form, form_name, collection_type = 'query_pairings', **kwargs):
 	# template and accompanying files e.g meanings
-		print(templates)
 		self.template_set = templates[form_name]
 
 		if collection_type == 'query_pairings':
@@ -226,7 +224,7 @@ class form_results_collection:
 						) VALUES (%s,%s,%s, NOW(), %s, %s);"""
 
 				params = (root_linkage,root_linkage_id,current_user.id,form_name, json.dumps(self.results))
-				print(params)
+
 				cursor.execute(query,params)
 				cursor.execute("SELECT LAST_INSERT_ID() FROM `form_data`.`ancilliary_forms`")
 				self.data = None
@@ -384,8 +382,6 @@ class form_results_collection:
 				#self.sub_tables[table_route] = 'empty'
 				self.data[f'{table_route}_count']['data_rows'] = 'none'
 
-			#print(self.sub_tables[table_route])
-		#print(self.sub_tables)
 
 # alter values for machine learning and analysis purposes
 	def value_interpret(self):
@@ -472,7 +468,6 @@ class result:
 
 # add relevancy markers to data pieces based off of element relevances so they are not displayed or processed"""
 	def exclude_irrelevants(self):
-		#print(self.element_relevances['flow_controls'])
 		flows = self.element_relevances['flow_controls']
 		for key in self.data:
 			if key in flows:
@@ -669,9 +664,7 @@ def input_type_jiggling(e, data, form, docu_det, ident):
 					if sub_row_matches['form'] in r and r[sub_row_matches['form']]['value'] != False:
 
 						#sub_row_matches['data'].append(r[sub_row_matches['form']])
-						#print(r[sub_row_matches['form']])
 						returns = input_type_jiggling('none',r[sub_row_matches['form']], form, sub_table_docu_det, sub_row_matches['form'])
-						#print(returns)
 						def alter_date(output):
 							if output == False:
 								return 'null'
@@ -905,7 +898,6 @@ def flow_control_tiers(control_set, data):
 		if control['identifier'] in data:
 			comp = data[control['identifier']]['value']
 			comp = output_py_return(comp, data[control['identifier']]['input_type'])
-			#print(control['identifier'],comp )
 
 			for val in control['value']:
 				if val == comp:
@@ -918,7 +910,6 @@ def flow_control_tiers(control_set, data):
 					item_relevant = False
 			if item_relevant == False: 
 				return False
-				#print(comp, control_set, item_relevant)
 	if item_relevant == True:
 		return True
 	return False
