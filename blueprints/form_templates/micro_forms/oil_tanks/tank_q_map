@@ -1,0 +1,39 @@
+
+"section_name":"Tank Specifictions",
+	"identifier":"fuel_type", 
+	"identifier":"tank_storage_volume", 
+	"identifier":"tank_installation_year", 
+	"identifier":"is_tank_bunded", 
+
+"section_name":"Environmental Regulations",
+	"identifier":"fresh_or_coastal", 
+	"identifier":"into_drain", 
+
+"section_identifier":"tank_proximities",
+		"identifier":"prox_building",
+		"identifier":"prox_bound",
+		"identifier":"prox_ditch",
+		"identifier":"prox_drain_culvert",
+		"identifier":"open_gutter",
+		"identifier":"driveway_vehicles",
+
+"section_identifier":"tank_type_standard",
+		"identifier":"bunded",
+		"identifier":"platform",
+		"identifier":"elevated",
+		"identifier":"construction_material",
+		"identifier":"age",
+
+"section_identifier":"maintenance_inspection",
+		"identifier":"inspected",
+		"identifier":"maintained",
+		"identifier":"repaired",
+		"identifier":"leak_history", : {'propogate:{micro-form'"leak_history"}
+		"identifier":"",
+
+"section_identifier":"access",
+		"identifier":"inspected",
+		"identifier":"maintained",
+		"identifier":"repaired",
+		"identifier":"leak_history",
+		"identifier":"",

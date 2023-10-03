@@ -8,9 +8,15 @@ stamps  = {
 		},
 		'marks':{
 			'default':{'text':['this property has no mains sewage connection']},
-			'new_disclose':{'small_sewage_discharge':{}},
-			'finance':{'small_sewage_treatment':{'text':'Loan Funding may be possible in order to enable installation of either mains sewage connection or a small sewage treatment plant'}},
-			'indem':{}
+			'new_disclose':{'text':[
+					"undertake the small sewage disclosure module to determine if this system is compliant with the current sewage discharge regulations",
+					"if non complaint a despatches stratified mortgages may lend to cover the cost of bringing the property in addition to the purchase.",
+					"cover for any non compliant damage done can be appended to conveyance indemnity "
+				],
+				"new_disclose_name":"Small Sewage"
+			},
+			'loan_opp':{'text':['Loan Funding may be possible in order to enable installation of either mains sewage connection or a small sewage treatment plant']},
+			'indem_opp':{'text':['An indemnity may be available in order to mitigate this risk']}
 			},
 		'info_type':['']
 	},
@@ -27,8 +33,8 @@ stamps  = {
 		'marks':{
 			'default':'This property may have limitations effecting it\'s permitted development rights',
 			'new_disclose':{'permitted_develop_status':{'':''},},
-			'finance':{},
-			'indem':{},
+			'loan_opp':{},
+			'indem_opp':{},
 		},
 		'info_type':{'legal_concern':True, 'estate_agent':'negative'}
 	},
@@ -42,8 +48,14 @@ stamps  = {
 		'identifiers':{
 			'TA6_Part_1.mains_drainage':{'values':['no'], 'status':'minimum.1', 'marks':[True]},
 			'TA6_Part_1.electricity':{'values':['no'], 'status':'minimum.1', 'marks':[True]},
-			'TA6_Part_1.water_supply':{'values':['no'], 'status':'minimum.1', 'marks':[True]},
-		}
+			'TA6_Part_1.water_supply':{'values':['no'], 'status':'minimum.1', 'marks':[True]},	
+		},
+		'marks':{
+			'default':'This does not have a mains connection to at least one major utility',
+			'new_disclose':{'permitted_develop_status':{'':''},},
+			'loan_opp':{},
+			'indem_opp':{},
+		}		
 	},
 	'off_grid_power':{
 		'identifiers':{
@@ -53,8 +65,9 @@ stamps  = {
 	'eco_property':{
 		'identifiers':{
 			'TA6_Part_1.solar_panels':{'values':['yes'],'status':'minimum.2'},
-			'TA6_Part_1.heat_pumps':{'values':['yes'],'status':'minimum.2'}
-		}
+			'TA6_Part_1.heat_pumps':{'values':['yes'],'status':'minimum.2'},
+		},
+		"marks":{"default":{"text":["This property is ideal for people interested in a more sustainable way of living or are interested in a low carbon lifestyle"]}}
 	},
 	'without_sewage':{
 		'identifiers':{
@@ -65,9 +78,17 @@ stamps  = {
 	'not_suitable_For_habitation':{
 		'identifiers':{
 			'stamp.without_sewage':{'values':[True], 'status':'minimum.1', 'marks':[True]}
-		}
+		},
+		'marks':{
+			'default':{'text':['this property is missing a major utilit and is therfore uninhabitable']},
+			'new_disclose':{'permitted_develop_status':{'':''},},
+			'loan_opp':{},
+			'indem_opp':{},
+		}		
 	}
 }
+
+#evaluated individual data peices that make up a stamp
 class stamp_identifier:
 	def __init__(self, name, identifier):
 		self.values = identifier['values']
@@ -78,6 +99,7 @@ class stamp_identifier:
 		self.name = name
 		self.match = False
 		self.finished =  False
+		#find out subdivisions denoting which form the identifier belongs to
 		x = re.search("\.", self.name)
 		if not x == None:
 			deci = x.start()
@@ -98,6 +120,8 @@ class stamp_identifier:
 					self.match = True
 					break
 
+
+#main body of stamp data
 class stamp:
 	def __init__(self, name, stamp):
 		self.name = name

@@ -54,12 +54,17 @@
     background-color:purple;
     color:white;
 }
+.indem_opp{
+    background-color:blue;
+    color:white;
+}
 
 .colour_stamp_view{
     position:absolute;
     z-index: 3;
     top: 0;
     left: 0;
+    width:100%;
 }
 </style>
 <section>
@@ -161,94 +166,13 @@
     </div>
 </section>
 <section id="object_details">
- <div class='columns'>
-    <div class='column is-half'>
-    {% include "mp_views_and_profiles/mp_profile_sub_components/mp_components_update.html" %}
-    </div>
-    <div class='column'>
-        <div style='overflow:scroll;height:600px'>
-    {% if 'off_grid_sewage' in mp['stamps'].stamps %}
-        {% if mp['stamps'].stamps['off_grid_sewage']['bool'] == true %}
-            <div class='feed_box'>
-                <div class='row'>
-                    <div class='colour_col'>
-                        <div class='colour_tab'></div>
-                        <div class='colour_tab new_disclose' stamp='off_grid_sewage' type='new_disclose' group='colour_stamp'></div>
-                        <div group='colour_stamp'stamp='off_grid_sewage'class='colour_tab loan_opp' type='loan_opp'></div>                        
-                    </div>
-                    <div class='feed_content'>
-                        <div class='box' group='main_feed_content'
-                        stamp='off_grid_sewage'>
-                            <p><span>This property has no mains sewage connection</span>
-                            </p>
-                            <hr>
-                        </div>
-                        <div stamp='off_grid_sewage' group ='colour_stamp_view' class='box new_disclose hide colour_stamp_view hide' type='new_disclose'>
-                            <div stamp='off_grid_sewage' group ='colour_stamp_view_body'>
-                                <div><button type='main_feed_return' stamp='off_grid_sewage' class='button is-warning'><-</button></div>
-                                <div><p>undertake the small sewage disclosure module to determine if this system is compliant with the current sewage discharge regulations</p></div>
-                                <div><p>if non complaint a despatches stratified mortgages may lend to cover the cost of bringing the property in addition to the purchase.</p>
-                                <p>
-                                    cover for any non compliant damage done can be appended to conveyance indemnity 
-                                </p></div>
-                                <div><button class='button is-dark' type='issue_disclose'>small sewage</button></div>
-                            </div>
-                        </div>
-                        <div stamp='off_grid_sewage' group ='colour_stamp_view' class='box loan_opp hide colour_stamp_view' type='loan_opp'>
-                         <div><button type='main_feed_return' stamp='off_grid_sewage' class='button is-warning'><-</button></div>
-                           <p> Loan Funding may be possible in order to enable installation of either mains sewage connection or a small sewage treatment plant</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
-    {% if 'permitted_development_limitation' in mp['stamps'].stamps
-     %}
-        {% if mp['stamps'].stamps['permitted_development_limitation']['bool'] == true %}
-            <div class='feed_box'>
-                <div class='row'>
-                    <div class='colour_col'>
-                        <div class='colour_tab'></div>
-                        <div class='colour_tab price_neg'></div>
-                         <div class='colour_tab new_disclose'></div> 
-                    </div>
-                    <div class='box feed_content'>
-                        <div>
-                            <p><span>This property has factors limiting permitted development</span>
-                            </p>
-                            <div>
-                                <button class='button is-dark'>Learn More</button>
-                            </div>
-                        </div>
-                        <hr>
-                        <div>
-                            <p><span> Enhance disclosure with permitted development disclosure</span></p>
-                        </div>
-                        <div>
-                             <button class='button is-dark'>Permitted Development</button>
-                         </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
-    {% if 'eco_property' in mp['stamps'].stamps
-     %}
-        {% if mp['stamps'].stamps['eco_property']['bool'] == true %}
-            <div class='feed_box'>
-                <div class='row'>
-                    <div class='colour_col'>
-                        <div class='colour_tab'></div>
-                    </div>
-                    <div class='box feed_content'>
-                        <p><span>This property is ideal for people interested in a more sustainable way of living or are interested in a low carbon lifestyle</span>
-                        </p>
-                    </div>
-                </div>
-            </div>            
-        {% endif %}
-    {% endif %}
+    <div class='columns'>
+        <div class='column is-half'>
+            {% include "mp_views_and_profiles/mp_profile_sub_components/mp_components_update.html" %}
+        </div>
+         <div class='column'>
+            <div style='overflow:scroll;height:600px'>
+                {% include "mp_views_and_profiles/stamps/stamp_stream.jinja" %}
             </div>
         </div>
     </div>
@@ -271,7 +195,7 @@
 </section>
 <section id="other_forms" class="hide">
     <div style="height:20px;"></div>
-    <a href="{{ url_for('TA6_forms.template_form', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}">
+    <a href="{{ url_for('TA6_forms.template_micro_form', root_linkage_id=particular_id, root_linkage='market_particular', form_name='TA6_Part_1') }}">
         {%if TA6_data == None%} 
             <button class="button is-medium"  >New TA6 part 1</button>
         {% else %}
@@ -690,7 +614,7 @@ $(document).ready(function(){
             $(stamp_mark).css({'height':height, 'width':width})
                 .removeClass('hide');
             $(main_feed).attr('mark_switch', 'true')
-            $(`button[type=main_feed_return][stamp=off_grid_sewage]`).click(function(){
+            $(`button[type=main_feed_return]`).click(function(){
                 $(stamp_mark).addClass('hide')
                 height = $(main_feed).attr('height')
                 width = $(main_feed).attr('width')

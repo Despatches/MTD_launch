@@ -1,0 +1,30 @@
+legislation
+
+Occupiers' Liability Act 1957
+'juristiction' : ['england', 'wales']
+
+
+
+Environmental Protection Act 1990
+
+
+
+
+'juristiction' : ['england', 'wales']
+'form_identifier':'oil_tanks_template',
+'section_identifier':"tank_specifications",
+"identifier":"domestic_liquid_fuel_storage",
+"input_type":"bool",
+'display_reliance':{'identifier':"is_tank_bunded",'display_value':['0']},
+'act_identifier':'environment_act_2021',
+
+
+'juristiction' : ['england', 'wales']
+'form_identifier':'oil_tanks_template',
+'section_identifier':"tank_proximities",
+"identifier":"fresh_or_coastal",
+"input_type":"bool",
+'display_reliance':{'identifier':"fresh_or_coastal",'display_value':['1']},
+'act_identifier':'environmental_protection_act_1990',
+
+

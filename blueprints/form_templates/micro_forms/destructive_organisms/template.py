@@ -6,14 +6,14 @@ template = {
 			'section_identifier':'infestation',
 			'main_questions':[
 				{
-					'question_title':'Has this property ever sufferent from an infestation of any species of insect, mammal, or bio-organism?',
+					'question_title':'Has this property ever suffered from an infestation of any species of insect, mammal, or bio-organism?',
 					'input_type':'bool_extra',
 					'identifier':'ever_suffered_infestation'
 					'radio_options':{'radio_value':'not_known','radio_text':'Not Known'},
 					'sub_questions':[
 						{
 							'question_title':'what was the nature / mode of the infestation?',
-							'other question text': ['confirm ; what type of investation, the building fabric effected, the scale and severity. '],
+							'other question text': ['confirm ; what type of infestation, the building fabric effected, the scale and severity. '],
 							'input_type':'detail_text',
 							'display_reliance':{'identifier':'parent','display_value':['1']},
 							'identifier':'infestation_details'
@@ -37,10 +37,10 @@ template = {
 								{
 									'question_title':'Was any warranty provided with the infestation resolution measure',
 									'identifier':'repel_warranty',
-									'input_type':'bool',
+									
 								}
 							]
-						},
+						}
 						{
 							'question_title':'Was any fabric forming part of the property damaged and replaced as a result of the infestation?',
 							'input_type':'bool',
@@ -71,7 +71,7 @@ template = {
 							'input_type':'docu',
 							'display_reliance': [{'identifier':'remedy_warranty_docu','value':['1']}],
 							'identifier':'remedy_warranty_docu',
-							'display_reliance':{'identifier':'remedy_warranty_docu','display_value':['1']},
+							'display_reliance':{'identifier':'parent','display_value':['1']},
 						},
 					]
 				},

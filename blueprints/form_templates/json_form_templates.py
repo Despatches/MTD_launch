@@ -1,11 +1,6 @@
 from flask import json,jsonify, render_template
 import copy
-from launch.blueprints.form_templates.TA6_part_1.TA6_part_1 import TA6_Part_1
-from launch.blueprints.form_templates.micro_forms.subsidence.subsidence import subsidence
-from launch.blueprints.form_templates.micro_forms.attic.attic_development.attic_development import attic_development
-from launch.blueprints.form_templates import template_data_transitions as form_data
 
-templates = {'TA6_Part_1':TA6_Part_1, 'subsidence':subsidence, 'attic_development':attic_development}
 
 #class based template sort deprecated
 """class template_sorter:
@@ -149,86 +144,11 @@ templates = {'TA6_Part_1':TA6_Part_1, 'subsidence':subsidence, 'attic_developmen
 
 			reliances = {'control_subject':ident, 'reliances':full_r}
 			flow_controls.append(reliances)"""
-def input_type_eval(question):
-	print(question)
-	result_options = []
-	column_data = None
-	if question['input_type'] == 'bool':
-		column_data = 'ENUM ("empty","yes","no") NOT NULL'
-		result_options = ['empty', 'yes', 'no']
 
-	elif question['input_type'] == 'bool_extra':
-		column_data = 'enum ("empty","yes","no"'
-		result_options = ['empty', 'yes', 'no']
-		if 'radio_options' in question and len(question['radio_options']) > 0:
-			for opt in question['radio_options']:
-				result_options.append(opt['radio_value'])
-				radio_value = opt['radio_value']
-				column_data += f',"{radio_value}"'
-			column_data += ') NOT NULL'
 
-	elif question['input_type'] == 'radio':
-		result_options = []
-		if 'radio_options' in question and len(question['radio_options']) > 0:
-			column_data = 'ENUM ("empty",'
-			opt_count = 0
-			result_options = ['empty']
-			for opt in question['radio_options']:
-				if opt_count > 0:
-					column_data += ','
-				radio_value = opt['radio_value']
-				column_data += f'"{radio_value}"'
-				opt_count += 1
-
-				result_options.append(opt['radio_value'])
-			column_data += ') NOT NULL'
-
-	elif question['input_type'] == 'text':
-		column_data =  'VARCHAR (120)'
-		result_options = ['none', 'value']
-
-	elif question['input_type'] == 'detail_text':
-		#details_enum.append(question['identifier'])
-		column_data = 'BOOL DEFAULT FALSE'
-		result_options = ['true', 'false']
-
-	elif question['input_type'] == 'docu':
-		#docu_enum.append(question['identifier'])
-		column_data = 'BOOL DEFAULT FALSE'
-		result_options = ['true', 'false']
-
-	elif question['input_type'] == 'checkbox':
-		column_data = 'ENUM ("empty","yes","no") NOT NULL'
-		result_options = ['empty', 'yes', 'no']
-
-	elif question['input_type'] == 'date':
-		column_data = 'DATE'
-		result_options = ['none', 'value']
-
-	elif question['input_type'] == 'currency':
-		column_data = 'DOUBLE PRECISION (11,2)'
-		result_options = ['none', 'value']
-
-	elif question['input_type'] == 'postcode':
-		column_data = 'CHAR (8)'
-		result_options = ['none', 'value']
-
-	elif question['input_type'] == 'number':
-		column_data = 'INT'
-		result_options = ['none', 'value']
-
-	else:
-		column_data =  'VARCHAR (120)'
-		result_options = ['none', 'value']
-
-	return {'sql_data_type':column_data, 'result_options':result_options}
-
-# ful q copies the full template data of a question into template sort objects for internal usage
-# kwargh options = 'modifiers' (allow modifier files to be passed with templates)
-def template_sort(template, full_q = False, **kwargs):
+def template_sort(template, full_q = False):
 	flow_controls = []
 	sections = []
-	section_controls = []
 
 	class questions:
 		def __init__(self):
@@ -284,11 +204,6 @@ def template_sort(template, full_q = False, **kwargs):
 				form_object = question['question_set']
 				question['input_type'] = 'none'
 			for q in question['sub_questions']:
-				if 'modifiers' in kwargs:
-					for mod in 'modifiers':
-						if q['identifier'] in mod:
-							for key in mod[q['identifier']]:
-								q[key] = mod[q['identifier']][key]
 				if 'question_set' in q:
 					if q['question_set'] != 'true':
 						form_object = q['question_set']
@@ -298,7 +213,6 @@ def template_sort(template, full_q = False, **kwargs):
 
 				if 'input_type' in q and ('question_set' not in q or q['question_set'] != 'true'):
 					if 'element' in q:
-						#print(q['element'])
 						form_object['element'] = q['element']
 					if full_q == True:
 						questions.cur_focus.append(q)
@@ -326,10 +240,7 @@ def template_sort(template, full_q = False, **kwargs):
 	def display_reliance(question, **kwargs):
 		if 'display_reliance' in question:
 			full_r=[]
-			if 'type' in kwargs and kwargs['type'] == 'section':
-				ident = question['section_identifier']
-			else:
-				ident = question['identifier']
+			ident = question['identifier']
 			for reliance in question['display_reliance']:
 				if reliance['identifier'] == 'parent':
 					reliance['identifier'] = kwargs['parent']
@@ -344,8 +255,6 @@ def template_sort(template, full_q = False, **kwargs):
 			
 
 			reliances = {'control_subject':ident, 'reliances':full_r}
-			if 'type' in kwargs and kwargs['type'] == 'section':
-				section_controls.append(reliances)
 			flow_controls.append(reliances)
 
 	#print(template)
@@ -361,19 +270,12 @@ def template_sort(template, full_q = False, **kwargs):
 
 	questions = questions()
 	for section in template['Sections']:
-		if 'display_reliance' in section:
-			display_reliance(section, type='section')
 		sec_ident = section['section_identifier']
 		sections.append(sec_ident)
 		questions.add_sec(sec_ident)
 		questions.new_focus(questions.sections[sec_ident])
 		ident_prefix_list.find_ident_prefix(section)
 		for question in section["main_questions"]:
-			if 'modifiers' in kwargs:
-				for mod in 'modifiers':
-					if question['identifier'] in mod:
-						for key in mod[question['identifier']]:
-							question[key] = mod[question['identifier']][key]
 			question['identifier'] = ident_prefix_list.calc_ident_prefix(question['identifier'])
 			ident_prefix_list.find_ident_prefix(question)
 			form_object = 'none'
@@ -402,7 +304,7 @@ def template_sort(template, full_q = False, **kwargs):
 		questions.remove_focus()
 	ident_prefix_list.reset()
 
-	return {'flow_controls':flow_controls, 'questions':questions.sections, 'sections':sections, 'template':template, 'section_controls':section_controls}
+	return {'flow_controls':flow_controls, 'questions':questions.sections, 'sections':sections, 'template':template}
 
 class template_form_form:
 	"""docstring for ClassName"""
@@ -433,56 +335,6 @@ def basic_template_render(template, submission_sequence='sections', url='/TA6_Pa
 	sub_forms = 0
 	main_form_data['submission_sequence'] = json.dumps(submission_sequence)
 	return render_template("Json_form_templating/Json_form_templating.html", main_form_data = main_form_data,template=new_template, sub_forms=sub_forms, submission_sequence=submission_sequence, submission_url=url, test='test')
-	
-#create meaning files or modifier files or
-# current error means modifier files innacurate as they do not account for template data assigned to areas with the attribute 'question_set':'true'
-def create_meaning_lists(template, typing='meanings',**kwargs):
-	data_meanings = {}
-	itera = 'ans'
-	if typing == 'meanings':
-		add_on = {'meanings':''}
-	elif typing == 'duplicate':
-		add_on ={
-			'question_title':'',
-			'extra_question_text':['']
-		}
-		itera = 'question'
-	if 'add_on' in kwargs:
-		if kwargs['add_on'] != None:
-			add_on = kwargs['add_on']
-			
-	def multi_loop(result):
-		if result['input_type'] == 'multi_row':
-			for m in result['data_rows']:
-				data_meanings[m['identifier']] ={}
-				if itera == 'ans':
-					result_options = input_type_eval(m)['result_options']
-					for r in result_options:
-						data_meanings[m['identifier']][r] = add_on
-				else:
-					data_meanings[m['identifier']] = add_on
-					data_meanings[m['identifier']]['orig'] = copy.deepcopy(m['question_title'])
-					data_meanings[m['identifier']] = copy.deepcopy(data_meanings[m['identifier']])
-				multi_loop(m)
-
-	results = template_sort(template, True)['questions']
-	for section in results:
-		for question in results[section]:
-			if itera == 'ans':
-				data_meanings[question['identifier']] = {}
-				result_options = input_type_eval(question)['result_options']
-				for r in result_options:
-					data_meanings[question['identifier']][r] = add_on
-			else:
-				data_meanings[question['identifier']] =add_on
-				data_meanings[question['identifier']]['orig'] = copy.deepcopy(question['question_title'])
-				data_meanings[question['identifier']] = copy.deepcopy(data_meanings[question['identifier']])
-
-			multi_loop(question)
-
-	return data_meanings
-
-
 
 
 		

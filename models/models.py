@@ -152,9 +152,11 @@ class market_particulars:
 		if self.TA6[0] != None:
 			form = self.TA6[0]
 			template_set = templates['TA6_Part_1']
-			self.TA6 = form_data.form_results_collection(form_data.collect_form_data(template_set['query_columns'],form), form, 'TA6_Part_1')
+			self.TA6 = form_data.form_results_collection("market_particular", self.id, 'TA6_Part_1' ,"ancilliary_form")
 			#TA6_part_1_set.fraud_risk_comp(templates)
-			self.TA6.append_data_group(template_set['comp_risk_fraud'])
+			if template_set['comp_risk_fraud'] != None:
+				self.TA6.append_data_group(template_set['comp_risk_fraud'])
+			
 			self.TA6.add_element_relevances()
 			self.TA6.exclude_irrelevants()
 			self.TA6.sub_forms_gather(True)
@@ -201,12 +203,10 @@ class market_particulars:
 			params = (self.id,)
 			cursor.execute(query,params)
 			results = cursor.fetchall()
-			print(results)
 			if results != 0:
 				col_count = 0
 				while col_count < max_cols:
 					if len(columns[col_count]) == 2:
-						print(columns[col_count])
 						self.title_derivatives[key]['headings'].append(columns[col_count])
 					col_count += 1
 				for r in results:
@@ -219,36 +219,6 @@ class market_particulars:
 
 					self.title_derivatives[key]['data'].append(new_ob)
 		cursor.close()
-
-	#outmoded pre objectg orientated stamp_evaluation
-	"""def stamp_evaluation(self):
-		self.stamps ={}
-		for stamp in stamps:
-			cur_stamp =  stamps[stamp]
-			stamp_attr = {}
-			stamp_value = True
-			for stamp_key in cur_stamp['identifiers']:
-				print(stamp_key)
-				x = re.search("\.", stamp_key)
-				if not x == None:
-					deci = x.start()
-					form_loci = stamp_key[0:deci]
-					identifier = stamp_key[deci+1:]
-					print(form_loci,identifier)
-					if form_loci in self.forms:
-						form = self.forms[form_loci]
-						if identifier in form['data']:
-							match = False
-							for val in cur_stamp['identifiers'][stamp_key]['values']:
-								print(val, form['data'][identifier]['value'])
-								if form['data'][identifier]['value'] ==  val:
-									stamp_attr[stamp_key] = {'value':val}
-									match = True
-									break
-							if match == False and cur_stamp['identifiers'][stamp_key]['status'] ==  'required':
-								stamp_value = False
-								break
-			self.stamps[stamp] = stamp_value"""
 
 	def stamp_evaluation(self):
 		self.stamps = stamps.stamp_set(stamps.stamps,self.forms)
@@ -322,7 +292,6 @@ class market_particulars:
 		params = ('market_particular', None, self.sudo_name+ ' Leasehold', self.id, self.single_point_x, self.single_point_y,'')
 
 		cursor.execute(query, params)
-		print('works')
 		db.commit()
 		cursor.close()
 		return 0

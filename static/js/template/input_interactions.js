@@ -98,7 +98,7 @@ function multi_row_data_table(table_ref, trigger,inputs){
 			new_row = `<tr table_name=${table_ref} row_num='${table_row}' uploaded = 'yes' ref = '${data_row_ref}'>`
 			inputs.forEach(function(item){
 				//cur_row[item.identifier]
-				console.log(cur_row[item.identifier]['value'])
+//				console.log(cur_row[item.identifier]['value'])
 				var stored_data_piece = cur_row[item.identifier]
 
 				if (stored_data_piece == undefined){
@@ -112,7 +112,7 @@ function multi_row_data_table(table_ref, trigger,inputs){
 						cell_display =cur_row[item.identifier]['value']
 					};
 				};
-				new_row += `<td row='${table_row}' type="data" table_name="${table_ref}" name="${item.identifier}" val = ${cur_row[item.identifier]['value']} fa=${cell_false} uploaded = 'yes' ref = '${data_row_ref}'>${cell_display}</td>`
+				//new_row += `<td row='${table_row}' type="data" table_name="${table_ref}" name="${item.identifier}" val = ${cur_row[item.identifier]['value']} fa=${cell_false} uploaded = 'yes' ref = '${data_row_ref}'>${cell_display}</td>`
 			});
 			new_row += `<td><button class="button is-warning is-small" row='${table_row}' table_name="${table_ref}">Delete</button></td>`
 			new_row += '</tr>'

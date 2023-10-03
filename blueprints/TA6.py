@@ -4,7 +4,7 @@ from launch.models.models import User, market_particulars , new_form_object, tem
 from launch.functions.data_base_procedures import add_to_selections_with_parents, counter,last_input_to_select_set, find_propagations,delete_last_from_queue, sort_answers_and_add,add_to_selections_without_parents,get_selection_keys, check_selection_set,delete_last_from_object_queue, sort_answers_and_add_objects, add_to_selections_without_parents_objects,add_to_selections_with_parents_objects,collect_object_selections,update_last_data_entry_mp
 from launch.functions.access_record_procedures import update_last_user_access
 from launch.blueprints.form_templates.standard_TA6.standard_TA6 import template as standard_ta6_template, bounds_radio_options
-from launch.blueprints.form_templates.json_form_templates import template_sort, basic_template_render, create_meaning_lists
+from launch.blueprints.form_templates.json_form_templates import template_sort, basic_template_render
 from launch.blueprints.form_templates.new_db_sql_code_writer import create_new_sql_table, element_relevancy
 from launch.blueprints.form_templates.template_data_transitions import collect_form_data, form_results_collection, input_type_jiggling,form_equals_evaluation, multi_line_input, generic_input, flow_control_tiers, bool_java_conversion, print_for_eqivilents, print_text_modifier, work_task as work_task_class, evaluate_form_mp_relation
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session,json,jsonify
@@ -149,9 +149,6 @@ def template_form_collect():
 
 	equals = pairings[section]
 
-	#print(equals)
-	#print(inputs)
-
 	final_inputs = form_equals_evaluation(equals, inputs, form)
 
 	pairs += final_inputs['pairs']
@@ -165,7 +162,6 @@ def template_form_collect():
 	if len(pairs) > 0:
 		"""update_statement(pairs, form, "`TA6`.`TA6_Part_1_records`")"""
 		if sec_status != 'steady':
-			print(sec_status)
 			pairs.append({'row':'section_marker', 'value':sec_status})
 		update_statement(pairs, form, "`form_data`.`TA6_Part_1_data`")
 	"""if len(pairs) > 0:
@@ -238,29 +234,6 @@ def create_form_db_table():
 			new_list = characteristics_of_risk(sets)
 			return json.dumps(new_list)
 
-	elif call == 'meaning':
-		sub_type = request.form.get('sub_type')
-		sub_data = {}
-		exec(sub_type, sub_data)
-		if 'add_on' in sub_data:
-			add_on = sub_data['add_on']
-		else: add_on = None
-		if 'sub_type' in sub_data:
-			if sub_data['sub_type'] == 'duplicate':
-				meanings = create_meaning_lists(template, sub_data['sub_type'], add_on=add_on)
-		else:
-			meanings = create_meaning_lists(template, add_on=add_on)
-			if 'meanings' in tp:
-				old_means = tp['meanings']
-				for mean in meanings:
-					if mean not in old_means:
-						old_means[mean] = meanings[mean]
-					else:
-						for ans in meanings[mean]:
-							if ans not in old_means[mean]:
-								old_means[mean] = meanings[mean]
-								break
-				return json.dumps(old_means)
 		return json.dumps(meanings)
 
 	"""elif call == 'gpt_training':
@@ -291,7 +264,6 @@ def create_form_db_table():
 def test_template():
 
 	tempy = request.form.get('template')
-	print(tempy)
 	
 	tp = {}
 	exec(tempy, tp)
@@ -299,151 +271,6 @@ def test_template():
 	#from launch.blueprints.form_templates.market_particulars.new_market_particular import template as nmp_temp
 	#template = nmp_temp
 	return basic_template_render(template)
-
-@TA6_forms.route("/oil_tank_form")
-def oil_tank_form():
-	template=oil_tank_template
-
-	flow_controls = []
-	questions = {}
-	sections = []
-	returns = template_sort(template)
-	template = returns['template']
-
-	flow_controls = returns['flow_controls']
-
-	js_template = json.dumps(template)
-
-	questions = returns['questions']
-
-	sections = returns['sections']
-	return render_template("Json_form_templating/Json_form_templating.html", template = template, flow_controls = flow_controls, js_template=js_template, questions=questions ,form_id = form, person_number=person_number, sections=sections)
-
-@TA6_forms.route("/standard_TA6")
-def standard_TA6():
-	person_number = 0
-	form_id = 0
-	form = 0
-	template=standard_ta6_template
-
-	flow_controls = []
-	questions = {}
-	sections = []
-	returns = template_sort(template)
-	template = returns['template']
-	
-
-	flow_controls = returns['flow_controls']
-
-	js_template = json.dumps(template)
-
-	questions = returns['questions']
-
-	sections = returns['sections']
-	flow_controls = json.dumps(flow_controls)
-
-	questions = json.dumps(questions)
-
-	sections = json.dumps(sections)	
-	result_send = json.dumps('none')
-	searchable_data = 'none'
-	return render_template("Json_form_templating/Json_form_templating.html", template = template, flow_controls = flow_controls, js_template=js_template, questions=questions ,form_id = form, sections=sections, results = json.dumps('none'), sub_table_data = json.dumps('none'), section_marker=0)
-
-@TA6_forms.route("/standard_TA6_results/<form_id>")
-def TA6_Part_1_results(form_id):
-	template_set = templates['TA6_Part_1']
-	template = template_set['template']
-	form_results = collect_form_data(template_set['query_columns'],form_id)
-
-	part_1_data = form_results_collection(form_results, form_id, template['form_identifier'])
-
-	element_relevances  = element_relevancy(template_set['template'])
-
-	document_list = element_relevances['document_list']
-	flow_controls = element_relevances['flow_controls']
-	detail_list = element_relevances['detail_list']
-	sections = element_relevances['sections']
-	flow_controlled_documents = {}
-	#print(document_list)
-	#print(flow_controls)
-		#if document in flow_controls:
-			#for control in flow_controls:
-
-		#else relevant_documents.append(document)
-
-	def input_type_list_sorts(listy, flow_controls):
-		relevant_items = []
-		for item in listy:
-		#for doc in document_list:
-			#if doc['identifier'] in flow_controls:
-			#print(item['identifier'])
-			if item['identifier'] in flow_controls:
-
-				#doc_controllers = [flow_controls[doc['identifier']]]
-
-				#print(flow_controls[doc['identifier']])
-				if flow_control_tiers(flow_controls[item['identifier']], part_1_data.data) == True:
-					item['value'] = part_1_data.data[item['identifier']]
-					relevant_items.append(item)
-			else:
-				item['value'] = part_1_data.data[item['identifier']]
-				relevant_items.append(item)
-
-		return relevant_items
-
-	# long hand detail whereby the flow control route would have made this question answerable
-	relevant_details = input_type_list_sorts(detail_list, flow_controls)
-
-	# documents whereby the flow control route would have made this question answerable
-	relevant_documents = input_type_list_sorts(document_list, flow_controls)
-	print(document_list)
-
-
-			#flow_controlled_documents[doc['identifier']] = doc_controllers
-
-	#for key in flow_controlled_documents:
-	#	ir = len(flow_controlled_documents[key])
-	#	keys = 0
-		#while keys < ir:
-			#cont = flow_controlled_documents[key][keys]
-
-
-	#print(part_1_data.data)
-
-	reached_sections = sections[0:part_1_data.section_marker + 1]
-
-	return render_template('mp_views_and_profiles/TA6_Part_1_dashboard.html', results = part_1_data, document_list=relevant_documents,
-														detail_list=relevant_details, reached_sections=reached_sections)
-
-
-
-@TA6_forms.route("/data_exchange")
-def data_exchange():
-	return render_template('data_exchange.html')
-
-"""@TA6_forms.route("/alter_comp_risk_fraud")
-def alter_comp_risk_fraud():
-	new_frc = {}
-	'''for key in TA6_Part_1_comp_risk_fraud:
-		t1 = key
-		new_frc[t1] = TA6_Part_1_comp_risk_fraud[t1]
-		for key in list(TA6_Part_1_comp_risk_fraud[t1]):
-			if key == ' false ':
-				new_key = key[1:-1]
-				new_frc[t1][new_key] = TA6_Part_1_comp_risk_fraud[t1][key]
-			else: new_frc[t1][key] = TA6_Part_1_comp_risk_fraud[t1][key]
-	
-	print(new_frc)'''
-	print('{\n')
-	for key in TA6_Part_1_comp_risk_fraud:
-		t1 = key
-		print(f"	'{key}' :", '{', '\n')
-		for key in TA6_Part_1_comp_risk_fraud[t1]:
-			print(f"		'{key}' : \n")
-			print(f"			{TA6_Part_1_comp_risk_fraud[t1][key]}")
-			print("	, \n")
-		print("	}, \n",)
-	return render_template('data_exchange.html')"""
 
 @TA6_forms.route("/synopsis_temp")
 def template_synopsis():
@@ -474,7 +301,7 @@ def bulk_form_collect(form, template_set, *args):
 
 @TA6_forms.route("/synopsis_temp/<form_name>/<p_type>/<particular_id>")
 def collect_synopsis_data(form_name,p_type, particular_id):
-	if form_name == 'TA6_Part_1':
+	if form_name == 'TA6_Par_1':
 		template_set = templates[form_name]
 		template = template_set['template']
 		results = form_particular_creation(form_name, p_type, particular_id)
@@ -514,7 +341,7 @@ def collect_synopsis_data(form_name,p_type, particular_id):
 	else:
 		data = micro_synop_return({'form_name':form_name, 'root_linkage':p_type,'root_linkage_id':particular_id})
 		data['form'] = particular_id
-		print(data['form_name'])
+		#print(data['form_name'])
 		return render_template('synopsis_template_html.html', form_set=json.dumps(data), p_type = p_type, particular_id = particular_id)
 
 """@TA6_forms.route("/synopsis_temp", methods=['POST'])
@@ -533,7 +360,6 @@ def synopsis_temp_create_new_work_task():
 @TA6_forms.route('/create_form_work_task', methods=['POST'])
 def create_work_task():
 	work_task = json.loads(request.form.get("data"))
-	print(work_task)
 	cursor = db.cursor()
 	query = "INSERT INTO `form_data`.`work_tasks`(\
 					form,\
@@ -605,15 +431,14 @@ def complete_work_task():
 # prep generic form data to send to templating system
 def template_send_prep(form_name):
 	form_set = templates[form_name]
-	print(form_set)
 	template = form_set['template']
 	returns = template_sort(template)
 	flow_controls = json.dumps(returns['flow_controls'])
 	js_template = json.dumps(returns['template'])
 	questions = json.dumps(returns['questions'])
 	sections = json.dumps(returns['sections'])
-	section_controls = json.dumps(returns['section_controls'])
-	return {'flow_controls':flow_controls, 'questions':questions, 'sections':sections, 'template':template, 'section_controls':section_controls}
+	#section_controls = json.dumps(returns['section_controls'])
+	return {'flow_controls':flow_controls, 'questions':questions, 'sections':sections, 'template':template} #'section_controls':section_controls}
 
 # evaluate if particular currently has active form of this type
 def form_age_eval(form_search, form_name, p_type, particular_id):
@@ -629,6 +454,7 @@ def form_age_eval(form_search, form_name, p_type, particular_id):
 # prefi form wth already collected data
 def form_data_prefil(form, form_set, template):
 	if form['form_age'] == 'old_form':
+		form_results_collection(data['root_linkage'], data['root_linkage_id'],data['form_name'], 'ancilliary_form' )
 		form_results = form_results_collection(collect_form_data(form_set['query_columns'],form['form']), form['form'], template['form_identifier'])
 		form_results.fetch_detail_data()
 		form_results.collect_multi_row_data(form_set['sub_tables'])

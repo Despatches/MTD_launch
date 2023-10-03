@@ -130,7 +130,7 @@ template={
 							
 							#Attach a plan identifying the locations where sewage from this property connect and flow through the sewage pipes on this freehold?
 					{
-						"question_title":'When were the sewage pipes on this property that carry media from other properties installed?',
+						"question_title":'When were the sewage pipes on this property that carry sewage media from other properties installed?',
 						"input_type":"date",
 						'identifier':'date_sewage_pipes_installed_date'
 					},

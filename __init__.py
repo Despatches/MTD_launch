@@ -16,6 +16,7 @@ import openai
 cnx = mysql.connect(host="127.0.0.1", port=3306, user="root", password="10010010",auth_plugin='mysql_native_password')
 db = cnx
 currency = {'name':'pound', 'icon':'£'}
+from .blueprints.form_templates.templates import templates
 
 #openai.api_key = "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"
 #openai.Model.list()
