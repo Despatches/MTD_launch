@@ -48,8 +48,14 @@ stamps  = {
 		'identifiers':{
 			'TA6_Part_1.mains_drainage':{'values':['no'], 'status':'minimum.1', 'marks':[True]},
 			'TA6_Part_1.electricity':{'values':['no'], 'status':'minimum.1', 'marks':[True]},
-			'TA6_Part_1.water_supply':{'values':['no'], 'status':'minimum.1', 'marks':[True]},
-		}
+			'TA6_Part_1.water_supply':{'values':['no'], 'status':'minimum.1', 'marks':[True]},	
+		},
+		'marks':{
+			'default':'This does not have a mains connection to at least one major utility',
+			'new_disclose':{'permitted_develop_status':{'':''},},
+			'loan_opp':{},
+			'indem_opp':{},
+		}		
 	},
 	'off_grid_power':{
 		'identifiers':{
@@ -72,7 +78,13 @@ stamps  = {
 	'not_suitable_For_habitation':{
 		'identifiers':{
 			'stamp.without_sewage':{'values':[True], 'status':'minimum.1', 'marks':[True]}
-		}
+		},
+		'marks':{
+			'default':{'text':['this property is missing a major utilit and is therfore uninhabitable']},
+			'new_disclose':{'permitted_develop_status':{'':''},},
+			'loan_opp':{},
+			'indem_opp':{},
+		}		
 	}
 }
 

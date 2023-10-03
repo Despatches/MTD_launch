@@ -64,6 +64,7 @@
     z-index: 3;
     top: 0;
     left: 0;
+    width:100%;
 }
 </style>
 <section>
@@ -194,7 +195,7 @@
 </section>
 <section id="other_forms" class="hide">
     <div style="height:20px;"></div>
-    <a href="{{ url_for('TA6_forms.template_form', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}">
+    <a href="{{ url_for('TA6_forms.template_micro_form', root_linkage_id=particular_id, root_linkage='market_particular', form_name='TA6_Part_1') }}">
         {%if TA6_data == None%} 
             <button class="button is-medium"  >New TA6 part 1</button>
         {% else %}
