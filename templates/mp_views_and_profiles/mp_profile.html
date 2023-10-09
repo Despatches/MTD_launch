@@ -35,7 +35,7 @@
 .colour_tab{
     width:100%;
     height:15px;
-    background-color:green;
+    background-color:rgba(255,220,59,1);
     overflow:visible;
 }
 .feed_content{
@@ -47,8 +47,8 @@
     background-color:red;
 }
 .new_disclose{
-    background-color:black;
-    color:white;
+    background-color:rgba(237,230,230,1);
+    color:black;
 }
 
 .loan_opp{
@@ -56,7 +56,11 @@
     color:white;
 }
 .indem_opp{
-    background-color:blue;
+    background-color:rgba(54,118,217,1);
+    color:white;
+}
+.esg{
+    background-color:rgba(50,208,101,1);
     color:white;
 }
 
@@ -98,7 +102,7 @@
             <div class="column is-one-fifth"> 
                 <div>
                     <a
-                      button href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}" type ="submit" class="button is-block is-warning is-fullwidth" style="margin:5px;">Synopsis
+                      button href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" type ="submit" class="button is-block is-warning is-fullwidth" style="margin:5px;">Synopsis
                     </a>
                 </div>
                 <div>
@@ -212,7 +216,7 @@
         {% endif %}
 
     </a>
-    <a href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}">
+    <a href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}">
         <button class="button is-medium" >TA6 part 1 collected data</button>
     </a>  
     <div style='height:900px'>
@@ -247,19 +251,19 @@
                                     <div class ="navbar-dropdown" style="color:black; width:60px;">
                                         <div>  
                                             <a
-                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}" >
-                                                Sewage and Waste
+                                               href="{{ url_for('TA6_forms.template_micro_form', root_linkage_id=mp["TA6"]["form"], root_linkage='TA6_Part_1', form_name='sewage_waste_freeholder') }}" >
+                                                Freeholder Sewage and Waste
                                             </a>
-                                        </div>
+                                        </div>                                        
                                         <div>  
                                             <a
-                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}" >
+                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" >
                                                 Basement
                                             </a>
                                         </div>
                                         <div>  
                                             <a
-                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_Part_1') }}" >
+                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" >
                                                 Attic Development
                                             </a>
                                         </div>

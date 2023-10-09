@@ -1,7 +1,7 @@
 template = {
     # Completed by LANDLORD or Agent.
     "Form": "Freeholder_sewage and Waste",
-    "form_identifier": "sewage_and_waste",
+    "form_identifier": "sewage_waste_freeholder",
     "Sections": [
         {
             "section_name": "Personal Details",
@@ -10,9 +10,9 @@ template = {
             "main_questions": [
                 {
                     "question_numbering": "1",
-                    "question_title": "Provide the following personal details of individual providing preliminary information",
+                    "question_title": "Provide the following personal details for each individual providing preliminary information",
                     "identifier": "data_providers",
-                    "multi_row_guidance": "for each person who enters data fill this section out separately",
+                    "multi_row_guidance": "for each person who enters data complete this section out separately",
                     "input_type": "multi_row",
                     "sub_questions": [
                         {
@@ -61,9 +61,9 @@ template = {
                                     "identifier": "data_provider_type_details",
                                     "input_type": "detail_text",
                                     "display_reliance": [
-                                        {"identifier": "parent", "value": ["Other"]}
+                                        {"identifier": "parent", "value": ["Other"]},
                                     ],
-                                }
+                                },
                             ],
                         },
                     ],
@@ -122,8 +122,8 @@ template = {
             ],
         },
         {
-            "section_name": "Sewage Conduit Locations",
-            "section_identifier": "sewage_conduit_loactions",
+            "section_name": "Sewage Connections",
+            "section_identifier": "sewage_connections",
             #'question_set_data':{'set_numbering':"3.2"},
             "main_questions": [
                 {
@@ -133,6 +133,34 @@ template = {
                     "identifier": "mains_sewage_connection_bool",
                 },
                 # IF "NO" (not connected to mains sewage)
+            ],
+            "section_name": "Sewage Pipes Installation",
+            "section_identifier": "sewage_pipes_installation",
+            #'question_set_data':{'set_numbering':"3.2"},
+            "main_questions": [
+                {
+                    "question_title": "When were the sewage pipes that exclusively serve this property installed?",
+                    "sub_q_other_text": "",
+                    "input_type": "date",
+                    "identifier": "sewage_pipes_excl_serving_this_property_install_date",
+                },
+                {
+                    "question_title": "When were the sewage pipes on this property that carry media from other properties installed?",
+                    "multi_row_guidance": "Note; ",
+                    # Re-arrange to a Poll :
+                    # Date : Date
+                    # Date un-known > sub Question
+                    #   "sub_q_other_text": "When was the property constructed?
+                    #   "sub_q_other_text": "Is this property design contemporary with the adjacent neighbouring properties?"
+                    "sub_q_other_text": "",
+                    "input_type": "date",
+                    "identifier": "shared_sewage_pipes_installation_date",
+                },
+            ],
+            "section_name": "Sewage Pipes Locations",
+            "section_identifier": "sewage_pipes_locations",
+            #'question_set_data':{'set_numbering':"3.2"},
+            "main_questions": [
                 {
                     "question_title": "Do you have any record that specifies where the existing waste pipes are located?",
                     "input_type": "bool",
@@ -140,10 +168,17 @@ template = {
                 },
                 # IF "NO" (no idea where sewage pipes located)
                 # Attach a plan identifying the locations where sewage from this property connect and flow through the sewage pipes on this freehold?
+            ],
+            "section_name": "Sewage Boundary Intersections",
+            "section_identifier": "sewage_boundary_intersections",
+            #'question_set_data':{'set_numbering':"3.2"},
+            "main_questions": [
                 {
-                    "question_title": "When were the sewage pipes on this property that carry sewage media from other properties installed?",
-                    "input_type": "date",
-                    "identifier": "date_sewage_pipes_installed_date",
+                    "question_title": "Do any of the drains entering or leaving the property do so by crossing the boundary from an adjacent property?",
+                    "multi_row_guidance": "Note; Disclude the street / road or public land.",
+                    "sub_q_other_text": "",
+                    "input_type": "bool",
+                    "identifier": "sewage_pipes_crossing_adjacent_property_boundary_bool",
                 },
                 {
                     "question_title": "Do you have any record of where on the propertys boundaries these pipes enter and exit the property?",
@@ -173,25 +208,6 @@ template = {
                         }
                     },
                 },
-                {
-                    "question_title": "When were the sewage pipes on this property that carry media from other properties installed?",
-                    "sub_q_other_text": "",
-                    "input_type": "date",
-                    "identifier": "sewage_pipes_via_other_properties_install_date",
-                },
-                {
-                    "question_title": "Has the number of properties served by this sewerage pipe been increased since the present infrastructure specification was installed?",
-                    "sub_q_other_text": "",
-                    "input_type": "number",
-                    "identifier": "number_propeties_served_by_sewage_increased_bool",
-                },
-                {
-                    "question_title": "Do any of the drains entering or leaving the property do so by crossing the boundary from an adjacent property?",
-                    "multi_row_guidance": "Note; Disclude the street / road or public land.",
-                    "sub_q_other_text": "",
-                    "input_type": "bool",
-                    "identifier": "sewage_pipes_crossing_adjacent_property_boundary_bool",
-                },
                 #
                 {
                     "question_title": "Attach a plan identifying the locations on the boundary where the sewage pipes cross the boundary or boundaries.",
@@ -200,31 +216,36 @@ template = {
                     "input_type": "docu",
                     "identifier": "plan_of_shared_sewage_pipes_plan_docu",
                 },
-                {
-                    "question_title": "When were the sewage pipes on this property that carry media from other properties installed?",
-                    "multi_row_guidance": "Note; ",
-                    # Re-arrange to a Poll :
-                    # Date : Date
-                    # Date un-known > sub Question
-                    # 	"sub_q_other_text": "When was the property constructed?
-                    # 	"sub_q_other_text": "Is this property design contemporary with the adjacent neighbouring properties?"
-                    "sub_q_other_text": "",
-                    "input_type": "date",
-                    "identifier": "shared_sewage_pipes_installation_date",
-                },
-                {
-                    "question_title": "Has the number of properties served by this sewerage pipe been increased since the present infrastructure specification was installed.",
-                    "multi_row_guidance": "Note; Include division of properties to multiple dwellings.",
-                    "sub_q_other_text": "",
-                    "input_type": "number",
-                    "identifier": "increased_number_propeties_served_by_sewage_post_install",
-                },
+            ],
+            "section_name": "Sewage Conduit Capacity",
+            "section_identifier": "sewage_conduit_capacity",
+            #'question_set_data':{'set_numbering':"3.2"},
+            "main_questions": [
                 {
                     "question_title": "Confirm the total number of properties presently served by the shared sewage pipe:",
                     "multi_row_guidance": "Note; Include in the total all anexes and multiple dwellings located upon a single tite",
                     "sub_q_other_text": "",
                     "input_type": "number",
-                    "identifier": "number_propeties_served_by_shared_sewage_pipe",
+                    "identifier": "number_properties_served_by_shared_sewage_pipe",
+                },
+                {
+                    "question_title": "Has the number of properties served by this sewerage pipe been increased since the present infrastructure specification was installed?",
+                    "sub_q_other_text": "",
+                    "input_type": "bool",
+                    "identifier": "number_properties_served_by_sewage_increased_bool",
+                },
+                {
+                    "question_title": "By how many properties has the increased burden on this sewerage pipe been increased since the present infrastructure specification was installed?",
+                    "multi_row_guidance": "Note; Include division of properties to multiple dwellings.",
+                    "sub_q_other_text": "",
+                    "input_type": "number",
+                    "identifier": "increased_number_properties_served_by_sewage_post_install",
+                    "display_reliance": [
+                        {
+                            "identifier": "number_properties_served_by_sewage_increased_bool",
+                            "value": ["1"],
+                        }
+                    ],
                 },
                 {
                     "question_title": "Confirm the total number of permanent residents currently served by the pipe:",
@@ -238,7 +259,7 @@ template = {
                     "multi_row_guidance": "Note; Disclude the street / road or public land.",
                     "sub_q_other_text": "",
                     "input_type": "number",
-                    "identifier": "rated_capacity_of_sewage_pipe`",
+                    "identifier": "rated_capacity_of_sewage_pipe",
                 },
             ],
         },

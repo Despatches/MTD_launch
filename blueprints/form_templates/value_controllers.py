@@ -1,9 +1,15 @@
-def larger_then(value, controller):
+def larger_than(value, controller):
     if value > controller:
         return True
-    else: return False 
+    else:
+        return False
 
-def less_then(value, controller):
+
+def less_than(value, controller):
     if value < controller:
-        return True 
-    else: return False
+        return True
+    else:
+        return False
+
+
+controllers = {"larger_than": larger_than, "less_than": less_than}

@@ -1,7 +1,7 @@
 template = {
     # Completed by LANDLORD or Agent.
     "Form": "Freeholder_sewage and Waste",
-    "form_identifier": "sewage_and_waste",
+    "form_identifier": "sewage_waste_freeholder",
     "Sections": [
         {
             "section_name": "Personal Details",
@@ -123,7 +123,7 @@ template = {
         },
         {
             "section_name": "Sewage Conduit Locations",
-            "section_identifier": "sewage_conduit_loactions",
+            "section_identifier": "sewage_conduit_locations",
             #'question_set_data':{'set_numbering':"3.2"},
             "main_questions": [
                 {
@@ -183,7 +183,7 @@ template = {
                     "question_title": "Has the number of properties served by this sewerage pipe been increased since the present infrastructure specification was installed?",
                     "sub_q_other_text": "",
                     "input_type": "number",
-                    "identifier": "number_propeties_served_by_sewage_increased_bool",
+                    "identifier": "number_properties_served_by_sewage_increased_bool",
                 },
                 {
                     "question_title": "Do any of the drains entering or leaving the property do so by crossing the boundary from an adjacent property?",
@@ -217,14 +217,14 @@ template = {
                     "multi_row_guidance": "Note; Include division of properties to multiple dwellings.",
                     "sub_q_other_text": "",
                     "input_type": "number",
-                    "identifier": "increased_number_propeties_served_by_sewage_post_install",
+                    "identifier": "increased_number_properties_served_by_sewage_post_install",
                 },
                 {
                     "question_title": "Confirm the total number of properties presently served by the shared sewage pipe:",
                     "multi_row_guidance": "Note; Include in the total all anexes and multiple dwellings located upon a single tite",
                     "sub_q_other_text": "",
                     "input_type": "number",
-                    "identifier": "number_propeties_served_by_shared_sewage_pipe",
+                    "identifier": "number_properties_served_by_shared_sewage_pipe",
                 },
                 {
                     "question_title": "Confirm the total number of permanent residents currently served by the pipe:",
@@ -238,7 +238,7 @@ template = {
                     "multi_row_guidance": "Note; Disclude the street / road or public land.",
                     "sub_q_other_text": "",
                     "input_type": "number",
-                    "identifier": "rated_capacity_of_sewage_pipe`",
+                    "identifier": "rated_capacity_of_sewage_pipe",
                 },
             ],
         },
