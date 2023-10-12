@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% macro not_none(data)%}
+	{% if notice['data'][data]['value'] != None %}
+		{{notice['data'][data]['value']}} 
+	{% endif %}
+{%- endmacro %}
+<section>
+	<div class='columns'>
+		<div class='column'>
+			<table style='width:100%'>
+				<tr>
+					<th>
+						Notice Sender
+					</th>
+					<th>
+						Notice Recipient
+					</th>
+				</tr>
+				<tr>
+					<td style='width:50%'>
+						<div class='box' >
+							<div>
+								{{not_none('psn_postcode')}}
+							</div>
+							<div>
+								{{notice['data']['psn_address_line_1']['value']}}
+							</div>
+							<div>
+								{{notice['data']['psn_address_line_2']['value']}}
+							</div>
+							<div>
+								{{notice['data']['psn_postcode_address_town_or_city']['value']}}
+							</div>
+							<div>
+								{{not_none('psn_UPRN')}}
+							</div>
+						</div>
+					</td>
+					<td >
+						<div class='box'>
+							<div>
+								{{notice['data']['prn_postcode']['value']}}
+							</div>
+							<div>
+								{{notice['data']['prn_address_line_1']['value']}}
+							</div>
+							<div>
+								{{notice['data']['prn_address_line_2']['value']}}
+							</div>
+							<div>
+								{{notice['data']['prn_postcode_address_town_or_city']['value']}}
+							</div>
+							<div>
+								{{not_none('prn_UPRN')}}
+							</div>
+						</div>
+					</td>					
+				</tr>
+				<tr>
+					
+				</tr>
+			</table>
+		</div>
+		<div class='column' style="color:black;">
+			<div>
+				Date of service : {{notice['data']['date_of_service']['value']}}
+			</div>
+			<div>
+				Response Date : {{notice['data']['response_date']['value']}}
+			</div>
+			<div>
+				Response Type : {{notice['data']['response_type']['value']}}
+			</div>
+			<div>
+				Aiding Surveyor : {{notice['data']['party_wall_surveyor_bool']['value']}} <button class="button is-link" id='toggle_surveyor_details' surv_dets='hidden'> Surveryor Details</button>
+				<div id='surveyor_details' class='box' style='width:75%'>
+					<div>
+						Surveyor Name : {{not_none('aiding_surveyor_first_name')}} 
+						{{not_none('aiding_surveyor_other_names')}}
+						{{not_none('aiding_surveyor_surname')}}
+					</div>
+					<div>
+						Surveyor Company or Agency : {{notice['data']['aiding_surveyor_represented_agency']['value']}}
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+</section>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#surveyor_details').slideUp();
+	$('#toggle_surveyor_details').click(function(){
+		if ($(this).attr('surv_dets') === 'hidden'){
+			$('#surveyor_details').slideDown()
+			$(this).attr('surv_dets', 'shown')
+		} else{
+			$('#surveyor_details').slideUp()
+			$(this).attr('surv_dets', 'hidden')
+		}
+	})
+
+});
+</script>
+{% endblock %}

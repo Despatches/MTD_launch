@@ -1,12 +1,15 @@
 {% set subsections= namespace(count=0, ident_prefix='') %}
 {% set sections= namespace(count=0, ident_prefix='') %}
 <div class="columns">
-	{% if return |default('none') != 'none' %}
-		<button id='return_to_button'>
-			{{ return['name'] }}
-		</button>
-	{% endif %}
+
 	<div class="column is-one-fifth" style="background-color:#ede6e6;color:#135e7c">
+			{% if root_linkage == "market_particular"%}
+			 <a href="{{ url_for('mp.selectedmp', particular_id=root_linkage_id) }}">
+				<button id='return_to_button'>
+					return to particular details
+				</button>
+			</a>
+		{%  endif %}
 		<aside class="menu is-warning">
 			<p class="menu-heading">
    				Sections

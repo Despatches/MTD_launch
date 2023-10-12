@@ -1,0 +1,113 @@
+{% set subsections.count = 0 %}
+	{% macro other_q_text(question) -%}
+		{% if question['other_question_text'] is defined %}
+			<div style='background-color:#ede6e6;'>
+			{% for other_text in question['other_question_text'] %}
+				<p class="q_title">{{other_text}}</p>	
+			{% endfor %}
+			</div>
+		{% endif %}	
+	{%- endmacro %}
+
+	{% macro find_ident_prefix(parent)%}
+		{% if parent['ident_prefix'] is defined%}
+			{% set subsections.ident_prefix = parent['ident_prefix']%}
+		{% else %}
+			{% set subsections.ident_prefix = '' %}
+		{% endif %}	
+	{%- endmacro %}
+	{% macro question_container(question) -%}
+		{% if question['mandatory_guidance'] is defined %}
+
+			{% include "Json_form_templating/mandatory_warning.html"%}
+
+			{% if question['display_reliance'] is defined and question['display_reliance'] | length > 0 %}
+				<div {{other_input_data(question)}} id="{{question['identifier']}}_container" status='locked' flow_control = "off">
+			{% else%}
+				<div {{other_input_data(question)}} id="{{question['identifier']}}_container" status='locked' flow_control = "on">
+			{% endif %}			
+
+		{% else %}
+			{% if question['display_reliance'] is defined and question['display_reliance'] | length > 0 %}
+				<div {{other_input_data(question)}} id="{{question['identifier']}}_container" flow_control = "off">	
+			{% else%}	
+				<div {{other_input_data(question)}} id="{{question['identifier']}}_container" flow_control = "on">
+			{% endif %}
+		{% endif %}
+	{%- endmacro %}
+	{% macro mandatory_q(question) -%}
+	{%- endmacro %}
+
+
+<section id="{{section['section_identifier']}}" style="width: 50%; margin: auto;">
+	<thing>
+	<div id='{{section['section_identifier']}}_content_div'>
+		<div>
+			<b>{{ section['section_name'] }}</b>
+		</div>
+		 {% for section_text in section['section_text'] %}
+		 	<div>{{ section_text }}</div>
+		 {% endfor %}
+		<div>
+			{% for question in section['main_questions'] %}
+				{{ question_container(question)}}
+	<!-- 							 -->
+				{% if subsections.count == 0 %}
+					{% set subsections.count = 1 %}	
+				{% else %}
+					<hr class="dropdown-divider">
+				{% endif %}
+	<!-- 							 -->
+				{% if question['api'] is defined %}
+					{% for api in question['api']%}
+						{% include 'Json_form_templating/api/'+ api +".html"%}
+					{% endfor %}
+				{% endif %}
+	<!-- 							 -->
+				{% if question['input_type'] == 'multi_row' %}
+					{% include "Json_form_templating/input_types/multi_row.html"%}
+				{% else %}
+				
+					{% if question['question_set'] is defined %}
+						<div style='background-color:#ede6e6;'>
+
+							<p class="q_title" ><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
+
+							{{other_q_text(question)}}
+						</div>
+
+						{% include "Json_form_templating/subquestion_loop.html"%}
+
+					{% else %}
+
+						<p class="q_title"><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
+					
+						{{other_q_text(question)}}	
+
+						{% include "Json_form_templating/input_types/input_type_eval.html"%}
+						{% include "Json_form_templating/subquestion_loop.html"%}
+
+					{% endif %}
+				{% endif %}	
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	</thing>
+	<div>
+		<hr class="dropdown-divider">
+		<button class="button is-success is-medium" id="submit_{{section['section_identifier']}}">
+			{% if submission_sequence | default('sections') == 'single' %}
+				continue
+			{% else %}
+				Submit
+			{% endif %}
+		</button>
+	</div>
+</section>
+
+<script>
+$(document).ready(function(){
+
+});
+</script>

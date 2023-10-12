@@ -150,7 +150,7 @@ def collect_form_data(query_column, form_id, db_table="`form_data`.`TA6_Part_1_d
     params = (form_id,)  # TA6_part_1_query_columns
 
     query = f"SELECT {query_column}, section_marker, user_initiator, ceation_moment FROM {db_table}\
-				WHERE form_id = %s"
+                WHERE form_id = %s"
 
     cursor.execute(query, params)
 
@@ -211,9 +211,9 @@ class form_results_collection:
                 value = results[query_pairings[key]["db_position"]]
                 data[key]["input_type"] = ini_type
                 """if ini_type == 'detail_text' or 'docu':
-					value = db_true_false_transition(value)
-				if ini_type == 'bool' or 'cheakbox' or 'bool_extra':
-					value = output_py_return(value, 'bool')"""
+                    value = db_true_false_transition(value)
+                if ini_type == 'bool' or 'cheakbox' or 'bool_extra':
+                    value = output_py_return(value, 'bool')"""
                 data[key]["value"] = value
                 data[key]["work_tasks"] = []
                 data[key]["documents"] = []
@@ -235,22 +235,22 @@ class form_results_collection:
             # id of specific root_linkage object
             self.root_linkage_id = root_linkage_id
             query = """SELECT 
-				form_id, 
-				root_linkage, 
-				root_linkage_id, 
-				form_identifier, 
-				form_results,
-				section_marker, 
-				user_initiator,
-				ceation_moment,
-				revision_date,
-				revision_count
-				FROM `form_data`.`ancilliary_forms`
-				WHERE form_identifier = '{form_name}' AND root_linkage = '{root_linkage}' AND root_linkage_id = {root_linkage_id}
-				AND form_id=(
-		   			 SELECT max(form_id) FROM `form_data`.`ancilliary_forms`
-		   			 WHERE form_identifier = '{form_name}' AND root_linkage = '{root_linkage}' AND root_linkage_id = {root_linkage_id}
-		   		);""".format(
+                form_id, 
+                root_linkage, 
+                root_linkage_id, 
+                form_identifier, 
+                form_results,
+                section_marker, 
+                user_initiator,
+                ceation_moment,
+                revision_date,
+                revision_count
+                FROM `form_data`.`ancilliary_forms`
+                WHERE form_identifier = '{form_name}' AND root_linkage = '{root_linkage}' AND root_linkage_id = {root_linkage_id}
+                AND form_id=(
+                     SELECT max(form_id) FROM `form_data`.`ancilliary_forms`
+                     WHERE form_identifier = '{form_name}' AND root_linkage = '{root_linkage}' AND root_linkage_id = {root_linkage_id}
+                );""".format(
                 form_name=form_name,
                 root_linkage=root_linkage,
                 root_linkage_id=root_linkage_id,
@@ -291,13 +291,13 @@ class form_results_collection:
                 for section in self.template_set["template"]["Sections"]:
                     self.results["form_results"][section["section_identifier"]] = {}
                 query = """INSERT INTO  `form_data`.`ancilliary_forms`(
-						root_linkage, 
-						root_linkage_id,
-						user_initiator,
-						ceation_moment,
-						form_identifier,
-						form_results
-						) VALUES (%s,%s,%s, NOW(), %s, %s);"""
+                        root_linkage, 
+                        root_linkage_id,
+                        user_initiator,
+                        ceation_moment,
+                        form_identifier,
+                        form_results
+                        ) VALUES (%s,%s,%s, NOW(), %s, %s);"""
 
                 params = (
                     root_linkage,
@@ -334,7 +334,7 @@ class form_results_collection:
     def sub_forms_gather(self, create=False):
         cursor = db.cursor()
         query = """SELECT DISTINCT(`form_identifier`) FROM  `form_data`.`ancilliary_forms`
-			WHERE `root_linkage` = %s and root_linkage_id = %s ;"""
+            WHERE `root_linkage` = %s and root_linkage_id = %s ;"""
         params = (self.form_name, self.form)
 
         cursor.execute(query, params)
@@ -370,12 +370,12 @@ class form_results_collection:
         if sec_status != "steady":
             self.section_marker = sec_status
         query = """UPDATE `form_data`.`ancilliary_forms`
-		 SET 
-			form_results = %s,
-			revision_date = NOW(),
-			revision_count = %s,
-			section_marker = %s
-		WHERE form_identifier = %s and root_linkage = %s and root_linkage_id = %s"""
+         SET 
+            form_results = %s,
+            revision_date = NOW(),
+            revision_count = %s,
+            section_marker = %s
+        WHERE form_identifier = %s and root_linkage = %s and root_linkage_id = %s"""
 
         params = (
             json.dumps(self.results),
@@ -394,8 +394,8 @@ class form_results_collection:
 
     def add_forms(self, form_identifier, root_linkage, root_linkage_id):
         query = """SELECT form_id, form_results, section_marker, user_initiator, creation_moment
-					FROM `form_data`.`ancilliary_forms` 
-					WHERE root_linkage = %s AND root_linkage_id = %s AND form_identifier = %s"""
+                    FROM `form_data`.`ancilliary_forms` 
+                    WHERE root_linkage = %s AND root_linkage_id = %s AND form_identifier = %s"""
         cursor = db.cursor()
         params = (rooe_linkage, root_linkage_id, form_identifier)
         cursor.execute(query, params)
@@ -507,7 +507,7 @@ class form_results_collection:
         if self.collection_type != "micro":
             table = "`form_data`.`{}_text_editations`".format(self.form_name)
             query = """SELECT `reference_edit`, `editation_data` FROM {}
-						WHERE `parent_form` =  {}""".format(
+                        WHERE `parent_form` =  {}""".format(
                 table, self.form
             )
             cursor = db.cursor()
@@ -658,27 +658,6 @@ class form_results_collection:
             else:
                 self.data[key]["relevant"] = 1
 
-    """def evaluate_objects(self, object_set):
-		self.objects = {}
-		pairings = {}
-		for key in object_set:
-			if key in objects:
-				for key_2 in object_set[key]['links']:
-					if object_set[key]['links'][key_2] != None:
-						pairings[key_2] = self.data[object_set[key]['links'][key_2]]
-						pairings[key_2]['original_identifier'] = object_set[key]['links'][key_2]
-						self.data[object_set[key]['links'][key_2]]['meanings']['meaning'] = ''
-					else: pairings[key_2] = None
-				allowed = True
-				for requ in objects[key]['requirements']:
-					allowed = object_requirements[requ['type']](pairings)
-					if allowed == False:
-						break
-				if allowed == True:
-					self.objects[object_set[key]['local_ident']] = objects[key]['create'](pairings)
-					if object_set[key]['position'] == 'first':
-						self.element_relevances['questions'][object_set[key]['section']] = [{'object':object_set[key]['local_ident']}] + self.element_relevances['questions'][object_set[key]['section']]"""
-
     # collect and assign data that belongs to a tmeplate specific object
     def find_documents(self, gather=False):
         cursor = db.cursor()
@@ -687,8 +666,8 @@ class form_results_collection:
             gathering = ",document"
 
         query = """SELECT ref, text_reference, document_name, document_description,viewed, upload{}
-					FROM `form_data`.`{form_name}_docu_storage`
-					WHERE parent_form = {form_id}""".format(
+                    FROM `form_data`.`{form_name}_docu_storage`
+                    WHERE parent_form = {form_id}""".format(
             gathering, form_name=self.form_name, form_id=self.form
         )
 
@@ -743,15 +722,15 @@ class form_results_collection:
     # collect work tasks from database for given form id
     def work_tasks(self):
         query = """SELECT
-			`work_tasks`.`id`,
-			`work_tasks`.`identifier`,
-		    `work_tasks`.`work_task_header`,
-		    `work_tasks`.`work_task_date`,
-		    `work_tasks`.`work_task_info`,
-		    `work_tasks`.`client_issue`
-		FROM `form_data`.`work_tasks`
-		WHERE  `work_tasks`.`form` = %s AND 
-			`work_tasks`.`form_id` = %s"""
+            `work_tasks`.`id`,
+            `work_tasks`.`identifier`,
+            `work_tasks`.`work_task_header`,
+            `work_tasks`.`work_task_date`,
+            `work_tasks`.`work_task_info`,
+            `work_tasks`.`client_issue`
+        FROM `form_data`.`work_tasks`
+        WHERE  `work_tasks`.`form` = %s AND 
+            `work_tasks`.`form_id` = %s"""
 
         cursor = db.cursor()
 
@@ -898,7 +877,7 @@ def input_type_jiggling(e, data, form, docu_det, ident):
                 cursor = db.cursor()
                 table = e["table"]
                 query = f"SELECT ref FROM {table} WHERE parent_form = {form}\
-							and sub_attributes = FALSE"
+                            and sub_attributes = FALSE"
 
                 cursor.execute(query)
 
@@ -956,10 +935,10 @@ def multi_line_input(pairs, table, **kwargs):
     values = ""
 
     """#if len(pairs[0]['value']) == 1:
-	#	for p in pairs:
-	#		p['value'] = p['value'][0]
-	#		generic_input(pairs, table)
-	#		return None"""
+    #   for p in pairs:
+    #       p['value'] = p['value'][0]
+    #       generic_input(pairs, table)
+    #       return None"""
 
     row_input_num = len(pairs[0]["value"])
 
@@ -1011,8 +990,8 @@ def multi_line_input(pairs, table, **kwargs):
         row_input_counter += 1
 
     query = f"INSERT into {table}\
-				({rows})\
-				VALUES{values};"
+                ({rows})\
+                VALUES{values};"
     # print(query)
     cursor.execute(query)
 
@@ -1039,8 +1018,8 @@ def generic_input(pairs, table):
             values = f"{values} ,{p['value']}"
 
     query = f"INSERT into {table}\
-				({rows})\
-				VALUES({values})"
+                ({rows})\
+                VALUES({values})"
 
     cursor.execute(query)
 
@@ -1081,18 +1060,18 @@ class postal_address(conjoined_objects):
         self.meaning = ""
 
     """def create_meaning(self, specifics):
-		if 'meaning' not in specifics:
-			self.meaning = 'the Address is'
-			n = 0
-			for s in [self.first_line,self.second_line,self.third_line,self.fourth_line]
-				if s != None or '':
-					if n != 0:
-						self.meaning += ', {}'.format(s)
-					else: 
-						self.meaning += ' {}'.format(s)
-			if n == 0:
-				if self.postcode == '' or None:
-					continue"""
+        if 'meaning' not in specifics:
+            self.meaning = 'the Address is'
+            n = 0
+            for s in [self.first_line,self.second_line,self.third_line,self.fourth_line]
+                if s != None or '':
+                    if n != 0:
+                        self.meaning += ', {}'.format(s)
+                    else: 
+                        self.meaning += ' {}'.format(s)
+            if n == 0:
+                if self.postcode == '' or None:
+                    continue"""
 
 
 objects = {
@@ -1176,8 +1155,8 @@ def evaluate_form_mp_relation(form_name, p_type, p_id):
     cursor = db.cursor()
 
     query = f"""SELECT max(form_id) 
-				FROM `form_data`.`{form_name}_{p_type}_relationship` 
-				WHERE market_particulars = %s AND attachment_type = 'mp'"""
+                FROM `form_data`.`{form_name}_{p_type}_relationship` 
+                WHERE market_particulars = %s AND attachment_type = 'mp'"""
 
     params = (p_id,)
 

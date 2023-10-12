@@ -368,8 +368,7 @@ $(document).ready(function(){
 				var non_format_text = 'false'
 				//console.log(selec_ident)
 					if (item['object'] != undefined){
-		//if (objects['disclosure_address'] != undefined){
-					//console.log(objects['disclosure_address'])
+
 					var address = objects['disclosure_address'];
 					var address_meaning = 'The address of the property being disclosed has been given as';
 					
@@ -495,16 +494,7 @@ $(document).ready(function(){
 						var cur_multi_span = $(`span[type=multi][multi_group=${selec_ident}]`)
 						meaning_span({'span_subject':cur_item, 'append_area':cur_multi_span});
 						if (cur_item['data_rows'] != 'none'){
-							/*var data_row_count = 0
-							var new_data_row = `<span type='data_row' multi_group='${cur_item.identifier}' row_count=${data_row_count}></span>`
-							cur_item['data_rows'].forEach(function(row){
-								$(cur_multi_span).append(new_data_row)
-								var cur_data_row = $(`span[type=data_row][multi_group=${cur_item.identifier}][row_count=${data_row_count}]`)
-								Object.keys(row).forEach(function(ident){
-									if_result_relevant(meaning_span,{'span_subject':row[ident], 'append_area':cur_data_row})
-								});
-								data_row_count += 1
-							});*/
+
 						};
  					}
 				}
@@ -548,18 +538,7 @@ $(document).ready(function(){
 	});
 
 
-		//way to display the name of the section  via section shortcut buttons
-	/*$('button[group=sections_shortcut]').each(function(){
-		$(this).mouseenter(function(){
-			$('#section_name_tag').text($(this).attr('t_name'))
-			$('#section_name_tag').removeClass('hide')
-				.animate({top:event.pageY, left: event.pageX, 'z-index': 1});
-		})
-		$(this).mouseleave(function(){
-			$('#section_name_tag').addClass('hide')
-		})
-	});*/
-
+	//facilitates switching sections on and off
 	function section_switcher(changer){
 		var sec_name = $(changer).attr('name')
 		if ($(changer).prop('checked') == false){
@@ -591,33 +570,10 @@ $(document).ready(function(){
 
 	$('button[group=sections_shortcut]').mouseenter()
 
+	//toggles all sections on and off
 	$('#view_all_topic_toggle').click(function(){
 		all_sections('n')
 	});
-	/*Object.keys(results).forEach(function(item){
-		if (results[item]['relevant'] == 1 && results[item]['meanings'] != undefined){
-			if(results[item]['meanings']['meaning'] != ''){
-				/*var new_span = `
-					<span 
-						data-meaning="${results[item]['meanings']}" 
-						type="meaning"`
-					for (let s of searchable_data)*/
-				/*$("div[id=meaning_body]").append(`
-					<span 
-						class="stand_text" 
-						data-meaning="${results[item]['meanings']}" 
-						data-fraud="${results[item]['fraud']}"
-						data-competancy="${results[item]['competancy']}"
-						data-risk="${results[item]['risk']}"  
-						type="meaning"
-						data-identifier="${item}"
-					>
-							${results[item]['meanings']['meaning']},
-					</span>`
-				)
-			}
-		}
-	});*/
 
 	let divmin = false;
 	let getinfo = false;
@@ -719,68 +675,7 @@ $(document).ready(function(){
 			});
 		};
 	};
-	/*function get_mp_selecs(){
-		$("button[id=loading]").removeClass("hide");
-		$("p[id=meaning_string").toggleClass("hide");
-		if (sets.selec_set_counter == undefined){
-			set  = JSON.parse(selection_sets[selec_set_counter])
-		}else{
-			sets.selec_set_counter=set
-		}
-		$.ajax({
-			data : {selec_set :set.set_ID},
-			type : 'POST',
-			url : "/get_mp_selection/revisions",
-			success: function(data){
-				cur_set = []
-				if (data == "no_selections"){
-					alert("no_selections")
-				}
-				set = data.selec_set
-				$("button[id=loading]").addClass("hide");
-				$("p[id=meaning_string").addClass("hide");
-				$("div[id=meaning_body]").empty();
-				for (let s of set){
-					s = JSON.parse(s)
-					if (s.auxilliary_data == "extra"){
-						var placeholder = "``````"
-						var extra_data_slice = s.answer_meaning.search(new RegExp(placeholder, "i"));
-
-						if (extra_data_slice != -1){
-							var slice_end = extra_data_slice + 6
-							var start = s.answer_meaning.substring(extra_data_slice, slice_end)
-							var end = s.answer_meaning.substring( slice_end)
-							s.answer_meaning = "" + start + s.ancilliary_data + end
-						}
-					}
-					$("div[id=meaning_body]").append(`
-							<span 
-								data-competancy="${s.competancy_imp}" 
-								type="meaning" 
-								data-fraud="${s.fraud_imp}" 
-								data-meaning="${s.answer_meaning}" 
-								class="stand_text" 
-								id="${s.unique_selection_ID}" 
-								data-ans="${s.answer}"
-								marked="0" 
-								data-parent_set='${s.parent_set}'
-								data-parent_unique_selection_ID='${s.parent_unique_selection_ID}'
-								data-selection_ans='${s.selection_ans}'
-								data-lft='${s.lft}'
-								data-rgt='${s.rgt}'
-								data-auxilliary_data='${s.auxilliary_data}'>
-									${s.answer_meaning},
-							</span>`
-					)
-					cur_set.push(s)
-				}
-				search_function()				
-			},
-			error: function(error) {
-				console.log(error);
-			}
-		});
-	};*/
+	
 	Object.keys(fraud_comp_risk).forEach(function(marker){
 		fraud_or_comp(marker)
 	});
@@ -1262,32 +1157,6 @@ $(document).ready(function(){
 			return popup;	
 			},
 	}	
-	/*Object.keys(fraud_comp_risk).forEach(function(marker){
-		err_sec_count = section_data['collated'][marker]['high'].length;
-		$(`#high_${marker}_sections_count`).text(err_sec_count);
-		err_sec_count = section_data['collated'][marker]['standard'].length;
-		$(`#${marker}_sections_count`).text(err_sec_count);		
-	});*/
-	/*Object.keys(fraud_comp_risk).forEach(function(marker){
-		$(`#view_high_${marker}_sections`).click(function(){
-			all_sections('none')
-			section_data['collated'][marker]['high'].forEach(function(section){
-				$(`input[group=sections][name=${section}]`).click();
-			});
-			if ($(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).prop('checked') == false){
-				$(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).click();
-			};
-		});
-		$(`#view_${marker}_sections`).click(function(){
-			all_sections('none')
-			section_data['collated'][marker]['standard'].forEach(function(section){
-				$(`input[group=sections][name=${section}]`).click();
-			});
-			if ($(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).prop('checked') == false){
-				$(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).click();
-			};
-		});		
-	});*/
 
 	$('button[group=section_frc]').each(function(){
 		var marker = $(this).attr('frc');

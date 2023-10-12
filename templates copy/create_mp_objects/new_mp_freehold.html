@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <head>
+ {% include "link_configs_and_spatial/spatial_links.html" %}
+ {% include "link_configs_and_spatial/base_map_link.html" %}
+  </head>
+<style type="text/css">
+    .input_field{
+        width: 50%;
+    }
+</style>
+    <div>
+        <div style="width:40px;">
+        <div  id="show_postcode">
+            <button class='button is-small is-block is-info' id="show_pc">add map location</button>
+        </div>
+        <div class="hide" id="hide_postcode">
+            <button class='button is-small is-block is-info' id="hide_pc">hide map location</button>
+        </div>
+        </div>
+        <div class="hide" id='postcode_container'>
+            <form id="ajax_pc">
+                <input id='postcode_input' type="text" name="postcode" maxlength="8" minlength="7">
+                <div id="div_show_map_button">
+                    <button class='button is-small is-block is-info' id="show_map" type="button">Enter Postcode</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class='hide' id="show_change_pc">
+        <button class='button is-small is-block is-info' id="change_pc" type="button">change Postcode</button>
+    </div>
+
+    <map id='map' style='height:400px;width:400px' class="hide"></map>
+
+<form method="POST" action="{{url_for('title_derivatives.newfreehold_proceed',particular_id = particular_id)}}">
+            <div class="field">
+                <div class="control">
+                    <input class="input input_field" type="name" name="reference_name" placeholder="reference_name" autofocus="">
+                </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input input_field" type="name" name="Title_ID" placeholder="Title_ID if known" autofocus="">
+                </div>
+            <div class="field">
+                <div class="control input_field">
+                    <input class="input" type="name" name="Address" placeholder="Address" autofocus="">
+                </div>
+            <div>
+            <button class="button is-block is-info is-large ">Proceed</button>
+        </div>
+        </form>
+
+{% endblock %}

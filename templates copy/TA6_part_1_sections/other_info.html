@@ -1,0 +1,134 @@
+<section id="other_info" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>21. Other information</b>
+		</div>
+		<div>					
+			<p>21.1 Is the property affected by Japanese Knotweed?</p>
+		</div>
+		<div>
+
+			<div style="display:flex; flex-direction:row; ">
+				<div class = "pillar">
+					<p>Yes</p>
+					<input name="knotweed_bool"  type="radio" value="1">
+				</div>
+				<div class = "pillar">
+					<p>No</p>
+					<input name="knotweed_bool"  type="radio" value="0">
+				</div>
+				<hr class="dropdown-divider">			
+			</div>
+			<div id="knotweed_details">
+				<p>give details</p>
+				<div>
+					<textarea class="textarea" id="knotweed"></textarea>
+				</div>
+			</div>						
+		</div>
+		<hr class="dropdown-divider">
+		<div>					
+			<p>21.2 Is the property in a mining area?</p>
+		</div>
+		<div>
+			<div style="display:flex; flex-direction:row; ">
+				<div class = "pillar">
+					<p>Yes</p>
+					<input name="mining_bool"  type="radio" value="1">
+				</div>
+				<div class = "pillar">
+					<p>No</p>
+					<input name="mining_bool"  type="radio" value="0">
+				</div>
+				<hr class="dropdown-divider">			
+			</div>
+			<div id="mining_details">
+				<p>give details</p>
+				<div>
+					<textarea class="textarea" id="mining"></textarea>
+				</div>
+			</div>						
+		</div>
+		<hr class="dropdown-divider">
+		<div>					
+			<p>21.3 Has something happened in the property that a buyer would want to know about or might influence their decision to purchase?</p>
+		</div>
+		<div>
+			<div style="display:flex; flex-direction:row; ">
+				<div class = "pillar">
+					<p>Yes</p>
+					<input name="influence_decision_bool"  type="radio" value="1">
+				</div>
+				<div class = "pillar">
+					<p>No</p>
+					<input name="influence_decision_bool"  type="radio" value="0">
+				</div>
+				<hr class="dropdown-divider">			
+			</div>
+			<div id="influence_decision_details">
+				<p>give details</p>
+				<div>
+					<textarea class="textarea" id="influence_decision"></textarea>
+				</div>
+			</div>						
+		</div>
+		<hr class="dropdown-divider">
+		<div>					
+			<p>21.4 Do any neighbours or members of the public have the right to enter your property?</p>
+		</div>
+		<div>
+			<div style="display:flex; flex-direction:row; ">
+				<div class = "pillar">
+					<p>Yes</p>
+					<input name="neighbours_access_bool"  type="radio" value="1">
+				</div>
+				<div class = "pillar">
+					<p>No</p>
+					<input name="neighbours_access_bool"  type="radio" value="0">
+				</div>
+				<hr class="dropdown-divider">			
+			</div>
+			<div id="neighbours_access_details">
+				<p>give details</p>
+				<div>
+					<textarea class="textarea" id="neighbours_access"></textarea>
+				</div>
+			</div>						
+		</div>	
+		<hr class="dropdown-divider">
+		<div>					
+			<p>21.5 Is there anything else you think a buyer would want to know, or that might influence their decision to buy or that you remember about the property when you bought it?</p><br>
+			<p>For example, why are you moving?
+				<br>If you are not sure if you should disclose information, ask your solicitor.</p>
+		</div>
+		<div>
+			<div style="display:flex; flex-direction:row; ">
+				<div class = "pillar">
+					<p>Yes</p>
+					<input name="anything_else_bool"  type="radio" value="1">
+				</div>
+				<div class = "pillar">
+					<p>No</p>
+					<input name="anything_else_bool"  type="radio" value="0">
+				</div>
+				<hr class="dropdown-divider">			
+			</div>
+			<div id="anything_else_details">
+				<p>give details</p>
+				<div>
+					<textarea class="textarea" id="anything_else"></textarea>
+				</div>
+			</div>						
+		</div>						
+	</div>
+</section>
+
+<script>
+$(document).ready(function(){
+	boolean_slide_open("input[name=knotweed_bool]","#knotweed_details","stand")
+	boolean_slide_open("input[name=mining_bool]","#mining_details","stand")
+	boolean_slide_open("input[name=influence_decision_bool]","#influence_decision_details","stand")
+	boolean_slide_open("input[name=neighbours_access_bool]","#neighbours_access_details","stand")
+	boolean_slide_open("input[name=anything_else_bool]","#anything_else_details","stand")
+});
+</script>

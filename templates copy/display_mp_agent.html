@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block links %}
+ {% include "link_configs_and_spatial/spatial_links.html" %}
+{% endblock %}
+                         
+{% block content %}
+<div>
+    <button name="mpsp" class="button is-medium" id="mpsp">View Sale Particulars</button>
+    <button name="mpsp" class="button is-medium hide" id="mpsp">View Market Particulars</button>
+</div>
+<div id="map_container">
+    <div id="map" style="height:250px;"></div>
+</div>
+<div id="mp">
+    <div class="field">
+        <button id="new_mp" class="button is-info is-fullwidth" status="hidden">Create New MP</button>
+    </div>
+    <div class="columns">
+        <div class="column">
+            {% if row_count == 0 %}
+            <div style="width:100%;margin:auto;">
+                <div class="notification is-info">
+                    <p>
+                        <b>No active market particulars</b>
+                    </p>
+                </div>
+            </div>
+            {% else %}
+            <div class="" id="mp_table">
+                <table class="table is-striped is-fullwidth fl-table">
+                    <thead>
+                        <tr>
+                            {% for header in headings[1:] %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr style="color:black">
+                            <td>{{ row['name'] }}</td>
+                            <td>{{ row['creation_date'] }}</td>
+                            {% if row['confirmed_on_the_market'] == True %}
+                            <td>confirmed on the market</td>
+                            {% elif row['confirmed_on_the_market'] == False %}
+                            <td>not confirmed on the market</td>
+                            {% endif %}
+                            {% if row['active_offers']  == True %}
+                            <td>currently active offers</td>
+                            {% elif row['active_offers'] == False %}
+                            <td>no active offers</td>
+                            {% endif %}
+                            {% if row['updates']  == True %}
+                            <td>New Updates</td>
+                            {% elif row['updates'] == False %}
+                            <td>No New Updates</td>
+                            {% endif %}
+                            <th>
+                                <a href="{{ url_for('mp.selectedmp', particular_id=row['id']) }}">
+                                    <button type="submit" class="button is-block is-info is-small">View</button>
+                                </a>
+                            </th>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+        <div class="column hide" style="" id="new_mp_container">
+            <div>
+                <button class="button is-warning" id="close_new_mp">X</button>
+            </div>
+            <div id="new_mp_area" style="width:0%;">
+                {% include 'new_mp_form.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hide" id="sp">
+    <a href="{{ url_for('mp.newmp', user_type='agent') }}">
+        <button class="button is-block is-info is-large is-fullwidth">Market New Sale market particulars</button>
+    </a>
+    No active Sale particulars
+</div>
+<script>
+$(document).ready(function() {
+
+    $("a[id=nav_mp]").addClass("is-active");
+    
+		$("button[name=mpsp]").click(function(){
+			$( "#mp" ).toggleClass("hide");
+			$( "#sp" ).toggleClass("hide");
+			$("button[name='mpsp']").toggleClass("hide");
+		});
+		if(navigator.onLine){
+       		//map =Initialize_map(50.00,0.3675,16);
+   		}
+    $('#map_container').slideUp();
+
+    $('#new_mp').click(function(){
+    	var status = $(this).attr('status')
+    		$(this).attr('status', 'shown');
+    		$('#new_mp_container').removeClass('hide');
+    		$('#new_mp_area').animate({'width':'80%'});
+    		$('#new_mp').slideUp();
+    });
+
+    $('#close_new_mp').click(function(){
+    	$('#new_mp_area').animate({'width':'0%'});
+    	$('#new_mp_container').addClass('hide');
+    	$('#new_mp').slideDown();
+    });
+});
+</script>
+
+{% endblock %}

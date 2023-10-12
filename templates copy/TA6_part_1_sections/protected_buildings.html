@@ -1,0 +1,101 @@
+<section id="protected_buildings" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>9.  Protected buildings</b>
+		</div>
+		<div>					
+			<p class="q_title"><b>9.1</b> Is the property (or any part of it) listed in the National Heritage List for England?</p>
+		</div>
+		<div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="protected_buildings_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="protected_buildings_bool"  type="radio" value="0">
+					</div>
+					<div class = "radio_container">
+						<p>Don’t know</p>
+						<input name="protected_buildings_bool"  type="radio" value="not_known">
+					</div>				
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="protected_buildings_bool_empty" class="button is-small is-warning"><b>X</b></button>
+				</div>			
+			</div>		
+			<div id="protected_buildings_details" class="child_q">
+				<hr class="dropdown-divider">
+				<p calss="q_title">you’ll need to supply a copy of any relevant documents eg notice of listing, letter from local authority confirming listing.</p>
+				<div class="row">
+					<div>
+						<input type="file" id="protected_buildings_docu">
+					</div>
+					<div class="empty_container">
+						<button align="right" style="float:right;" id="protected_buildings_docu_empty" class="button is-small is-warning"><b>X</b></button>
+					</div>					
+				</div>
+
+			</div>					
+		</div>
+		<div>
+			<hr class="dropdown-divider">
+			<div>					
+				<p class="q_title"><b>9.2</b> Is the property (or any part of it) in a conservation area?</p>
+			</div>			
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="conservation_area_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="conservation_area_bool"  type="radio" value="0">
+					</div>
+					<div class = "radio_container">
+						<p>Don’t know</p>
+						<input name="conservation_area_bool"  type="radio" value="not_known">
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="conservation_area_bool_empty" class="button is-small is-warning"><b>X</b></button>
+				</div>								
+			</div>			
+			<div id="conservation_area_details" class="child_q">
+				<hr class="dropdown-divider">
+				<p class="q_title">you’ll need to supply a copy of any relevant documents</p>
+				<div class="row">
+					<div clas="input_container">
+						<input type="file">
+					</div>
+					<div class="empty_container">
+						<button align="right" style="float:right;" id="conservation_area_bool_empty" class="button is-small is-warning"><b>X</b></button>
+					</div>						
+				</div>
+			</div>					
+		</div>
+		<hr class="dropdown-divider">
+		<button id="submit_protected_buildings_data" class="button is-medium is-success">Submit</button>	
+	</div>
+</section>
+
+<script>
+var protected_buildings = {}
+$(document).ready(function(){
+	boolean_slide_open("input[name=protected_buildings_bool]", "#protected_buildings_details", "stand");
+	boolean_slide_open("input[name=conservation_area_bool]", "#conservation_area_details", "stand");
+
+	protected_buildings_input_fields=[
+			{"identifier":"protected_buildings_bool", "input_type":"bool_extra", radio_function:function(){$('#protected_buildings_details').slideUp()}},
+			{"identifier":"protected_buildings_docu", "input_type":"docu"},
+			{"identifier":"conservation_area_bool", "input_type":"bool_extra", radio_function:function(){$('#conservation_area_details').slideUp()}},
+			{"identifier":"protected_buildings_docu", "input_type":"docu"}
+		]
+	empty_and_convert(protected_buildings_input_fields);
+
+	ajax_submission('submit_protected_buildings_data',protected_buildings, "/TA6_part_1_protected_buildings", protected_buildings_input_fields);
+});
+</script>

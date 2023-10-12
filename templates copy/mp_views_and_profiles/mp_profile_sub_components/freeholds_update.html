@@ -1,0 +1,47 @@
+{% block freeholds %}
+
+   {% if freehold_data == None %}
+             No Freeholds assigned to sale
+    {% else %}
+
+            <div class="table-wrapper" id='work_task_table_wrapper'style="height:400px;width:900px;">
+                 <table class="fl-table" align="left">
+                    <thead>
+                        <tr>
+                            <th colspan = {{mp.title_derivatives['freeholds']['headings']|length +1 }}>Freeholds</th>
+                        </tr>
+                        <tr>
+                            {% for header in mp.title_derivatives['freeholds']['headings'] %}
+                                <th style='width:300px'> 
+                                    {{ header[1] }}
+                                </th>
+                            {% endfor %}  
+                            <th style='width:200px'>
+                            </th>                      
+                        </tr>
+                    </thead>
+                </table>
+            <div style="height:400px;overflow-y:auto;width:900px;">
+                <table class="fl-table" align="left" id="display_freehold_table">
+                    <tbody>
+                        {% for freehold in mp.title_derivatives['freeholds']['data'] %}
+                            <tr style="color:black" type="freehold" data-name="{{freehold['reference_name']}}" data-date_first_specified="{{freehold['date_first_specified']}}" data-x_coordinate="{{freehold['x_location_point']}}" data-y_coordinate="{{freehold['y_location_point']}}" data-holding_id="{{freehold[holding_ID]}}" obj_type="freehold">
+                                          
+                                {% for header in mp.title_derivatives['freeholds']['headings'] %}
+                                     <td> 
+                                        {{ freehold[header[0]] }} 
+                                    </td>
+                                {% endfor %}
+                                <td>
+                                    <a 
+                                        <button href="{{ url_for("mp.freehold_profile",holding_ID = freehold[holding_ID],selec_set_ID = selec_set_ID )}}" type ="submit" class="button is-block is-info is-small ">Actions</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                 </table>
+             </div>
+            </div>
+    {% endif %}
+{% endblock %}

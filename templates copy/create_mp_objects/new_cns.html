@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block links %}
+ {% include "link_configs_and_spatial/spatial_links.html" %}
+{% endblock %}
+
+{% include "link_configs_and_spatial/postcode_map.html" %}
+
+{% block content %}
+
+
+<form method="POST" action="{{url_for('title_derivatives.new_cns_proceed',particular_id = particular_id)}}">
+            <div class="field">
+                <div class="control">
+                    {% if reference_name %}
+                          <input class="input is-large" type="name" name="reference_name" placeholder="reference_name"autofocus="" value="{{ reference_name }}">
+                    {% else %}
+
+                        <input class="input is-large" type="name" name="reference_name" placeholder="reference_name"autofocus="">
+                    {% endif %}
+                </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="name" name="Title_ID" placeholder="Title_ID if known" autofocus="">
+                </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="name" name="Address" placeholder="Address" autofocus="">
+                </div>
+
+                        <div class="field">
+                <div class="control">
+                    <input class= type="percentage"
+                    name="share percentage" placeholder = "share percentage %" autofocus="">
+
+
+            <button class="button is-block is-info is-large is-fullwidth">Proceed</button>
+        </form>
+{% endblock %}

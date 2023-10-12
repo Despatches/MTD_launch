@@ -1,0 +1,158 @@
+<section id="flooding" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b class="q_title">18. Flooding</b>
+		</div>
+		<div>
+			<p class="q_title"><span>Flooding may take a variety of forms: it may be seasonal, irregular or simply a one-off event. Your property does not need to be near the sea or to a river for flooding to happen.<br><br>
+			</span><a> Find out more about the types of flooding and flood risk reports</a><br></span><span><a>Check if you're at risk of flooding in England</a><br></span><p>
+		</div>
+		<div>					
+			<p class="q_title"><b>18.1</b>   Has any part of the property (buildings, surrounding garden or land) ever been flooded?</p>
+		</div>
+		<div class="row">		
+			<div class="input_container">
+				<div class = "radio_container">
+					<p>Yes</p>
+					<input name="flooding_bool"  type="radio" value="1">
+				</div>
+				<div class = "radio_container">
+					<p>No</p>
+					<input name="flooding_bool"  type="radio" value="0">
+				</div>				
+			</div>
+			<div class="empty_container">
+				<button align="right" style="float:right;" id="vacant_possession_proof_docu_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+			</div>			
+		</div>			
+			<div id="flood_details" class="child_q">
+				<hr class="dropdown-divider">
+				<p class="q_title">What type of flooding took place?</p>
+				<div class="row">
+					<div class="input_container">
+						<div class = "radio_container">
+							<p>Ground water</p>
+							<input name="flood_type"  type="radio" value=1>
+						</div>
+						<div class = "radio_container">
+							<p>Sewer flooding</p>
+							<input name="flood_type"  type="radio" value=2>
+						</div>
+						<div class = "radio_container">
+							<p>Surface water</p>
+							<input name="flood_type"  type="radio" value="0">
+						</div>
+						<div class = "radio_container">
+							<p>Coastal flooding</p>
+							<input name="flood_type"  type="radio" value="0">
+						</div>
+						<div class = "radio_container">
+							<p>River flooding</p>
+							<input name="flood_type"  type="radio" value="0">
+						</div>
+						<div class = "radio_container">
+							<p>Other</p>
+							<input name="flood_type"  type="radio" value="0">
+						</div>
+					</div>
+				</div>
+				<p class="q_title">for other give details</p>
+				<div class="row">
+					<div class="input_container">
+						<textarea id="other_flood_type_description"></textarea>
+					</div>
+				</div>
+				<hr class="dropdown-divider">				
+				<div>
+					<p>18.1.1 When did the flooding take place?</p>
+					<div>
+						<input type="month" id="flood_event_date">
+					</div>
+				</div>
+				<hr class="dropdown-divider">
+				<div>
+					<p>18.1.2 Which parts flooded?</p>
+					<div>
+						<textarea id="flood_area_details"></textarea>
+					</div>
+				</div>
+				<button class="button is-success" id="add_flood_details">Add Flood Event</button>
+				<hr class="dropdown-divider">
+
+				<div>
+					<table class="table" align="middle" id="flooding_event_table" row_num='0'>	
+						<tr>
+							<th>
+								Flood Type
+							</th>
+							<th>
+								Flood Type Description
+							</th>
+							<th>
+								Flood date
+							</th>						
+							<th>
+								Flood Extent
+							</th>
+							<th>
+							</th>
+						</tr>
+					</table>
+				</div>
+					<hr class="dropdown-divider">
+				<div>
+					<p>18.2 Has a flood risk report been created for the property?<p>
+					<div class="row">
+						<div class = "radio_container">
+							<p>Yes</p>
+							<input name="flood_risk_report_bool"  type="radio" value="1">
+						</div>
+						<div class = "radio_container">
+							<p>No</p>
+							<input name="flood_risk_report_bool"  type="radio" value="0">
+						</div>
+						<div class="empty_container">
+							<button align="right" style="float:right;" id="vacant_possession_proof_docu_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+						</div>									
+					</div>	
+					<div id="flood_risk_docu">
+						<p class="q_title">you’ll need to supply a copy of the flood risk report.<p>
+						<div class="row">
+							<div class="input_container">
+								<input type="file" id="flood_risk_report_docu">
+							</div>
+						</div>
+					</div>			
+				</div>
+			</div>
+			<hr class="dropdown-divider">
+			<div>
+				<button class="button is-success is-medium">Submit</button>
+			</div>
+
+	</div>
+	
+</section>
+
+<script>
+$(document).ready(function(){
+	boolean_slide_open("input[name=flooding_bool]","#flood_details","stand");
+	boolean_slide_open("input[name=flood_risk_report_bool]","#flood_risk_docu","stand");
+
+
+	flood_inputs = [
+		{"identifier":"flooding_bool", "input_type":"bool", radio_function:function(){$('#flood_details').slideUp()}},
+		{"identifier":"flooding_event_table", 'input_type':'multi_row','data_rows':[
+				{'identifier':'flood_type',"input_type":'radio'},
+				{'identifier':'other_flood_type_description',"input_type":'text'},
+				{'identifier':'flood_event_date',"input_type":'month'},
+				{'identifier':'flood_area_details',"input_type":'text'}
+			], 't' : '`TA6`.`flood`'
+		},
+		{"identifier":"flood_risk_report_bool", "input_type":"bool", radio_function:function(){$('#flood_risk_docu').slideUp()}},
+		{'identifier':'flood_risk_report_bool',"input_type":'bool'},
+	]
+
+	multi_row_data_table('flooding_event_table',[person_details_validate_17("first_name"),person_details_validate_17("surname")],$("#add_flood_details"),flood_inputs[1].data_rows)
+});
+</script>

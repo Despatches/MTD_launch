@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block links %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/base_map.js') }}"></script>
+<meta id="mp_profile_meta" data-selec_set_id="{{ selec_set_ID }}">
+{% endblock %}
+{% block content %}
+<head>
+    {% include "link_configs_and_spatial/spatial_links.html" %}
+</head>
+<section class="hero" >
+    <div class="hero-body">
+        <a
+        <button href="{{ url_for("mp.check_set",particular_id=particular_id )}}" type ="submit" class="button is-block is-info is-large" style="heigth:80px; ">Define Market Particulars</button>
+        </a>
+        <div class="columns">
+            <div class="column is-one-fifth"> 
+                <div>
+                    <a
+                      <button href="{{ url_for("mp.synopsis",particular_id=particular_id )}}" type ="submit" class="button is-block is-warning is-fullwidth" style="margin:5px;">Synopsis</button>
+                    </a>
+                </div>
+
+                <div>
+                    <a
+                        <button href="{{ url_for("mp.create_view_code",particular_id=particular_id) }}" class="button is-block is-warning is-fullwidth" style="margin:5px; height:55px;" align="pull-left"> Create New <br>View Code</button>
+                    </a>
+                </div>
+            </div>
+        <div class="column">
+            <div  class="navbar-item has-dropdown is-hoverable" style="color:black; width:200px;;">
+                <a  <button id="title_deriv_dropdown" class="button" style="color:black">
+                    Add Title Derivative</button>
+                </a>
+                <div class ="navbar-dropdown" style="color:black; width:60px;">             
+                    <a
+                     <button href="{{ url_for("title_derivatives.new_cns",particular_id = mid) }}" class="button is-success is-dark navbar-item is-small" style="height:55px; width:200px;">
+                                    Add Company <br> or Shares</button>
+                    </a>
+                    <a
+                        <button href="{{ url_for("title_derivatives.newfreeholdshare",particular_id = mid) }}" class="button  is-success navbar-item is-small" style="height:55px; width:200px"> Add Freehold Share</button>
+                    </a>
+                    <a
+                        <button href="{{ url_for("title_derivatives.new_leasehold",particular_id = mid) }}" class="button  is-success navbar-item is-small" style="height:55px; width:200px">
+                        Add Leasehold </button>
+                    </a>
+                    <a
+                        <button href="{{ url_for("title_derivatives.newfreehold",particular_id = mid) }}" class="button  is-success navbar-item is-small" style="height:55px; width:200px">
+                        Add Freehold</button>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <button id="view_other_forms" class="button is-block is-success">Other Forms</button>
+            </div>
+        </div>
+        <div class="column is-one-fifth">
+            <div>
+                <a
+                    <button style="margin:5px; height:55px;" class="button is-link is-light is-fullwidth" > Issue Micro Disclosure <br>for sale component </button>
+                </a>
+            </div>
+            <div>
+                    <button style="margin:5px;" class="button is-link is-light is-fullwidth" id="view_analytics"> analytics </button>
+
+            </div>
+        </div>
+    </div>
+</section>
+    <div>
+    <button id="map_toggle" class="button is-small">Hide Map</button>
+    </div>
+    <div id="map_container">
+        <div class="columns">
+            <div class = "column is-four-fifths" id='map' style='height:200px;'></div>
+            <div class="box hide column is-one-fifth" id="marker_data">
+                it_works
+            </div>
+        </div>
+    </div>
+<section id="object_details">
+    {% include "mp_views_and_profiles/mp_profile_sub_components/mp_components_update.html" %}
+</section>
+<section id="mp_analytics" class="hide">
+    <p>
+        <span>there are currently</span><b><span id="num_potential_buyers"></span></b><span>potential buyers with access to the market particulars</span>
+    </p>
+    <div style="width:300px;">
+        <canvas id="object_types_chart"></canvas>
+    </div>
+    <div>
+        standard disclosure progress
+        <progress class="progress" value="7" max="30"></progress>
+    </div>
+</section>
+<section id="other_forms" class="hide">
+    <div style="height:20px;"></div>
+    <a
+        <button class="button is-medium" href="{{ url_for('TA6_forms.template_form', particular_id=particular_id, p_type='market_particulars', form_name='TA6_part_1') }}" >New TA6 part 1</button>
+    </a>
+    <a
+        <button class="button is-medium" href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particulars', form_name='TA6_part_1') }}" >TA6 part 1 collected data</button>
+    </a>    
+    <div style='height:900px'>
+    <div class="table-wrapper">
+
+        <table class="fl-table">
+            <tr>
+                <th>
+                    form
+                </th>
+                <th>
+                    options
+                </th>
+
+                <th>
+                    Standard TA6
+                </th>
+            </tr>
+        </table>
+    </div>
+</div>
+</section>
+
+<script>
+var selec_set_id = $("meta[id=mp_profile_meta").data("selec_set_id")
+
+$(document).ready(function(){
+
+var current_section = $("section[id=object_details]")
+var map_show = true
+
+    $("#view_other_forms").click(function(){
+        var forms = $("#other_forms")
+        if ($(forms).hasClass("hide")==true){
+            $(current_section).addClass("hide");
+            $(forms).removeClass("hide")
+        } else if ($(forms).hasClass("hide")==false){
+            $(forms).addClass("hide");
+            $(current_section).removeClass("hide");
+        };
+    });
+
+function hide_map(){
+    $("#map_container").slideUp()
+    $("button[id=map_toggle]").text("Show Map")
+    map_show = false
+};
+    $("button[id=map_toggle]").click(function(){
+        if (map_show == true){
+            hide_map()
+        }else if (map_show == false){
+            $("#map_container").slideDown()
+            $(this).text("Hide Map") 
+            map_show = true           
+        }
+    });
+var map;
+var markers =[]
+    var fh_markers = [];
+    let range = {
+        min_lat: 0,
+        max_lat: 0, 
+        min_lng: 0,
+        max_lng: 0
+    };
+
+    $("tr[type=freehold]").each(function(){
+        if ($(this).data("x_coordinate") != "None" || $(this).data("y_coordinate") != "None"){
+            let fh={
+            type : "freehold",
+            freehold : `${$(this).data("holding_id")}`,
+            x_coordinate :$(this).data("x_coordinate"),
+            y_coordinate :$(this).data("y_coordinate")
+            }          
+            fh_markers.push(fh)
+        }
+    });
+    $("tr[type=leasehold]").each(function(){
+        if ($(this).data("x_coordinate") != "None" || $(this).data("y_coordinate") != "None"){
+            let lh={
+            type : "leasehold",
+            leasehold : `${$(this).data("holding_id")}`,
+            x_coordinate : $(this).data("x_coordinate"),
+            y_coordinate :$(this).data("y_coordinate")
+            }
+            fh_markers.push(lh)
+        }
+    });
+    if (fh_markers.length > 0){
+        range.min_lat = fh_markers[0].x_coordinate;
+        range.max_lat = fh_markers[0].x_coordinate;
+        range.max_lng = fh_markers[0].y_coordinate;
+        range.min_lng = fh_markers[0].y_coordinate;
+    };
+    
+    if (fh_markers.length >= 2){
+        for (let f of fh_markers.slice(1)){
+            if (f.x_coordinate > range.max_lat){
+                range.max_lat = f.x_coordinate;
+            }
+            if (f.x_coordinate < range.min_lat){
+                range.min_lat = f.x_coordinate;
+            }
+            if (f.y_coordinate > range.max_lng){
+                range.max_lng = f.y_coordinate;
+            }
+            if (f.y_coordinate < range.min_lng){
+                range.min_lng = f.y_coordinate;
+            }        
+        };
+    }
+
+    map_center={
+        lat:((range.max_lat + range.min_lat)/2),
+        lng:((range.max_lng + range.min_lng)/2)
+    }
+
+    map = Initialize_map(map_center.lat,map_center.lng,12);
+
+    const freehold_marker = L.Marker.extend({
+        options: {
+            ID: "freehold_ID",
+
+        }
+    })
+
+    const leasehold_marker = L.Marker.extend({
+        options: {
+            ID: "leasehold_ID"
+        }
+    })
+    
+    function show_marker_data(e){
+        $("div[id=marker_data]").removeClass("hide");
+        $("div[id=marker_data]").empty()
+        $("div[id=marker_data]").append(`<div>${this.options.ID}</div>`)
+    }
+
+    for (let f of fh_markers){
+        if (f.type == "freehold"){
+            marker = new freehold_marker([f.x_coordinate, f.y_coordinate],{
+                ID : f.freehold
+            }).addTo(map).on('mouseover', show_marker_data);
+        }
+        else if (f.type == "leasehold"){
+            marker = new freehold_marker([f.x_coordinate, f.y_coordinate],{
+                ID : f.leasehold
+            }).addTo(map).on('mouseover', show_marker_data);
+        }
+    };
+});
+
+$(document).ready(function(){
+
+    let analytics_viewed = false;
+
+    $("button[id=view_analytics").click(function(){
+        $("#object_details").toggleClass("hide");
+        $("#mp_analytics").toggleClass("hide");
+        if (analytics_viewed == false){analytics_viewed = true
+            $.ajax({
+            data :{mp_id : {{particular_id}} },
+            type : 'POST',
+            url : "/find_user_access",
+            success: function(data){
+                var potential_buyers=data.potential_buyers;
+                $("#num_potential_buyers").text(" "+potential_buyers+" ");
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+        };
+    });
+    $('#map_toggle').click()
+
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% for stamp in mp['stamps'].stamps%}
+	{% set curstamp = mp["stamps"].stamps[stamp] %}
+	{% if "marks" in curstamp and curstamp["marks"] != None%}
+		{% set marks = curstamp["marks"] %}
+		<div class="feed_box">
+			<div class="row">
+				<div class="colour_col">
+					<div class="colour_tab" ></div>
+					{% if "new_disclose" in marks %}
+						<div class='colour_tab new_disclose' stamp='{{stamp}}' type='new_disclose' group='colour_stamp' display="Further Disclosures"></div>
+					{% endif %}
+					{% if "loan_opp" in marks %}
+						<div group='colour_stamp'stamp='{{stamp}}' class='colour_tab loan_opp' type='loan_opp' display="Finance"></div>
+					{%  endif %}
+					{% if "indem_opp" in marks %}
+						<div group='colour_stamp' stamp='{{stamp}}' class='colour_tab indem_opp' type='indem_opp' display="Indemnity"></div>
+					{%  endif %}
+					{% if "esg" in marks %}
+						<div group='colour_stamp' stamp='{{stamp}}' class='colour_tab esg' type='esg' display="ESG"></div>
+					{%  endif %}														
+				</div>
+				<div class="feed_content">
+					<div class="box" group="main_feed_content" stamp="{{stamp}}">
+						{% if marks["default"]["text"]|length > 0 %}
+							{% for text in marks["default"]["text"] %}
+								<p><span>{{text}}</span></p>
+								<hr>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% for feed_item  in ["loan_opp", "indem_opp", "new_disclose", "esg"]%}
+						{% if feed_item in marks %}
+							<div stamp="{{stamp}}" group="colour_stamp_view" type = "{{feed_item}}" class='box {{feed_item}} colour_stamp_view hide'>
+								<div stamp='{{stamp}}' group ='colour_stamp_view_body'>
+									<div>
+										<button type='main_feed_return' stamp='{{stamp}}' class='button is-warning'><--</button>
+									</div>
+									{% for text in marks[feed_item]["text"]%}
+										<div>
+											<p>{{text}}</p>
+										</div>
+									{% endfor %}
+									{% if feed_item == "new_disclose" %}
+										<div>
+											<button class='button is-dark' type='issue_disclose' new_disclose="">{{marks[feed_item]["new_disclose_name"]}}</button>
+										</div>
+									{% endif %}
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endfor %}

@@ -1,0 +1,108 @@
+<section id="access_roads" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>13. Access roads and footpaths</b>
+		</div>
+		<div>					
+			<p class="q_title"><b>13.1</b> Do you have to pay anything towards the costs of maintaining roads, footpaths or other facilities?</p>
+		</div>
+		<div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="maintain_road_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="maintain_road_bool"  type="radio" value="0">
+					</div>
+					<div class = "radio_container">
+						<p>Not Sure</p>
+						<input name="maintain_road_bool"  type="radio" value="not_sure">
+					</div>								
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="maintain_road_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>				
+			</div>
+			<div id="maintain_road_details">	
+				<p class="q_title">please give details of any payments (how much, and who payments are made to).</p>
+				<div class="row">
+					<div class="input_container">
+						<textarea class="textarea" id="maintain_road_payement_details"></textarea>
+					</div>
+					<div class="empty_container">
+						<button align="right" style="float:right;" id="maintain_road_payement_details_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+					</div>					
+				</div>
+			<div>
+			<hr class="dropdown-divider">
+				<p class="q_title"><b>13.2</b> Is your house on a private road or is the road that gives access to or adjoins the property a private road?</p>
+			</div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="private_road"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="private_road"  type="radio" value="0">
+					</div>
+					<div class = "radio_container">
+						<p>Not sure</p>
+						<input name="private_road"  type="radio" value="not_sure">
+					</div>				
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="private_road_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>				
+			</div>
+			<div>
+			<hr class="dropdown-divider">
+				<p class="q_title"><b>13.3</b> Are the roads leading to your property maintained at public expense?</p>
+			</div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="public_expense_road"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="public_expense_road"  type="radio" value="0">
+					</div>
+					<div class = "radio_container">
+						<p>Not sure</p>
+						<input name="public_expense_road"  type="radio" value="not_sure">
+					</div>				
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="public_expense_road_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>				
+			</div>														
+		</div>
+
+	</div>
+	<hr class="dropdown-divider">
+	<button class="button is-success is-medium" id ="submit_access_roads">Submit</button>
+</div>
+</section>
+
+<script>
+access_roads = {}
+$(document).ready(function(){
+	boolean_slide_open("input[name=maintain_road_bool]","#maintain_road_details","stand");
+
+	access_roads_input_fields=[
+		{"identifier":"maintain_road_bool", "input_type":"bool_extra",radio_function:function(){$("#maintain_road_details").slideUp()}},
+		{"identifier":"maintain_road_payement_details", "input_type":"detail_text"},
+		{"identifier":"private_road", "input_type":"bool_extra"},
+		{"identifier":"public_expense_road", "input_type":"bool_extra"}
+	]
+	empty_and_convert(access_roads_input_fields);
+
+	ajax_submission('submit_access_roads',access_roads, "/TA6_part_1_access_roads", access_roads_input_fields);	
+});
+</script>

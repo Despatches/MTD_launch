@@ -1,0 +1,246 @@
+<style>
+.radio_table table, th, td {
+	border: 1px solid;
+	border-collapse: collapse;
+
+}
+</style>
+
+<section id="property_alteration" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>6.  Property alterations and building work</b>
+		</div>
+		<div>					
+			<p class="q_title"><b>6.1</b> Property alterations and building work Have any of the following changes been made to the property or any part of it (including the garden), during your ownership?</p>
+		</div>
+		<div>
+			<div style="display:flex; flex-direction:row; ">
+				<table class="radio_table">
+					<tr>
+						<td selection="1" group="building_work_type" name="building_works_and_alterations" value="non-resi">
+							<div style="display:flex; flex-direction:row;">
+								<p >Part of the property is not used for residential occupation eg commercial use</p>
+								<input name="building_works_and_alterations" type="radio" value="non-resi" class="hide">
+							</div>							
+						</td>	
+						<td selection="2" group="building_work_type" name="building_works_and_alterations" value="replace_element">
+							<div style="display:flex; flex-direction:row;">
+								<p>Installing replacement windows, roof windows, roof lights, glazed doors since 1 April 2002</p>
+								<input name="building_works_and_alterations" type="radio" value="replace_element" class="hide">
+							</div>							
+						</td>
+					</tr>
+					<tr>
+						<td selection="6" group="building_work_type" name="building_works_and_alterations" value="garage_conversion">
+							<div style="display:flex; flex-direction:row;">
+								<p>Garage conversion</p>
+								<input  name="building_works_and_alterations" type="radio" value="garage_conversion" class="hide">
+							</div>						
+						</td>
+						<td selection="3" group="building_work_type" name="building_works_and_alterations" value="extension">
+							<div style="display:flex; flex-direction:row;">
+								<p>Adding an extension</p>
+								<input  name="building_works_and_alterations" type="radio" value="extension" class="hide">
+							</div>							
+						</td>
+					</tr>
+					<tr>
+						<td selection="4" group="building_work_type" name="building_works_and_alterations" value="conservatory">
+							<div style="display:flex; flex-direction:row;">
+								<p>Adding a conservatory</p>
+								<input  name="building_works_and_alterations" type="radio" value="conservatory" class="hide">
+							</div>							
+						</td>
+						<td selection="5" group="building_work_type" name="building_works_and_alterations" value="loft_conversion">
+							<div style="display:flex; flex-direction:row;">
+								<p>Loft conversion</p>
+								<input  name="building_works_and_alterations" type="radio" value="loft_conversion" class="hide">
+							</div>							
+						</td>
+					</tr>
+					<tr>
+						<td selection="7" group="building_work_type" name="building_works_and_alterations" value="wall_remove">
+							<div style="display:flex; flex-direction:row;">
+								<p>Removal of internal walls</p>
+								<input  name="building_works_and_alterations" type="radio" value="wall_remove" class="hide">
+							</div>						
+						</td>
+						<td selection="8" group="building_work_type" name="building_works_and_alterations" value="other_change">
+							<div style="display:flex; flex-direction:row;">
+								<p>Other building works or changes to the property</p>
+								<input  name="building_works_and_alterations" type="radio" value="other_change" class="hide">
+							</div>																					
+						</td>
+					</tr>					
+				</table>
+			</div>
+			<hr class="dropdown-divider">
+			<div>
+				<div class="pillar">
+					<p class="q_title"> Give details of the work carried out</p>
+					<div class="input_container">
+						<textarea class="textarea" id="property_alterations_work_details">
+						</textarea>
+					</div>
+				</div>
+				<hr class="dropdown-divider">
+				<div class="pillar">
+					<p class="q_title">Give an indictation of the period the work occured in</p>
+					<div class="input_container">
+						<div class="radio_container">
+							<p>Work start</p>
+							<input type="date" style="align:left;" id="alterations_work_start">
+						</div>
+						<div class="radio_container">
+							<p>Work End</p>
+							<input type="date" style=" align:left;" id="alterations_work_end">
+						</div>						
+					</div>
+
+				</div>
+			</div>
+			<hr class="dropdown-divider">
+			<div>
+				<p class="q_title"><b>6.2.1</b> Is this work completed?</p>
+				<div class="input_container">
+					<div class="radio_container">
+						<p>Yes</p>
+						<input name="property_works_completed_bool"  type="radio" value="1">
+					</div>
+					<div class="radio_container">
+						<p>No</p>
+						<input name="property_works_completed_bool"  type="radio" value="0">
+					</div>
+				</div>
+			</div>
+			<div id="property_works_completed_detail">
+				<p>Give details regarding completion of the works</p>
+				<div class="input_container">
+					<textarea class ="textarea" id="completion_of_work_details"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr class="dropdown-divider">
+	<div>
+		<p class="q_title"><b>6.2.2</b> Did you have to get planning consent?</p>
+		<div class="input_container">
+			<div class = "radio_container">
+				<p>Yes</p>
+				<input name="planning_consent_required_bool"  type="radio" value="1">
+			</div>
+			<div class = "radio_container">
+				<p>No</p>
+				<input name="planning_consent_required_bool"  type="radio" value="0">
+			</div>
+		</div>
+		<div class="child_q">
+			<div id="planning_docs">
+				<p class="q_title"><b>6.2.3</b> You’ll need to upload copies of the planning documents and consents</p>
+			</div>
+			<div id="no_planning_reason">
+				<p class="q_title"><b>6.2.4</b> If no planning consents were required, explain why.</p>
+				<p class="q_title">For instance, if the work was exempt from building regulations or permitted development rights applied.</p>
+				<div class="input_container">
+					<textarea class="textarea" id="no_planning_reason_details"></textarea>
+				</div>
+			</div>
+			<div>
+				<input type="file" name="planning_consent_reasoning">
+			</div>
+		</div>		
+
+	</div>
+	<hr class="dropdown-divider">
+	<button class="button is-small is-success" id="confirm_alteration_works">Confirm Works</button>
+	<hr class="dropdown-divider">
+	<div>
+		<table class="table" align="middle" id="property_alteration_table">	
+			<tr>
+				<th>
+					Building Works Type
+				</th>
+				<th>
+					Work Details
+				</th>
+				<th>
+					Work Start
+				</th>
+				<th>
+					Work End
+				</th>									
+				<th>
+					Work Completed
+				</th>
+				<th>
+					Work Completion Details
+				</th>
+				<th>
+					Planning Consent Required
+				</th>
+				<th>
+					Planning Consent Documents
+				</th>					
+				<th>
+
+				</th>				
+			</tr>
+		</table>
+	</div>
+	<hr class="dropdown-divider">
+	<button class="button is-success is-medium">Submit</button>
+</section>
+
+<script>
+var property_alteration_table_row = 0
+$(document).ready(function(){
+	boolean_slide_open("input[name=property_works_completed_bool]","#property_works_completed_detail","reverse");
+	boolean_slide_open("input[name=planning_consent_required_bool]","#planning_docs","stand");
+	boolean_slide_open("input[name=planning_consent_required_bool]","#no_planning_reason","reverse");
+
+	$("td[group=building_work_type]").mouseenter(function(){
+		$(this).css({"background-color":"#f9f7f7"})
+	})
+	$("td[group=building_work_type]").mouseleave(function(){
+		if ($(this).prop("selected") == true){
+			$(this).css({"background-color":"#ede6e6"});
+		} else{
+			$(this).css({"background-color":"lightblue"})
+		}
+	})
+	service_charge_input_fields=[
+		{"identifier":"building_works_and_alterations", "input_type":"radio"},
+		{"identifier":"property_alterations_work_details", "input_type":"detail_text"},
+		{"identifier":"alterations_work_start", "input_type":"date"},
+		{"identifier":"alterations_work_end", "input_type":"date"},
+		{"identifier":"property_works_completed_bool", "input_type":"bool"},
+		{"identifier":"completion_of_work_details", "input_type":"detail_text"},
+		{"identifier":"planning_consent_required_bool", "input_type":"bool"},
+		{"identifier":"planning_consent_reasoning", "input_type":"docu"},
+	]
+	$("td[group=building_work_type]").click(function(){
+		$("td[group=building_work_type]").each(function(){
+			$(this).prop("selected", false)
+			$(this).css({"background-color":"lightblue"})
+		});
+		$(this).css({"background-color":"#ede6e6"});
+		$(this).prop("selected", true);
+		$(`input[name=building_works_and_alterations][value='${$(this).attr('value')}']`).prop('checked',true)
+	});
+
+	$("#confirm_alteration_works").click(function(){
+		property_alteration_table_row += 1
+		$('#property_alteration_table').append(`
+			<tr>
+	<td>
+		${final_input_value(type, id_or_name)}
+	</td>
+	<td>
+	</td>
+</tr>
+			`)
+	});
+
+});
+</script>

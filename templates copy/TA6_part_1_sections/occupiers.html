@@ -1,0 +1,259 @@
+<section id="occupiers" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>17. Occupiers</b>
+		</div>
+		<div>					
+			<p class="q_title"><b>17.1</b> Do you live at the property?</p>
+		</div>
+		<div class="row">
+			<div class="input_container">
+				<div class = "radio_container">
+					<p>Yes</p>
+					<input name="live_at_prop_bool"  type="radio" value="1">
+				</div>
+				<div class = "radio_container">
+					<p>No</p>
+					<input name="live_at_prop_bool"  type="radio" value="0">
+				</div>
+			</div>
+			<div class="empty_container">
+				<button align="right" style="float:right;" id="live_at_prop_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+			</div>									
+		</div>		
+		<div>
+		<hr class="dropdown-divider">					
+			<p><b>17.2</b> Does anyone else, aged 17 or over, live at the property?</p>
+		</div>
+		<div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="over_17_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="over_17_bool"  type="radio" value="0">
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="over_17_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>					
+			</div>		
+			<div id="over_17_details">
+				<hr class="dropdown-divider">				
+				<div><b>17.2.1</b> Supply full names of any occupiers (other than yourself) aged 17 or over:</div>
+				<div id="over_17_details_inputs">
+					<div class = "pillar" id="first_name_area_17">
+						<p>First Name</p>
+						<input id="first_name_17" class="input">
+						<div type="required_for_person" id="first_name_required_17" style="background-color: red; color:black;" class="box hide">
+							This data is required to add individuals details
+						</div>
+					</div>					
+					<div class = "pillar" id="middle_name_area_17">
+						<p>Middle Names</p>
+						<input id="middle_name_17" class="input">
+						<div id="middle_name_required_17" style="background-color: red; color:black;" class="box hide">
+							This data is required to add individuals details
+						</div>				
+					</div>
+					<div class = "pillar" id="surname_area_17">
+						<p>Surname</p>
+						<input id="surname_17" class="input">
+						<div type="required_for_person" id="surname_required_17"style="background-color: red; color:black;" class="box hide">
+							This data is required to add individuals details
+						</div>				
+					</div>
+				</div>
+				<div class="input_container">
+					<button class="button is-success" id="add_person_details_17">Confirm individual</button>
+				</div>
+				<table row_num='0' class="table" align="middle" id="over_17_table">	
+					<tr>
+						<th>
+							First Name
+						</th>
+						<th>
+							Middle Names
+						</th>
+						<th>
+							Surname
+						</th>						
+						<th>
+							Other Data
+						</th>
+						<th>
+						</th>
+					</tr>
+				</table>
+				<hr class="dropdown-divider">
+			<div>
+				<p class="q_title"><b>17.2.2</b> Are any of the occupiers who are aged 17 or over (other than yourself), tenants or lodgers?</p>
+			</div>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="lodgers_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="lodgers_bool"  type="radio" value="0">
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="lodgers_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>						
+			</div>										
+		</div>
+		<div>
+			<hr class="dropdown-divider">
+			<p><b>17.3</b> Is the property being sold with vacant possession<br>     When buying or selling a property, “vacant possession” means that the property is empty and emptied of anything not contracted to remain on the day of completion eg chattels, rubbish.</p>
+			<div class="row">
+				<div class="input_container">
+					<div class = "radio_container">
+						<p>Yes</p>
+						<input name="vacant_possession_bool"  type="radio" value="1">
+					</div>
+					<div class = "radio_container">
+						<p>No</p>
+						<input name="vacant_possession_bool"  type="radio" value="0">
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="vacant_possession_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+				</div>					
+			</div>
+			<div id='vacant_possession_details'>
+				<hr class="dropdown-divider">
+				<p class="q_title"><b>17.3.1</b> Have all the occupiers aged 17 or over agreed to leave before completion?</p>
+				<div class="row">
+					<div class="input_container">
+						<div class = "radio_container">
+							<p>Yes</p>
+							<input name="agree_to_leave_bool"  type="radio" value="1">
+						</div>
+						<div class = "radio_container">
+							<p>No</p>
+							<input name="agree_to_leave_bool"  type="radio" value="0">
+						</div>
+					</div>
+					<div class="empty_container">
+							<button align="right" style="float:right;" id="agree_to_leave_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+					</div>					
+				</div>
+				<hr class="dropdown-divider">
+				<p class="q_title"><b>17.3.2</b> Have all the occupiers aged 17 or over agreed to sign the sale contract?</p>
+				<div class="row">
+					<div class="input_container">
+						<div class = "radio_container">
+							<p>Yes</p>
+							<input name="occupiers_contract_sign_bool"  type="radio" value="1">
+						</div>
+						<div class = "pillar">
+							<p>No</p>
+							<input name="occupiers_contract_sign_bool"  type="radio" value="0">
+						</div>
+					</div>
+					<div class="empty_container">
+						<button align="right" style="float:right;" id="occupiers_contract_sign_bool_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+					</div>
+				</div>					
+			</div>
+			<div id="vacant_possession_docu">
+				<hr class="dropdown-divider">
+				<p class="q_title"><b>17.4</b> If the property is not being sold with vacant possession, you’ll need to supply evidence that the property will be empty on the day of completion.</p>
+				<div class="row">
+					<div class="input_container">
+						<input type="file" id="vacant_possession_proof_docu">
+					</div>
+					<div class="empty_container">
+						<button align="right" style="float:right;" id="vacant_possession_proof_docu_empty" class="button is-small is-warning empty_button"><b>X</b></button>			
+					</div>
+				</div>				
+			</div>									
+		</div>		
+	</div>
+	<div>
+		<hr class="dropdown-divider">
+		<button id="submit_occupiers" class="button is-medium is-success">Submit
+		</button>
+	</div>
+</div>
+	
+</section>
+
+<script>
+var table_row_17 = 0
+function person_details_validate_17(name){
+	if ($(`#${name}_17`).val().length < 1){
+			allow_details = false
+			$(`#${name}_required_17`).removeClass(`hide`)
+		}else {
+			$(`#${name}_required_17`).addClass("hide")
+		}
+
+}
+
+occupiers ={}
+$(document).ready(function(){
+	boolean_slide_open("input[name=over_17_bool]","#over_17_details","stand");
+	boolean_slide_open("input[name=vacant_possession_bool]","#vacant_possession_details","stand");
+	boolean_slide_open("input[name=vacant_possession_bool]","#vacant_possession_docu","reverse");
+
+	occupiers_inputs = [
+		{'identifier':"over_17_table", 'input_type':"multi_row", "data_rows":[
+				{'identifier':'first_name_17',"input_type":'text'},
+				{'identifier':'middle_name_17',"input_type":'text'},
+				{'identifier':'surname_17',"input_type":'text'}
+			], 't' : '`TA6`.`TA6_part_1_people`'
+		},
+		{'identifier':"over_17_bool", 'input_type':"bool",radio_function:function(){$('#over_17_details').slideUp()}},
+		{'identifier':"live_at_prop_bool", 'input_type':"bool"},
+		{'identifier':"lodgers_bool", 'input_type':"bool"},
+		{'identifier':"agree_to_leave_bool", 'input_type':"bool"},
+		{'identifier':"vacant_possession_bool", 'input_type':"bool",radio_function:function(){$('#vacant_possession_details').slideUp();$('#vacant_possession_docu').slideUp()}},
+		{'identifier':"occupiers_contract_sign_bool", 'input_type':"bool"},
+		{'identifier':"vacant_possession_proof_docu", 'input_type':"bool"},
+	]
+
+	multi_row_data_table('over_17_table',[person_details_validate_17("first_name"),person_details_validate_17("surname")],$("#add_person_details_17"),occupiers_inputs[0].data_rows)
+
+	empty_and_convert(occupiers_inputs);
+
+
+	/*$("button[id=add_person_details_17]").click(function(){
+		allow_details = true;
+		person_details_validate_17("first_name")
+		person_details_validate_17("surname")
+		if (allow_details == true){
+			table_row +=1;
+			$("#over_17_table").append(
+					`<tr row="${table_row}" type="individual">
+						<td row="${table_row}" info="first_name" d="${$('#first_name_17').val()}">
+							${$('#first_name_17').val()}
+						</td>
+						<td row="${table_row}" info="middle_name" d="${$('#middle_name_17').val()}">
+							${$('#middle_name_17').val()}
+						</td>
+						<td row="${table_row}" info="surname" d="${$('#surname_17').val()}">
+							${$('#surname_17').val()}
+						</td>
+						<td row="${table_row}">
+							<button id="remove_individual" row="${table_row}">remove</button>
+						</td>
+					</tr>`
+					);
+				$("#first_name_17").val('')
+				$("#middle_name_17").val('')
+				$("#surname_17").val('')
+		}
+	});*/
+
+	empty_and_convert(occupiers_inputs);
+
+	ajax_submission('submit_occupiers',occupiers, "/TA6_part_1_occupiers", occupiers_inputs);	
+});
+</script>

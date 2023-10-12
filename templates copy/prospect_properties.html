@@ -1,0 +1,44 @@
+{% extends "action_base.html" %}
+
+{% block action %}
+
+<div>
+	<h2>Properties</h2>
+	<div class="table-wrapper">
+	    <table class="fl-table">
+	        <thead>
+			<tr>
+
+				<th> sudo_name</th>
+				<th> confirmed_on_the_market</th>
+
+			</tr>
+			</thead>
+	        <tbody>
+
+				{% for row in props %}
+			<tr style="color:black">
+
+				<td> {{  row[1]  }} </td>
+
+				<td> {% if row[2]==1 %}
+				confirmed on market
+				{% else %} 
+				not confirmed on market
+			{% endif %} </td>
+				<th>
+					<a 
+	            		<button href="{{ url_for("mp.load_prospect_prop",particular_id = row[0]) }}" type ="submit" class="button is-block is-info is-small ">View</button>
+	            	</a>
+	        	</th>
+	        	</tr>
+	        </form>
+				{% endfor %}
+
+	        </tbody>
+	    </table>
+	</div>
+</div>
+
+
+{% endblock %}

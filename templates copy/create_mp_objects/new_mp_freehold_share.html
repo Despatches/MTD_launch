@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block links %}
+ {% include "link_configs_and_spatial/spatial_links.html" %}
+{% endblock %}
+
+{% block content %}
+
+{% include "link_configs_and_spatial/postcode_map.html" %}
+
+{% with full_freehold = get_flashed_messages(category_filter=[full_freehold]) %}
+    {% if full_freehold %}
+    {%- for msg in full_freehold %}
+     {{ msg }}
+    {% endfor %}
+     The current selected percentage share for the freehold (100%) suggests the intention is to add a new freehold if this is not the case ammend the percentage share and "Proceed" else "Add new Freehold"
+     <a>
+        <button href("url_for('title_derivatives.newfreehold_proceed',particular_id = particular_id)")> Add new Freehold</button>
+{% endif %}
+{% endwith %}
+
+
+<form method="POST" action="{{url_for('title_derivatives.newfreehold_share_proceed',particular_id = particular_id)}}">
+            <div class="field">
+                <div class="control">
+                    {% if reference_name %}
+                          <input class="input is-large" type="name" name="reference_name" placeholder="reference_name"autofocus="" value="{{ reference_name }}">
+                    {% else %}
+
+                        <input class="input is-large" type="name" name="reference_name" placeholder="reference_name"autofocus="">
+                    {% endif %}
+                </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="name" name="Title_ID" placeholder="Title_ID if known" autofocus="">
+                </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="name" name="postcode" placeholder="postcode" autofocus="">
+                </div>
+
+                        <div class="field">
+                <div class="control" id="share_percentage_info">
+                    <input id="share_percentage" type="percentage" name="share_percentage" placeholder = "share percentage %" autofocus="">
+                    <p id='share_percent_warn' class='hide box is-warning'>Share must be less than 100% of freehold</p> 
+                    <p id='share_percent_to_freehold' class='hide box is-warning'>Share must be less than 100% of freehold <a><span style'color:blue;'>create freehold instead?</span></a></p> 
+
+                </div>
+
+
+            <button id="proceed" class="button is-block is-info is-large is-fullwidth" disabled>Proceed</button>
+        </form>
+<script>
+$(document).ready(function(){
+    $('#share_percentage').keyup(function(e) {
+        if ($("#share_percentage").val()>100){
+            if($("#share_percent_warn").hasClass("hide")==true){
+                $("#share_percent_warn").toggleClass("hide")
+            }
+            sp_valid=false
+        }else if($("#share_percent_warn").hasClass("hide")==false){
+             $("#share_percent_warn").toggleClass("hide")
+        }
+        if($("#share_percentage").val()==100){
+            if($("#share_percent_to_freehold").hasClass("hide")==true){
+                $("#share_percent_to_freehold").toggleClass("hide")
+            }
+            sp_valid=false
+        }else if($("#share_percent_to_freehold").hasClass("hide")==false){
+             $("#share_percent_to_freehold").toggleClass("hide")
+        }
+        else if (0<$("#share_percentage").val()<100){
+            sp_valid=true;
+            if (sp_valid == true){
+                $("#proceed").prop('disabled',false)
+            }  
+        }
+    });
+});
+</script>
+{% endblock %}

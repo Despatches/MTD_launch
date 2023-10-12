@@ -1,0 +1,142 @@
+<section id="liabilities" id="data_providers" style="width: 50%;margin: auto;" align="middle" class="hide">
+	<div>
+		<div>
+			<b>7.   Potential liabilities</b>
+		</div>
+		<div>					
+			<p class="q_title">7.1 Are you aware of any of the following?</p>
+		</div>
+		<div>
+			<div class="row">
+				<div class="input_container">
+					<div>
+						<input name="planning_breach"  type="checkbox" set="liabilities">
+					</div>
+					<div>
+						<p>Breaches of planning permission conditions</p>
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="planning_breach_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+				</div>								
+			</div>
+				<div set="liabilities_details" name="planning_breach_details" class="child_q">
+					<hr class="dropdown-divider">
+					<p class="q_title">Describe the breaches of planning permission conditions</p>
+					<div  class="row">
+						<textarea set="liabilities_details" id="planning_breach_details"  type="date" style="align:left;" class="textarea"></textarea>
+						<div class="empty_container">
+							<button align="right" style="float:right;" id="planning_breach_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+						</div>	
+					</div>					
+				</div>
+			<hr class="dropdown-divider">
+			<div class="row">
+				<div class="input_container">
+					<div>
+						<input name="bulding_reg_breach"  type="checkbox" set="liabilities">
+					</div>
+					<div>
+						<p>Breaches of building regulations consent conditions</p>
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="bulding_reg_breach_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+				</div>								
+			</div>
+				<div set="liabilities_details" name="bulding_reg_breach_details" class="child_q">
+					<hr class="dropdown-divider">
+					<p class="q_title">Describe the breaches of building regulations consent conditions</p>
+					<div  class="row">
+						<textarea set="liabilities_details" id="bulding_reg_breach_details"  type="date" style="align:left;" class="textarea"></textarea>
+						<div class="empty_container">
+							<button align="right" style="float:right;" id="bulding_reg_breach_details_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+						</div>	
+					</div>					
+				</div>
+			<hr class="dropdown-divider">
+			<div class="row">
+				<div class="input_container">
+					<div>
+						<input name="unfinished_work"  type="checkbox" set="liabilities">
+					</div>
+					<div>
+						<p>Unfinished work</p>
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="unfinished_work_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+				</div>								
+			</div>
+				<div set="liabilities_details" name="unfinished_work_details" class="child_q">
+					<hr class="dropdown-divider">
+					<p class="q_title">Describe the unfinished work</p>
+					<div  class="row">
+						<textarea set="liabilities_details" id="unfinished_work_details"  type="date" style="align:left;" class="textarea"></textarea>
+						<div class="empty_container">
+							<button align="right" style="float:right;" id="unfinished_work_details_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+						</div>	
+					</div>					
+				</div>
+			<hr class="dropdown-divider">
+			<div class="row">
+				<div class="input_container">
+					<div>
+						<input name="consent_lack"  type="checkbox" set="liabilities">
+					</div>
+					<div>
+						<p>Work that does not have all necessary consents</p>
+					</div>
+				</div>
+				<div class="empty_container">
+					<button align="right" style="float:right;" id="consent_lack_empty" class="button is-small is-warning empty_button"><b>X</b></button>
+				</div>								
+			</div>
+				<div set="liabilities_details" name="consent_lack_details" class="child_q">
+					<hr class="dropdown-divider">
+					<p class="q_title">Describe works that do not have all necessary consents</p>
+					<div  class="row">
+						<textarea set="liabilities_details" id="consent_lack_details"  type="date" style="align:left;" class="textarea"></textarea>
+						<div class="empty_container">
+							<button align="right" style="float:right;" id="consent_lack_details_empty" class="button is-small is-warning empty_button"><b>X</b>
+							</button>
+						</div>	
+					</div>					
+				</div>
+			<hr class="dropdown-divider">
+			<button id="submit_liabilities_data" class="button is-success is-medium">Submit</button>										
+		</div>
+
+	</div>
+</section>
+
+<script>
+var liabilities={}
+$(document).ready(function(){
+	$("div[set=liabilities_details]").each(function(){$(this).slideUp()});
+	
+	$("input[set=liabilities").change(function(){
+		var name = $(this).attr("name")
+		if ($(this).prop("checked") == true){
+			$(`div[name='${name}_details'][set=liabilities_details]`).slideDown();
+		} else if ($(this).prop("checked") == false){
+			$(`div[name='${name}_details'][set=liabilities_details]`).slideUp();
+		};
+	});
+
+	liabilities_input_fields = [
+			{"identifier":"planning_breach", "input_type":"checkbox", radio_function:function(){$(`div[name=planning_breach_details][set=liabilities_details]`).slideUp()}},
+			{"identifier":"planning_breach_details", "input_type":"text_details"},
+			{"identifier":"bulding_reg_breach", "input_type":"checkbox", radio_function:function(){$(`div[name=bulding_reg_breach_details][set=liabilities_details]`).slideUp()}},
+			{"identifier":"bulding_reg_breach_details", "input_type":"text_details"},
+			{"identifier":"unfinished_work", "input_type":"checkbox", radio_function:function(){$(`div[name=unfinished_work_details][set=liabilities_details]`).slideUp()}},
+			{"identifier":"unfinished_work_details", "input_type":"text_details"},
+			{"identifier":"consent_lack", "input_type":"checkbox", radio_function:function(){$(`div[name=consent_lack_details][set=liabilities_details]`).slideUp()}},
+			{"identifier":"consent_lack_details", "input_type":"text_details"}								
+		]
+
+	empty_and_convert(liabilities_input_fields)
+
+	ajax_submission('submit_liabilities_data',liabilities, "/TA6_part_1_liabilities", liabilities_input_fields);
+});
+</script>

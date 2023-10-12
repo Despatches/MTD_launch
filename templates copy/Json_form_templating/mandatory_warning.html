@@ -1,0 +1,10 @@
+			<div id="{{question['identifier']}}_warning" class="box q_title" base="{{question['identifier']}}">
+				 {% for gui in question['mandatory_guidance'] %}
+					<div>{{gui}}</div>
+				{% endfor %}
+				<div>
+					<button class="button is-warning" id="accept_{{question['identifier']}}_warning" type="accept_warning_button" base="{{question['identifier']}}"> 
+							continue
+					</button>
+				</div>
+			</div>

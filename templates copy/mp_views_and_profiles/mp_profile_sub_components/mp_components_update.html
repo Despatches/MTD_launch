@@ -1,0 +1,121 @@
+
+            {% if mp.total_derivatives == 0 %}
+            <div class='feed_box' style="height:100%">
+                <div style="margin:auto;text-align: center;"> No objects assigned</div>
+            </div>
+            {% else %}
+        <meta id="object_types" data-freehold="{{ mp.title_derivatives['freeholds'] }}" data-leaseholds="{{ mp.title_derivatives['leaseholds']}}" data-cns= "{{ mp.title_derivatives['c_n_s'] }}" data-freehold_share = "{{ mp.title_derivatives['freehold_shares'] }}">
+            {% if mp.total_derivatives > 1 %}
+
+            <div class="buttons is-grouped is-right">
+                <form id="filter">
+                    <button class="button"><input id="view" type="radio" name="view_all" value="topic" checked/> View All</button>
+                    {% if mp.title_derivatives['freeholds']|length == 0 %}
+                    <button class="button is-warning" disabled>No Assigned Freeholds
+                    {% else %}
+                    <button class="button"><input type="radio" name="view_all" value="freeholds"/> View freehold</button>
+                    {% endif %}
+                    {% if mp.title_derivatives['leaseholds']|length == 0%}
+                    <button class="button is-warning" disabled>No Assigned Leaseholds
+                    {% else %}
+                    <button class="button"><input type="radio" name="view_all" value="leaseholds"/> View leaseholds</button>
+                    {% endif %}
+                    {% if mp.title_derivatives['c_n_s']|length == 0 %}
+                    <button class="button is-warning" disabled>No companies <br>or shares attributed
+                    {% else %}
+                    <button class="button"><input type="radio" name="view_all" value="c_n_s"/> View c_n_s</button>
+                    {% endif %}
+                    {% if mp.title_derivatives['freehold_shares']|length == 0 %}
+                    <button class="button is-warning" disabled>No Freehold Shares<br> Attributed
+                    {% else %}
+                    <button class="button"><input type="radio" name="view_all" value="freeholdshares"/> View freehold<br> shares</button>
+                    {% endif %}
+                </form>
+            </div>
+            
+
+    <div>
+        <div id="fil" class ="columns">
+         {% if mp.title_derivatives['c_n_s']['data']|length > 0 %}
+            <div class="column">
+            
+            {% include "mp_views_and_profiles/mp_profile_sub_components/cns.html" %}  
+             
+            </div>
+        {% endif %}
+        {% if mp.title_derivatives['freehold_shares']['data']|length > 0%}
+            <div class="column">
+
+                {% include "mp_views_and_profiles/mp_profile_sub_components/fhs.html" %}
+
+           </div>
+        {% endif %}
+        </div>
+        <div id="fo" class ="pillar">
+            {% if mp.title_derivatives['leaseholds']['data']|length > 0 %}
+            <div class="column" id='LH' group='title_derivative' type='leaseholds'>
+                {% include "mp_views_and_profiles/mp_profile_sub_components/leasehold_update.html" %}
+            </div>
+            {% endif %}
+            {% if mp.title_derivatives['freeholds']['data']|length > 0 %}
+            <div  class="column" id='FH' group='title_derivative'>
+                {% include "mp_views_and_profiles/mp_profile_sub_components/freeholds_update.html" %}
+             </div>
+            {% endif %}
+        </div>
+
+    </div>
+     {% elif mp.total_derivatives == 1 %}
+        {% if  mp.title_derivatives['freeholds']['data']|length > 0 %}
+            {% include "create_mp_objects/general_freehold.html" %}
+        {% elif  mp.title_derivatives['leaseholds']['data']|length > 0 %}
+             {% include "mp_views_and_profiles/general_leasehold.html.jinja" %}
+        {% endif %}
+    {% endif %}
+
+
+
+            <script language="javascript" type="text/javascript">
+
+            $(document).ready(function() {
+    var freehold_data = $('#object_types').data("freehold")
+
+    $('input[type=radio][name=view_all]').change(function(){ 
+
+                    if (this.value=="topic"){
+                        $('#fil').slideDown();
+                        $('#fo').slideDown();
+                    }
+                    else if(this.value!="topic"){
+                         $('#fil').slideUp();
+                         $('#fo').slideUp();
+                    }
+
+                    if (this.value=="freeholds"){
+                            $("div[id='FH']").removeClass("hide");   
+                    }
+                    else if(this.value!="freeholds"){
+                            $("div[id='FH']").addClass("hide");
+                    }
+                    if (this.value=="leaseholds"){
+                            $("div[id='LH']").removeClass("hide");   
+                    }
+                    else if(this.value!="leaseholds"){
+                            $("div[id='LH']").addClass("hide");
+                    }
+                    if (this.value=="freeholdshares"){
+                            $("div[id='FHS']").removeClass("hide");   
+                    }
+                    else if(this.value!="freeholdshares"){
+                            $("div[id='FHS']").addClass("hide");
+                    }
+                    if (this.value=="c_n_s"){
+                            $("div[id='CNS']").removeClass("hide");   
+                    }
+                    else if(this.value!="c_n_s"){
+                            $("div[id='CNS']").addClass("hide");
+                    }   
+                 })            
+            });
+            </script>
+    {% endif %}

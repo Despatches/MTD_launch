@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block links %}
+ {% include "link_configs_and_spatial/spatial_links.html" %}
+  {% include "link_configs_and_spatial/base_map_link.html" %}
+{% endblock %}
+{% block content %}
+
+{% include "link_configs_and_spatial/postcode_map.html" %}
+<form method="POST" action="{{url_for('title_derivatives.new_leasehold_proceed',particular_id = particular_id)}}">
+            <div class="field">
+                <div class="control">
+                    {% if reference_name %}
+                          <input class="input is-large" type="name" name="reference_name" placeholder="Reference Name"autofocus="" value="{{ reference_name }}">
+                    {% else %}
+
+                        <input class="input is-large" type="name" name="reference_name" placeholder="reference_name"autofocus="">
+                    {% endif %}
+                </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="name" name="freehold_ID" placeholder="Title_ID if known" autofocus="">
+                </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="name" name="Address" placeholder="Address" autofocus="">
+                </div>
+
+                        <div class="field">
+                <div class="control">
+
+            <button class="button is-block is-info is-large is-fullwidth">Proceed</button>
+            <input type="text" class="hide" name="lat" value="none">
+            <input type="text" class="hide" name="lng" value="none">
+        </form>
+<script>
+function map_click(e){
+   lat = e.latlng.lat
+   lng = e.latlng.lng
+   $('input[name=lat]').val(lat)
+   $('input[name=lng]').val(lng)
+   if (typeof indicative_location != "undefined"){
+        indicative_location.setLatLng(e.latlng)
+   }else{
+    indicative_location= L.marker(e.latlng).addTo(map);
+    }
+}
+
+function Initialize_map(lat,lng,zoom) {
+
+    var apiKey = 'SdgHyawn0Rkg1lm8IrOIMaDe7Y7Gjp4k';
+
+    var serviceUrl = 'https://api.os.uk/maps/vector/v1/vts';
+
+    // Initialize the map.
+    var mapOptions = {
+        minZoom: 7,
+        maxZoom: 19,
+        center: [ lat, lng ],
+        zoom: zoom,
+        maxBounds: [
+            [ 49.528423, -10.76418 ],
+            [ 61.331151, 1.9134116 ]
+        ],
+        attributionControl: false
+    };
+
+    map = L.map('map', mapOptions);
+
+    // Load and display vector tile layer on the map.
+    var gl = L.mapboxGL({
+        style: serviceUrl + '/resources/styles?key=' + apiKey,
+        transformRequest: url => {
+            return {
+                url: url += '&srs=3857'
+            }
+        }
+    }).addTo(map);
+        map.on('click',map_click)
+}
+</script>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/postcode_lookup_module.js') }}"></script>
+{% endblock %}

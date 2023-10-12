@@ -1,0 +1,687 @@
+{% extends "base.html" %}
+
+{% block links %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/base_map.js') }}"></script>
+<meta id="mp_profile_meta" data-selec_set_id="{{ selec_set_ID }}">
+{% endblock %}
+{% block content %}
+<head>
+    {% include "link_configs_and_spatial/spatial_links.html" %}
+</head>
+<style type="text/css">
+    .row{
+    display:flex; 
+    flex-direction:row; 
+    height:100%;
+}
+
+.q_title{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.feed_box{
+    width: 90%;
+    margin:auto;
+    margin-top: 10px;
+}
+
+.colour_col{
+    width:10%;
+    height:100%;
+}
+
+.colour_tab{
+    width:100%;
+    height:15px;
+    background-color:rgba(255,220,59,1);
+    overflow:visible;
+}
+.feed_content{
+    width:100%;
+    position: relative;
+}
+
+.price_neg{
+    background-color:red;
+}
+.new_disclose{
+    background-color:rgba(237,230,230,1);
+    color:black;
+}
+
+.loan_opp{
+    background-color:purple;
+    color:white;
+}
+.indem_opp{
+    background-color:rgba(54,118,217,1);
+    color:white;
+}
+.esg{
+    background-color:rgba(50,208,101,1);
+    color:white;
+}
+
+.colour_stamp_view{
+    position:absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width:100%;
+}
+.hover
+{
+  position: absolute;
+  /*transform: translate(-50%,-50%);  /* optional */
+  border: 1px solid black;  /* optional */
+  color:black;
+  background-color:white;
+}
+</style>
+<section>
+    <div class='greybg' style='text-align: center;font-size: 20px;'>
+      <b> {{ mp['sudo_name'] }}</b>
+    </div>
+</section>
+<section>
+    <div id="map_container" class='q_title'>
+        <div class="columns">
+            <div class = "column is-four-fifths" id='map' style='height:200px;'>                    
+            </div>
+            <div class="box hide column is-one-fifth" id="marker_data">
+                it_works
+            </div>
+        </div>
+    </div>
+</section>
+<section class="hero" >
+    <div class="hero-body">
+        <div class="columns">
+            <div class="column is-one-fifth"> 
+                <div>
+                    <a
+                      button href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" type ="submit" class="button is-block is-warning is-fullwidth" style="margin:5px;">Synopsis
+                    </a>
+                </div>
+                <div>
+                    <a
+                        button href="{{ url_for('mp.create_view_code',particular_id=particular_id) }}" class="button is-block is-warning is-fullwidth" style="margin:5px; height:55px;" align="pull-left"> Create New <br>View Code
+                    </a>
+                </div>              
+            </div>
+            <div class="column">
+                <div class='row'>
+                    <div>
+                        <div  class="navbar-item has-dropdown is-hoverable" style="color:black; width:200px;">
+                            <a  button id="title_deriv_dropdown" class="button" style="color:black">
+                                Add Title Derivative
+                            </a>
+                            <div class ="navbar-dropdown" style="color:black; width:60px;">             
+                                <a
+                                  href="{{ url_for("title_derivatives.new_cns",particular_id = mid) }}" class=" is-success is-dark navbar-item is-small" style="height:55px; width:200px;">
+                                                Add Company <br> or Shares
+                                </a>
+                                <a
+                                     href="{{ url_for("title_derivatives.newfreeholdshare",particular_id = mid) }}" class="  is-success navbar-item is-small" style="height:55px; width:200px"> Add Freehold Share
+                                </a>
+                                <a
+                                     href="{{ url_for("title_derivatives.new_leasehold",particular_id = mid) }}" class="  is-success navbar-item is-small" style="height:55px; width:200px">
+                                    Add Leasehold 
+                                </a>
+                                <a
+                                    href="{{ url_for("title_derivatives.newfreehold",particular_id = mid) }}" class="  is-success navbar-item is-small" style="height:55px; width:200px">
+                                    Add Freehold
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="view_other_forms" class="button is-block is-success">Other Forms</button>
+                    </div>
+                    <div>
+                        <button id="map_toggle" class="button is-block is-success">Hide Map</button>
+                    </div>
+                    <div>
+                        <div  class="navbar-item has-dropdown is-hoverable" style="color:black; width:200px;">
+                            <a>  <button id="title_deriv_dropdown" class="button" style="color:black">
+                                Offers</button>
+                            </a>
+                            <div class ="navbar-dropdown" style="color:black; width:60px;">  
+                                <div>           
+                                    <a
+                                        href="{{ url_for("title_derivatives.new_cns",particular_id = mid) }}" class="is-dark navbar-item is-small" style="height:55px; width:200px;">
+                                                View Offers
+                                    </a>
+                                </div>
+                                <div>
+                                    <a
+                                        href="{{ url_for("mp.new_mp_offer",particular_id=particular_id) }}" class=" is-dark navbar-item is-small" > New Offer
+                                    </a>
+                                </div>
+                            </div>                         
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="column is-one-fifth">
+            <div>
+                <a>
+                    <button style="margin:5px; height:55px;" class="button is-link is-light is-fullwidth" > Issue Micro Disclosure <br>for sale component </button>
+                </a>
+            </div>
+            <div>
+                    <button style="margin:5px;" class="button is-link is-light is-fullwidth" id="view_analytics"> analytics </button>
+
+            </div>
+        </div>
+    </div>
+</section>
+<section id="object_details">
+    <div class='columns'>
+        <div class='column is-half'>
+            {% include "mp_views_and_profiles/mp_profile_sub_components/mp_components_update.html" %}
+        </div>
+         <div class='column'>
+            <div style='overflow:scroll;height:600px'>
+                {% include "mp_views_and_profiles/stamps/stamp_stream.jinja" %}
+            </div>
+        </div>
+    </div>
+</section>
+<section id="mp_analytics" class="hide">
+    <div style='width:600px;heigth:600px;'>
+        <canvas id="datapoints"></canvas>
+        <canvas></canvas>
+    </div>
+    <p>
+        <span>there are currently</span><b><span id="num_potential_buyers"></span></b><span>potential buyers with access to the market particulars</span>
+    </p>
+    <div style="width:300px;">
+        <canvas id="object_types_chart"></canvas>
+    </div>
+    <div>
+        standard disclosure progress
+        <progress class="progress" value="7" max="30"></progress>
+    </div>
+</section>
+<section id="other_forms" class="hide">
+    <div style="height:20px;"></div>
+    <a href="{{ url_for('TA6_forms.template_micro_form', root_linkage_id=particular_id, root_linkage='market_particular', form_name='TA6_Part_1') }}">
+        {%if TA6_data == None%} 
+            <button class="button is-medium"  >New TA6 part 1</button>
+        {% else %}
+             <button class="button is-medium"  >Edit TA6 part 1</button>
+        {% endif %}
+
+    </a>
+    <a href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}">
+        <button class="button is-medium" >TA6 part 1 collected data</button>
+    </a>  
+    <div style='height:900px'>
+        <div class='columns'>
+            <div class='column' col='micro_form_tab' group='main_micro_tab'>
+                <div class="table-wrapper">
+                    <table class="fl-table" table='other_micro_form'>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div show='false' id='micro_form_tab' set='main_micro_tab'>
+                                        forms
+                                    </div>
+                                </th>
+                                <th set ='micro_form_tab' type='subs'>
+                                    Completion
+                                </th>
+                                <th set ='micro_form_tab' type='subs'>
+                                    Risk Status
+                                </th>
+                                <th set ='micro_form_tab' type='subs' style='width:60px;'>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td colspan='4'>
+                                <div  class="navbar-item has-dropdown is-hoverable" style="color:black; width:200px;">
+                                    <a  button id="title_deriv_dropdown" class="button" style="color:black">
+                                                    Add Disclosures </a>
+                                                
+                                    <div class ="navbar-dropdown" style="color:black; width:60px;">
+                                        <div>  
+                                            <a
+                                               href="{{ url_for('TA6_forms.template_micro_form', root_linkage_id=mp["TA6"]["form"], root_linkage='TA6_Part_1', form_name='sewage_waste_freeholder') }}" >
+                                                Freeholder Sewage and Waste
+                                            </a>
+                                        </div>                                        
+                                        <div>  
+                                            <a
+                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" >
+                                                Basement
+                                            </a>
+                                        </div>
+                                        <div>  
+                                            <a
+                                               href="{{ url_for('TA6_forms.collect_synopsis_data', particular_id=particular_id, p_type='market_particular', form_name='TA6_Part_1') }}" >
+                                                Attic Development
+                                            </a>
+                                        </div>
+                                    </div> 
+                                </div>  
+                            </td>
+                        </tr>
+                        <tbody id='other_micro_form_body'>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class='column' col='indemnity_tab' group='main_micro_tab'>
+                <div class="table-wrapper">
+                    <table class="fl-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div show='false' set='main_micro_tab' id='indemnity_tab'>
+                                        Indemnity Layers
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class='column' col='funding_tab' group='main_micro_tab'>
+                <div class="table-wrapper">
+                    <table class="fl-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div show='false' set='main_micro_tab' id='funding_tab'>
+                                        Funding Options
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div style='height:300px'>
+</div>
+</div>
+</section>
+
+<script>
+var selec_set_id = $("meta[id=mp_profile_meta").data("selec_set_id")
+    dp_breakdown_data ={
+    labels: ['risk', 'fraud', 'understanding', 'no negative implication'],
+    datasets: [{
+        data: dp_breakdown_list
+    }]
+};
+
+const dp_breakdown_config = {
+  type: 'radar',
+  data: dp_breakdown_data,
+  options: {
+    elements: {
+      line: {
+        borderWidth: 3
+      }
+    },
+    responsive: true
+  },
+
+};
+
+var TA6_data= JSON.parse({{TA6_data | tojson }});
+var current_section = $("section[id=object_details]")
+//var stamps = JSON.parse(stamps | tojson )
+var map_show = true
+var crf = ['risk', 'fraud', 'competancy']
+const dp_breakdown = $('#datapoints')
+var crf_data = {'risk':{'total':0},'fraud':{'total':0}, 'competancy':{'total':0}, 'no_neg':{'total':0}}
+var dp_breakdown_list=[];
+//console.log(stamps)
+
+function eval_frc(form_data){
+    if (form_data != undefined){
+        Object.keys(form_data['data']).forEach(function(identifier){
+            if (form_data['data'][identifier]['relevant'] == 1){
+                var negative_imp = false;
+                crf.forEach(function(neg){
+                    if (form_data['data'][identifier][neg] != (0 | undefined)){
+                        crf_data[neg]['total'] += 1
+                        negative_imp = true
+                    }
+                });
+                if (negative_imp == false){
+                    crf_data['no_neg']['total'] += 1
+                };
+            }
+        });
+    }
+};
+function handle_form_tabs(){ 
+     $('#other_micro_form_body').slideUp();
+     $('th[type=subs]').slideUp();
+    $('div[set=main_micro_tab]').click(function(){
+        var shower = $(this).attr('show');
+        var id = $(this).attr('id')
+        var col = $(`div[col=${id}]`)
+        if (shower === 'false'){
+            $('#other_micro_form_body').slideDown();
+            $(`th[type=subs][set=${id}]`).slideDown();
+            $(this).attr('show', 'true');
+            $('div[group=main_micro_tab]').each(function(){
+                if($(this).attr('col') !== id){
+                    $(this).slideUp()
+                }
+            })
+        }else if(shower === 'true'){
+            $('#other_micro_form_body').slideUp();
+             $(`th[type=subs][set=${id}]`).slideUp();
+            $(this).attr('show', 'false');
+            $('div[group=main_micro_tab]').each(function(){
+                if($(this).attr('col') !== id){
+                    $(this).slideDown()
+                }
+            })
+        };
+    });
+};
+function add_micro_forms(form_data){
+    Object.keys(form_data['sub_forms']).forEach(function(form){
+        var cur_form = form_data['sub_forms'][form]
+        var completion = false
+        var completion_eval
+        var disabled = ''
+        if (cur_form['section_marker'] == cur_form['element_relevances']['sections'].length){
+            completion = true
+            completion_eval = 'Completed'
+        } else if(cur_form['section_marker'] < cur_form['element_relevances']['sections'].length){
+            completion =cur_form['element_relevances']['sections'].length - cur_form['section_marker']
+            completion_eval =`<span>${completion}</span><span>sections remaining</span>`
+        };
+        /*if (cur_form['empty'] == 0){
+            disabled = 'disabled'
+        }*/
+        //console.log(completion, disabled)
+        var synopsis_button = `<div><button form=${form} action='synopsis' class='button is-link'>Synopsis</button></div>`
+
+        var answer_q_button = `<div><button form=${form} ${disabled} class='button is-warning' action='answer'>Answer questions</button></div> `
+
+        var issue_disclose_button = `<div><button form=${form} ${disabled} class='button is-info' action='disclose_code'>Create Issue Code</button></div>`
+
+        var new_table_row = `<tr set='form_rows'form=${form} style='color:black;' status='hide'><td>${cur_form['form_name']}</td><td><div>${completion_eval}</div></td><td></td><td form=${form} type='action'><div>${synopsis_button}${answer_q_button}${issue_disclose_button}</div></td></tr><tr form=${form} type='form_info' style='background-color=transparent;'><td colspan='3'><div class=box><div set='unanswerd_count'form='${form}'><span>${cur_form['empty']}:unanswered questions</span></div><div set='unanswerd_questions' form=${form}></div></div></td></tr>`
+        $(`#other_micro_form_body`).append(new_table_row);
+        $('tr[type=form_info]').slideUp()
+        Object.keys(cur_form.data).forEach(function(ident){
+            if (cur_form.data[ident]['relevant'] == 1 && cur_form.data[ident]['false'] == 1){
+
+                var unanswered_q = `<div>${cur_form.data[ident]['question_title']}</div>`
+                $(`div[set=unanswerd_questions][form=${form}]`).append(unanswered_q)
+            };
+        });
+    });
+    handle_form_tabs()
+    $('tr[set=form_rows]').click(function(){
+        var stat = $(this).attr('status');
+        var form  = $(this).attr('form');
+        var cur_row = this
+        //console.log(stat,form)
+        if (stat === 'hide'){
+            $(`tr[type=form_info][form=${form}]`).slideDown();
+            $(this).attr('status', 'show');
+            $(`td[form=${form}][type=action]`).attr('rowspan','2')
+        } else if (stat === 'show'){
+                $(`tr[type=form_info][form=${form}]`).slideUp();
+                setTimeout(function(){$(`td[form=${form}][type=action]`).attr('rowspan','1')}, 500)
+                $(cur_row).attr('status', 'hide');      
+        };
+       // location.href =
+    });
+    $('button[action=synopsis]').click(function(){
+        window.location.href = `/synopsis_temp/${$(this).attr('form')}/TA6_Part_1/${TA6_data['form']}`
+    });
+    $('button[action=answer]').click(function(){
+        window.location.href = `/form/micro/${$(this).attr('form')}/TA6_Part_1/${TA6_data['form']}`
+    });
+    $('button[action=disclose_code]').click(function(){
+        window.location.href = `/${$(this).attr('form')}/issue_code/market_particular`
+    });
+};
+$(document).ready(function(){
+    if (TA6_data != undefined){
+        eval_frc(TA6_data)
+        add_micro_forms(TA6_data)
+    }
+
+    Object.keys(crf_data).forEach(function(implication){
+        dp_breakdown_list.push(crf_data[implication]['total'])
+    })
+
+    if(navigator.onLine){
+
+        new Chart(dp_breakdown ,dp_breakdown_config);
+    }
+
+    $("#view_other_forms").click(function(){
+        var forms = $("#other_forms")
+        if ($(forms).hasClass("hide")==true){
+            $(current_section).addClass("hide");
+            $(forms).removeClass("hide")
+        } else if ($(forms).hasClass("hide")==false){
+            $(forms).addClass("hide");
+            $(current_section).removeClass("hide");
+        };
+    });
+
+    function hide_map(){
+        $("#map_container").slideUp()
+        $("button[id=map_toggle]").text("Show Map")
+        map_show = false
+    };
+    $("button[id=map_toggle]").click(function(){
+        if (map_show == true){
+            hide_map()
+        }else if (map_show == false){
+            $("#map_container").slideDown()
+            $(this).text("Hide Map") 
+            map_show = true           
+        }
+    });
+    var map;
+    var markers =[];
+    var fh_markers = [];
+    let range = {
+        min_lat: 0,
+        max_lat: 0, 
+        min_lng: 0,
+        max_lng: 0
+    };
+
+    $("tr[type=freehold]").each(function(){
+        if ($(this).data("x_coordinate") != "None" || $(this).data("y_coordinate") != "None"){
+            let fh={
+            type : "freehold",
+            freehold : `${$(this).data("holding_id")}`,
+            x_coordinate :$(this).data("x_coordinate"),
+            y_coordinate :$(this).data("y_coordinate")
+            }          
+            fh_markers.push(fh)
+        };
+    });
+    $("tr[type=leasehold]").each(function(){
+        if ($(this).data("x_coordinate") != "None" || $(this).data("y_coordinate") != "None"){
+            let lh={
+            type : "leasehold",
+            leasehold : `${$(this).data("holding_id")}`,
+            x_coordinate : $(this).data("x_coordinate"),
+            y_coordinate :$(this).data("y_coordinate")
+            };
+            fh_markers.push(lh)
+        }
+    });
+    if (fh_markers.length > 0){
+        range.min_lat = fh_markers[0].x_coordinate;
+        range.max_lat = fh_markers[0].x_coordinate;
+        range.max_lng = fh_markers[0].y_coordinate;
+        range.min_lng = fh_markers[0].y_coordinate;
+    };
+    
+    if (fh_markers.length >= 2){
+        for (let f of fh_markers.slice(1)){
+            if (f.x_coordinate > range.max_lat){
+                range.max_lat = f.x_coordinate;
+            }
+            if (f.x_coordinate < range.min_lat){
+                range.min_lat = f.x_coordinate;
+            }
+            if (f.y_coordinate > range.max_lng){
+                range.max_lng = f.y_coordinate;
+            }
+            if (f.y_coordinate < range.min_lng){
+                range.min_lng = f.y_coordinate;
+            }        
+        };
+    };
+
+    map_center={
+        lat:((range.max_lat + range.min_lat)/2),
+        lng:((range.max_lng + range.min_lng)/2)
+    }
+
+    if(navigator.onLine){
+        map = Initialize_map(map_center.lat,map_center.lng,12);
+
+        const freehold_marker = L.Marker.extend({
+            options: {
+                ID: "freehold_ID",
+
+            }
+        });
+
+        const leasehold_marker = L.Marker.extend({
+            options: {
+                ID: "leasehold_ID"
+            }
+        });
+        function show_marker_data(e){
+            $("div[id=marker_data]").removeClass("hide");
+            $("div[id=marker_data]").empty()
+            $("div[id=marker_data]").append(`<div>${this.options.ID}</div>`)
+        };
+
+        for (let f of fh_markers){
+            if (f.type == "freehold"){
+                marker = new freehold_marker([f.x_coordinate, f.y_coordinate],{
+                    ID : f.freehold
+                }).addTo(map).on('mouseover', show_marker_data);
+            }
+            else if (f.type == "leasehold"){
+                marker = new freehold_marker([f.x_coordinate, f.y_coordinate],{
+                    ID : f.leasehold
+                }).addTo(map).on('mouseover', show_marker_data);
+            };
+        };        
+    };
+
+});
+
+function issue_disclose_vendor(disclosure, issue_data){
+    $.ajax({
+        url:'/prop_dsiclose_client',
+        type:'POST',
+        data : issue_data,
+        success:function(data){
+            console.log(data)
+        }
+    })
+}
+var tempX = 0;
+var tempY = 0;
+$(document).ready(function(){
+     $(document).mousemove(function (e) {
+        var bodyOffsets = document.body.getBoundingClientRect();
+        tempX = e.pageX - bodyOffsets.left;
+        tempY = e.pageY;
+    });   
+    $("div[group=colour_stamp]").mouseenter(function(e){
+        var x = e.pageX
+        var y = e.pageY;
+        $(this).append(`<div class='hover' style='top :${y};left:${x};z-index:5'>${$(this).attr("display")}</div>`)
+    });
+    $("div[group=colour_stamp]").mouseleave(function(e){$(this).empty()});
+
+    $('div[group=colour_stamp]').click(function(){
+        var type = $(this).attr('type');
+        var stamp = $(this).attr('stamp');
+        var main_feed = `div[stamp=${stamp}][group=main_feed_content]`
+        var stamp_mark = $(`div[stamp=${stamp}][type=${type}][group=colour_stamp_view]`);
+        if ($(stamp_mark).hasClass('hide')){
+            if ($(main_feed).attr('mark_switch') === 'true'){
+                $(`div[stamp=${stamp}][group=colour_stamp_view]`).addClass('hide')
+            }else{
+                var default_height = $(main_feed).css('height');
+                var default_width = $(main_feed).css('width');
+                $(main_feed).attr('height', default_height);
+                $(main_feed).attr('width', default_width);
+            }                         
+            var height = $(stamp_mark).css( "height" );
+            var width = $(stamp_mark).css( "width" );
+    
+            $(main_feed).css({'height':height, 'width':width});
+            $(stamp_mark).css({'height':height, 'width':width})
+                .removeClass('hide');
+            $(main_feed).attr('mark_switch', 'true')
+            $(`button[type=main_feed_return]`).click(function(){
+                $(stamp_mark).addClass('hide')
+                height = $(main_feed).attr('height')
+                width = $(main_feed).attr('width')
+                $(main_feed).css('height', height)
+                $(main_feed).css('width', width)
+                $(main_feed).attr('mark_switch', 'false')
+            });
+        }
+    });
+
+    $('button[type=issue_disclose]').click(function(){
+        var default_height = $(main_feed).css('height')
+
+    })
+
+    let analytics_viewed = false;
+
+    $("button[id=view_analytics").click(function(){
+        $("#object_details").toggleClass("hide");
+        $("#mp_analytics").toggleClass("hide");
+        if (analytics_viewed == false){analytics_viewed = true
+            $.ajax({
+            data :{mp_id : {{particular_id}} },
+            type : 'POST',
+            url : "/find_user_access",
+            success: function(data){
+                var potential_buyers=data.potential_buyers;
+                $("#num_potential_buyers").text(" "+potential_buyers+" ");
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+        };
+    });
+    $('#map_toggle').click()
+
+});
+</script>
+
+{% endblock %}

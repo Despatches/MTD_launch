@@ -1,0 +1,38 @@
+<section id="right_to_enjoy" style="width: 50%; margin: auto;" class="hide">
+	<div>
+		<div>
+			<b>19. Right to use and enjoy your property</b>
+		</div>
+		<div>					
+			<p>19.1. Have you been told about plans for any building or developments that might affect someone’s ability to peacefully use and enjoy the property?</p>
+		</div>
+		<div>
+
+			<div style="display:flex; flex-direction:row; ">
+				<div class = "pillar">
+					<p>Yes</p>
+					<input name="nearby_development_bool"  type="radio" value="1">
+				</div>
+				<div class = "pillar">
+					<p>No</p>
+					<input name="nearby_development_bool"  type="radio" value="0">
+				</div>
+				<hr class="dropdown-divider">			
+			</div>
+			<div id="nearby_development_details">
+				<p>give details eg what the plans are and when they are expected to take place.</p>
+				<div>
+					<textarea class="textarea" id="nearby_development"></textarea>
+				</div>
+			</div>						
+		</div>
+		<hr class="dropdown-divider">
+		
+	</div>
+</section>
+
+<script>
+$(document).ready(function(){
+	boolean_slide_open("input[name=nearby_development_bool]","#nearby_development_details","stand")
+});
+</script>

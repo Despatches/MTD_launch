@@ -1,0 +1,42 @@
+		{% if question['sub_questions'] is defined %}
+			{% set subsections.count = 0 %}
+			<div class="child_q" id="{{question['identifier']}}_sub_questions">
+				{% for question in question['sub_questions'] %}
+					<div>
+						{{ question_container(question)}}
+
+							{% if subsections.count == 0 %}
+								{% set subsections.count = 1 %}	
+							{% else %}
+								<hr class="dropdown-divider">
+							{% endif %}
+							{% if question['question_set'] is defined %}
+
+									<p class="q_title" style='background-color:#ede6e6;'><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
+									{% for other_text in question['other_question_text'] %}
+
+										<p style='background-color:#ede6e6;'>{{other_text}}</p>	
+									{% endfor %}	
+
+									{% include "Json_form_templating/subquestion_loop.html"%}
+							{% else %}
+								<p class="q_title"><b>{{question['question_numbering']}}</b>  {{question['question_title']}}</p>
+								{% for other_text in question['other_question_text'] %}
+
+									<p>{{other_text}}</p>
+
+								{% endfor %}
+								{% if question['input_type'] == 'multi_row' %}
+									{% include "Json_form_templating/input_types/multi_row.html"%}
+								{% else %}
+
+									{% include "Json_form_templating/input_types/input_type_eval.html"%}
+									{% include "Json_form_templating/subquestion_loop.html"%}
+								{% endif %}
+							{% endif %}
+						</div>
+					</div>
+				{% endfor %}
+			{% set subsections.count = 1 %}
+			</div>
+		{% endif %}

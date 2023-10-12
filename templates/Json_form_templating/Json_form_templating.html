@@ -13,7 +13,20 @@
    	{% endif %}
 {%- endmacro %}
  {% block content %}
-<meta id="form_data" data-flow_controls='{{ main_form_data['flow_controls'] | tojson }}' data-form_id="{{main_form_data['form_id']}}"  data-questions='{{ main_form_data['questions'] | tojson }}' data-form ="{{template['form_identifier'] }}" data-results={{main_form_data['results'] | default('none')}} data-section_marker={{ main_form_data['section_marker']}} data-submission_Sequence = '{{submission_sequence | default('sections')}}'data-submission_url='{{submission_url|default('/TA6_Part_1_submit')}}' data-test = '{{test|default('no')}} 'data-process='{{ template['process'] |default('bulk')}}' data-template_type ={{main_form_data['template_type']|default('TA6')}} data-root_linkage={{root_linkage|default('none')}} data-root_linkage_id={{root_linkage_id|default('none')}}>
+<meta id="form_data" 
+		data-flow_controls="{{ main_form_data['flow_controls'] | tojson }}"
+		data-form_id="{{main_form_data['form_id']}}"
+		data-questions="{{ main_form_data['questions'] | tojson }}"
+		data-form ="{{template['form_identifier'] }}"
+		data-results="{{main_form_data['results'] | default('none')}}"
+		data-section_marker="{{ main_form_data['section_marker']}}"
+		data-submission_Sequence = "{{submission_sequence | default('sections')}}"
+		data-submission_url="{{submission_url|default('/TA6_Part_1_submit')}}"
+		data-test = "{{test|default('no')}}"
+		data-process="{{ template['process'] |default('bulk')}}"
+		data-template_type ="{{main_form_data['template_type']|default('TA6')}}"
+		data-root_linkage="{{root_linkage|default('none')}}"
+		data-root_linkage_id="{{root_linkage_id|default('none')}}">
 <style>
 .pillar{
 	display:flex;
@@ -484,7 +497,11 @@ $(document).ready(function(){
 		});
 		$("button[id=begin_form]").click(function(){
 			$("#guidance").addClass("hide")
-			$(`a[selec=${sections[reached_section]}]`).click()
+			if (reached_section >= sections.length){
+				$(`a[selec=${sections[0]}]`).click();
+			} else{
+				$(`a[selec=${sections[reached_section]}]`).click();
+			};
 
 		});
 		function next_section(){

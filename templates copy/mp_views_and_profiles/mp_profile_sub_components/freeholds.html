@@ -1,0 +1,39 @@
+{% block freeholds %}
+
+   {% if freehold_data == None %}
+             No Freeholds assigned to sale
+    {% else %}
+        <div id='FH'>
+            <h2>Freeholds</h2>
+            <div class="table-wrapper" >
+                <table class="fl-table" align="left" id="display_freehold_table">
+                    <thead>
+                            <tr>
+                          {% for header in freehold_headings %}
+                                <th> 
+                                    {{ header }}
+                                </th>
+                          {% endfor %}
+                            </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in freehold_data %}
+                            <tr style="color:black" type="freehold" data-name="{{row[0]}}" data-title_id="{{row[1]}}" data-date_first_specified="{{row[2]}}"data-x_coordinate="{{row[4]}}" data-y_coordinate="{{row[5]}}" data-holding_id="{{row[3]}}" obj_type="freehold">
+                          {% for cell in row[0:3] %}
+                                <td> 
+                                    {{ cell }} 
+                                </td>
+                          {% endfor %}
+                                <td>
+                                    <a 
+                                         <button href="{{ url_for("mp.freehold_profile",holding_ID = row[3],selec_set_ID = selec_set_ID )}}" type ="submit" class="button is-block is-info is-small ">Actions</button>
+                                    </a>
+                                </td>
+                             </tr>
+                             {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
