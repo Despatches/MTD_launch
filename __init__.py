@@ -56,25 +56,21 @@ def create_app():
 
     app.register_blueprint(main_blueprint)
 
-    from .blueprints.questions import questions as questions_blueprint
-
-    app.register_blueprint(questions_blueprint)
-
-    from .blueprints.objects_title_derivatives import title_derivatives
+    from .blueprints.blu_objects_title_derivatives import title_derivatives
 
     app.register_blueprint(title_derivatives)
 
-    from .blueprints.market_partics import mp as mp_blueprint
+    from .blueprints.blu_market_partics import mp as mp_blueprint
 
     app.register_blueprint(mp_blueprint)
 
-    from .blueprints.party_wall_register import (
+    from .blueprints.blu_party_wall_register import (
         party_Wall_register as party_Wall_register_blueprint,
     )
 
     app.register_blueprint(party_Wall_register_blueprint)
 
-    from .blueprints.TA6 import TA6_forms as TA6_forms_blueprint
+    from .blueprints.blu_TA6 import TA6_forms as TA6_forms_blueprint
 
     app.register_blueprint(TA6_forms_blueprint)
 
