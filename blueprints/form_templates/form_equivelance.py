@@ -374,7 +374,7 @@ equivilants = [
         "TA6": "",
         "TA6_part_1": {
             "identifier": "solar_electrical_tarrif_docu",
-            "question_title": "you’ll need to supply copies of the relevant documents, such as copies of electricity bills for feed-in tariffs (payments made for supplying electricity to the main grid).",
+            "question_title": "you’ll need to supply copies of the relevant documents, such as copies of electricity bills for feed-in tariffs (payments made for supplying electricity to the blu_main grid).",
         },
     },
     {

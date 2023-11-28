@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-	<form method="POST" action="{{ url_for('mp.change_selection',particular_id=particular_id, selec_set_ID=selec_set_ID,holding_ID=holding_ID,unique_selection_ID=unique_selection_ID) }}">
-
-	{% include "answer_module/answer_module_body.html" %}
-
-{% endblock %}

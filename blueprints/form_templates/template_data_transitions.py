@@ -823,7 +823,7 @@ def input_type_jiggling(e, data, form, docu_det, ident):
             db_ready_value = False
 
     elif data["input_type"] == "multi_row":
-        # if multi row main value =  false add no rows
+        # if multi row blu_main value =  false add no rows
         if val != False:
             sub_table_docu_det = {"docu": [], "details": []}
 

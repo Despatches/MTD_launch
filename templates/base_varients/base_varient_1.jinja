@@ -36,10 +36,10 @@
 <body>
   <section class="hero is-primary is-small">
   <div class="hero-head" style='background-color: lightblue;'>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar" role="navigation" aria-label="blu_main navigation">
       <div class="container">
         <div class="navbar-brand">
-          <a class="navbar-item" href="{{ url_for('main.index') }}">
+          <a class="navbar-item" href="{{ url_for('blu_main.index') }}">
             <span class="title is-4">Company Name</span>
           </a>
           <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
@@ -52,9 +52,9 @@
         <div id="navbarMenuHeroA" class="navbar-menu">
           <div class="navbar-end" style='color: black;'>
             {% block navbar %}
-            <a id="nav-home" href="{{ url_for('main.index') }}" class="navbar-item">Home</a>
-            <a id="nav-Profile" href="{{ url_for('main.profile') }}" class="navbar-item">Profile</a>
-            <a id="nav-Logout" href="{{ url_for('auth.logout') }}" class="navbar-item">Logout</a>
+            <a id="nav-home" href="{{ url_for('blu_main.index') }}" class="navbar-item">Home</a>
+            <a id="nav-Profile" href="{{ url_for('blu_main.profile') }}" class="navbar-item">Profile</a>
+            <a id="nav-Logout" href="{{ url_for('blu_auth.logout') }}" class="navbar-item">Logout</a>
             <div class="navbar-item has-dropdown is-hoverable">
               <a id="nav-mp" class="navbar-link is-arrowless">Market Particulars</a>
               <div class="navbar-dropdown">

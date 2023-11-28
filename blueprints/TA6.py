@@ -25,7 +25,7 @@ from launch.blueprints.form_templates.standard_TA6.standard_TA6 import (
 )
 from launch.blueprints.form_templates.json_form_templates import (
     template_sort,
-    basic_template_render,
+    # basic_template_render,
 )
 from launch.blueprints.form_templates.new_db_sql_code_writer import (
     create_new_sql_table,
@@ -250,7 +250,7 @@ def test_template():
     template = tp["template"]
     # from launch.blueprints.form_templates.market_particulars.new_market_particular import template as nmp_temp
     # template = nmp_temp
-    return basic_template_render(template)
+    # return basic_template_render(template)
 
 
 @TA6_forms.route("/synopsis_temp")
@@ -471,7 +471,7 @@ def template_send_prep(form_name):
         "flow_controls": flow_controls,
         "questions": questions,
         "sections": sections,
-        "template": template,
+        "template": returns["template"],
     }  #'section_controls':section_controls}
 
 
@@ -585,7 +585,7 @@ def template_micro_form(form_name, root_linkage, root_linkage_id, **kwargs):
         root_linkage, root_linkage_id, form_name, "ancilliary_form"
     )
     main_form_data["form_id"] = form.form
-    main_form_data["template"] = form_set["template"]
+    # main_form_data["template"] = form_set["template"]
     if form.data == None:
         main_form_data["result_send"] = json.dumps("none")
     else:
@@ -607,7 +607,7 @@ def template_micro_form(form_name, root_linkage, root_linkage_id, **kwargs):
         cursor.close()
     else:
         parent_data = "none"
-    print(main_form_data["result_send"])
+
     return render_template(
         "Json_form_templating/Json_form_templating.html",
         main_form_data=main_form_data,

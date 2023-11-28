@@ -5,6 +5,7 @@
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/base_map.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/template/input_interactions.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/template/reliance_evaluation.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/template/multi_row_data_table.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/@ideal-postcodes/address-finder-bundled/dist/address-finder.js"></script>
 {% endblock %}
 {% macro other_input_data(question) -%}
@@ -117,29 +118,39 @@ var sub_table_data = JSON.parse({{ main_form_data['sub_tables_send'] | tojson }}
 var form_flow_controls = JSON.parse({{ main_form_data['flow_controls'] | tojson }})
 
 	function text_final_val_func(vari){
+		console.log(vari);
+		var html_val;
+		var id_or_name = vari.identifier;
 		if (vari.styling != undefined && vari.styling['stock_options'] != undefined){
-			if (!$(`#${id_or_name}_stock`).val().trim().length){
+			id_or_name+="stock"
+			hmtl_val = $(`#${id_or_name}`).val().trim();
+			if (!hmtl_val.length){
 				vari.value = false;
 				vari.false=1;					
 			} else{
-				vari.value = $(`#${id_or_name}_stock`).val()
+				vari.value = hmtl_val
 				if (vari.value == 'other'){
-					if (!$(`input[id=${id_or_name}_stock_other]`).val().trim().length){
+					id_or_name += "other"
+					hmtl_val = $(`input[id=${id_or_name}]`).val().trim();
+					if (!hmtl_val.length){
 						/*alert($(`input[id=${id_or_name}_stock_other]`).val())
 						alert('3')*/
 						vari.value = false;
 						vari.false = 1;						
 					}else {
-						vari.value = $(`input[id=${id_or_name}_stock_other]`).val().trim();
+						vari.value = hmtl_val;
 					};
 				};					
 			};
 		}else{
-			if (!$(`#${id_or_name}`).val().trim().length){
+			console.log($(`#${id_or_name}`).val())
+			hmtl_val = $(`#${id_or_name}`).val().trim();
+			if (!hmtl_val.length){
 				vari.value = false;
 				vari.false = 1;
 			} else {
-				vari.value = $(`#${id_or_name}`).val().trim();
+				console.log(hmtl_val)
+				vari.value = hmtl_val;
 			};
 		};
 		return vari
@@ -223,7 +234,7 @@ var form_flow_controls = JSON.parse({{ main_form_data['flow_controls'] | tojson 
 			},
 			'multi_row':function(vari){
 				vari.rows = []
-				$(`tr[table_name=${id_or_name}][uploaded='no'`).each(function(){
+				$(`tr[table_name=${id_or_name}][uploaded='no']`).each(function(){
 					//alert("row")
 					var row_data = {};
 					var row_num = $(this).attr("row_num") 
@@ -233,12 +244,7 @@ var form_flow_controls = JSON.parse({{ main_form_data['flow_controls'] | tojson 
 						row_data[item.identifier].value=$(`td[row=${row_num}][name=${item.identifier}][table_name=${id_or_name}]`).attr('val');
 						row_data[item.identifier].input_type = item.input_type
 						row_data[item.identifier].false = $(`td[row=${row_num}][name=${item.identifier}][table_name=${id_or_name}]`).attr('fa')
-						//console.log(item.identifier, row_data[item.identifier].false)
-						/*if (row_data[item.identifier].value == false){
-							row_data[item.identifier].false = 1
-						} else {
-							row_data[item.identifier].false = 0
-						}*/
+
 					});
 					vari.rows.push(row_data)
 					
@@ -316,7 +322,6 @@ $(document).ready(function(){
 		if ($(this).width() !== window_width) {
 			 window_width = $(this).width();
 			$('div[func=guidance_slider][view=true]').each(function(){
-				console.log($(this))
 				$(this).css('width', $($(this).parent()).css('width'))
 			});
 		};
@@ -373,7 +378,6 @@ $(document).ready(function(){
 			};
 
 			setTimeout(() => {$(this).attr('view','true')}, 200);
-			//console.log($(guidance_slider).css("width"))
 		} else if (view ==='true'){
 			$(guidance_text).addClass('hide');
 			height = $($(guidance_slider).parent()).attr('height')
@@ -396,16 +400,20 @@ $(document).ready(function(){
 	var form_objects_functions = {
 		'address':function(form_object){
 			if(navigator.onLine){
-				IdealPostcodes.AddressFinder.setup({
-		    		apiKey: "ak_test",
-		   		outputFields: {
-				      line_1: '#'+form_object['elements']['line_1'],
-				      line_2: '#'+form_object['elements']['line_2'],
-				      line_3: '#'+form_object['elements']['line_3'],
-				      post_town: '#'+form_object['elements']['post_town'],
-				      postcode: '#'+form_object['elements']['postcode'],
-		    		}
-		  		});
+				try{
+					IdealPostcodes.AddressFinder.setup({
+			    		apiKey: "ak_test",
+			   		outputFields: {
+					      line_1: '#'+form_object['elements']['line_1'],
+					      line_2: '#'+form_object['elements']['line_2'],
+					      line_3: '#'+form_object['elements']['line_3'],
+					      post_town: '#'+form_object['elements']['post_town'],
+					      postcode: '#'+form_object['elements']['postcode'],
+			    		}
+			  		});
+				}catch(err){
+					console.log(err);
+				}
 			}
 		},
 	};
@@ -595,7 +603,6 @@ $(document).ready(function(){
 											processData: false,
 											contentType: false,
 											success : function(data){
-												console.log('data')
 											}
 										});
 									}
@@ -617,7 +624,6 @@ $(document).ready(function(){
 						$('#single_submission_sender').slideDown()
 					}
 					next_section();
-					console.log(total_data)
 				};
 			};
 		});

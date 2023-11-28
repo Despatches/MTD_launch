@@ -3,6 +3,7 @@ import copy
 
 
 def template_sort(template, full_q=False):
+    template = copy.deepcopy(template)
     flow_controls = []
     sections = []
 
