@@ -4,7 +4,6 @@ from launch import db
 from flask_login import login_user, current_user, login_required
 from launch.Objects.selections import market_particular_selection
 from launch.models.models import User, market_particulars, freehold, templates
-from launch.blueprints.mp_infinate_cascade import synopsis as synopsis_cascade
 from launch.functions.data_base_procedures import (
     add_to_selections_with_parents,
     counter,
@@ -45,12 +44,6 @@ import base64
 
 
 mp = Blueprint("mp", __name__)
-
-
-@mp.route("/synopsis/<particular_id>")
-@login_required
-def synopsis(particular_id):
-    synopsis_cascade(particular_id)
 
 
 # display a list of all market particulars user is attatched to
@@ -161,13 +154,13 @@ class market_particulars_set:
 def fetch_mps():
     get_mps = db.cursor()
     query = "SELECT market_particulars_ID,sudo_name, creation, confirmed_on_the_market,active_offers,last_user_to_change,last_data_change,`market_particulars_access_log`.`most_recent_access`\
-		FROM `particulars_and_objects`.`market_particulars`\
-		LEFT JOIN `particulars_and_objects`.`market_particulars_access_log`\
-		on `market_particulars`.market_particulars_ID = `market_particulars_access_log`.`market_particulars`\
-		AND particulars_and_objects.`market_particulars`.vendor_ID = `market_particulars_access_log`.`user`\
-		LEFT JOIN user_data.agency_assigned_to_market_partics\
-		on user_data.agency_assigned_to_market_partics.market_particulars = particulars_and_objects.market_particulars.`market_particulars_ID`\
-		WHERE user_data.agency_assigned_to_market_partics.`agency` = %s;"
+        FROM `particulars_and_objects`.`market_particulars`\
+        LEFT JOIN `particulars_and_objects`.`market_particulars_access_log`\
+        on `market_particulars`.market_particulars_ID = `market_particulars_access_log`.`market_particulars`\
+        AND particulars_and_objects.`market_particulars`.vendor_ID = `market_particulars_access_log`.`user`\
+        LEFT JOIN user_data.agency_assigned_to_market_partics\
+        on user_data.agency_assigned_to_market_partics.market_particulars = particulars_and_objects.market_particulars.`market_particulars_ID`\
+        WHERE user_data.agency_assigned_to_market_partics.`agency` = %s;"
 
     params = (current_user.agency,)
     get_mps.execute(query, params)
@@ -216,13 +209,13 @@ def display_mp():
 def display_mp_vendor():
     get_mps = db.cursor()
     query = "SELECT market_particulars_ID,sudo_name, creation, confirmed_on_the_market,active_offers,last_user_to_change,last_data_change,`market_particulars_access_log`.`most_recent_access`, cover_img, cover_name\
-		FROM `particulars_and_objects`.`market_particulars`\
-		LEFT JOIN `particulars_and_objects`.`market_particulars_access_log`\
-		on `market_particulars`.market_particulars_ID = `market_particulars_access_log`.`market_particulars`\
-		AND particulars_and_objects.`market_particulars`.vendor_ID = `market_particulars_access_log`.`user`\
-		LEFT JOIN user_data.agency_assigned_to_market_partics\
-		on user_data.agency_assigned_to_market_partics.market_particulars = particulars_and_objects.market_particulars.`market_particulars_ID`\
-		WHERE `particulars_and_objects`.`market_particulars`.`vendor_ID` = %s;"
+        FROM `particulars_and_objects`.`market_particulars`\
+        LEFT JOIN `particulars_and_objects`.`market_particulars_access_log`\
+        on `market_particulars`.market_particulars_ID = `market_particulars_access_log`.`market_particulars`\
+        AND particulars_and_objects.`market_particulars`.vendor_ID = `market_particulars_access_log`.`user`\
+        LEFT JOIN user_data.agency_assigned_to_market_partics\
+        on user_data.agency_assigned_to_market_partics.market_particulars = particulars_and_objects.market_particulars.`market_particulars_ID`\
+        WHERE `particulars_and_objects`.`market_particulars`.`vendor_ID` = %s;"
 
     params = (current_user.id,)
     get_mps.execute(query, params)
@@ -335,7 +328,7 @@ def current_mp_data(particular_id, selec_set_ID):
     go.close()
 
 
-# 	return render_template("synopsis.html" ,particular_id=particular_id, urlr=urlr, number_of_selec_sets=number_of_selec_sets,selection_sets=selection_sets)
+#   return render_template("synopsis.html" ,particular_id=particular_id, urlr=urlr, number_of_selec_sets=number_of_selec_sets,selection_sets=selection_sets)
 
 
 # overview profile of a freehold within a market particulars
@@ -347,20 +340,20 @@ def freehold_profile(holding_ID, selec_set_ID):
     freehold_collect = db.cursor()
     params = (holding_ID,)
     query = "SELECT \
-				`holding_ID`,\
-				`market_particulars`,\
-				`creating_user`,\
-				`reference_name`,\
-				`provisioned_ID`,\
-				`date_first_specified`,\
-				`X_location_point`,\
-				`Y_location_point`\
-			 from `selection_routines`.`unassigned_freehold` where holding_ID=%s"
+                `holding_ID`,\
+                `market_particulars`,\
+                `creating_user`,\
+                `reference_name`,\
+                `provisioned_ID`,\
+                `date_first_specified`,\
+                `X_location_point`,\
+                `Y_location_point`\
+             from `selection_routines`.`unassigned_freehold` where holding_ID=%s"
     freehold_collect.execute(query, params)
     unassigned_freehold_data = freehold_collect.fetchall()
     freehold_data = freehold(unassigned_freehold_data[0])
-    # 	ld = [unassigned_freehold_data[6], unassigned_freehold_data[7]]
-    # 	ld =json.dumps(ld)
+    #   ld = [unassigned_freehold_data[6], unassigned_freehold_data[7]]
+    #   ld =json.dumps(ld)
     table_name = "`selection_routines`.`selections_for_unassigned_freehold`"
     freehold_selections = collect_object_selections(
         table_name, holding_ID, selec_set_ID
@@ -375,9 +368,9 @@ def freehold_profile(holding_ID, selec_set_ID):
     )
 
 
-# 	return render_template("/create_mp_objects/unassigned_freehold.html",
-# 							location_data=ld,selec_set_ID=selec_set_ID,holding_ID=holding_ID,
-# 							particular_id=session['current_mp_set'][0], reference_name=reference_name)
+#   return render_template("/create_mp_objects/unassigned_freehold.html",
+#                           location_data=ld,selec_set_ID=selec_set_ID,holding_ID=holding_ID,
+#                           particular_id=session['current_mp_set'][0], reference_name=reference_name)
 
 
 @mp.route("/leasehold/<holding_ID>/<selec_set_ID>/overview")
@@ -441,7 +434,7 @@ def change_selection(particular_id, selec_set_ID, unique_selection_ID):
             )
 
     query = "update selection_routines.market_particulars_selections set selection_ans = %s \
-			where parent_set = %s and unique_selection_ID = %s"
+            where parent_set = %s and unique_selection_ID = %s"
 
     params = (form_answer, selec_set_ID, unique_selection_ID)
     change_selec.execute(query, params)
@@ -517,9 +510,9 @@ def redeem_view_code_proceed():
 def prospect_properties():
     prospects = db.cursor()
     query = "SELECT market_particulars_ID,sudo_name, confirmed_on_the_market \
-	from particulars_and_objects.market_particulars\
-	join mp_disclosure_access.prospective_buyer on particulars_and_objects.market_particulars.market_particulars_ID = mp_disclosure_access.prospective_buyer.market_particulars\
-	where mp_disclosure_access.prospective_buyer.user_ID = %s"
+    from particulars_and_objects.market_particulars\
+    join mp_disclosure_access.prospective_buyer on particulars_and_objects.market_particulars.market_particulars_ID = mp_disclosure_access.prospective_buyer.market_particulars\
+    where mp_disclosure_access.prospective_buyer.user_ID = %s"
 
     params = (current_user.id,)
 
@@ -581,7 +574,7 @@ def validate_view_code(particular_id, view_code):
     vcv = db.cursor()
     params = (particular_id, f"{view_code}", current_user.id)
     query = "INSERT INTO `mp_disclosure_access`.mp_access_requests(market_particulars,access_code,issue_timestamp,issueing_user)\
-			values(%s,%s,curtime(),%s);"
+            values(%s,%s,curtime(),%s);"
     vcv.execute(query, params)
     db.commit()
     vcv.close()
@@ -638,18 +631,18 @@ def form_issue_code(form_code):
 # def disclosure_package(particular_id):
 
 
-# 	mp.route("/market_partics")
-# 	def create_mp(,methods=['POST']):
-# 		create_mp = db.cusor(prepared=True)
-# 		cid = current_user.id
-# 		mp_creator = cid
-# 		sudo_name = request.form.get('name')
-# 		vendor = cid if request.form.get = ('user_vendor')
-# 		if not vendor == cid:
+#   mp.route("/market_partics")
+#   def create_mp(,methods=['POST']):
+#       create_mp = db.cusor(prepared=True)
+#       cid = current_user.id
+#       mp_creator = cid
+#       sudo_name = request.form.get('name')
+#       vendor = cid if request.form.get = ('user_vendor')
+#       if not vendor == cid:
 #
-# 		else:
-# 			procedure_new_mp = "call particulars_and_objects.new_market_particulars(%s,%s,%s)"
-# 			params = (cid,cid,sudo_name)
-# 			create_mp.execute(procedure_new_mp,params)
-# 			create_mp.close()
-# 			return 0
+#       else:
+#           procedure_new_mp = "call particulars_and_objects.new_market_particulars(%s,%s,%s)"
+#           params = (cid,cid,sudo_name)
+#           create_mp.execute(procedure_new_mp,params)
+#           create_mp.close()
+#           return 0
