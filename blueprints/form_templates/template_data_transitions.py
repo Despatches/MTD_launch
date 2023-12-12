@@ -748,6 +748,159 @@ class form_results_collection:
                 self.data[task.identifier]["work_tasks"].append(task.__dict__)
             self.work_tasks.append(task)
 
+    def AI_report(self):
+        import os
+        import openai
+        import tiktoken
+
+        max_tokens = 4000
+        openai.api_key = "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"
+        default_prompt = {
+            "model": "text-davinci-003",
+            "prompt": "",
+            "temperature": 0.5,
+            "max_tokens": 4000,
+            "top_p": 1,
+            "frequency_penalty": 0.2,
+            "presence_penalty": 0.1,
+        }
+        # response = openai.Completion.create(default_prompt)
+
+        pre_prompt = "write a home buyers report  where the following set of statements are true with good english, grammer and structure reordering the statements to improve flow and grouping similar topics and providing an appendix and Table of contents;<statements>"
+
+        # pre_prompt = 'write a home buyers report  where the following set of statements are true with good english, grammer and structure reordering the statements to improve flow and grouping similar topics;<statements>'
+        # pre_prompt =  'sort and return the information from the follwoeinhg statements best suited to the introduction to a home buyers report and then use that information to write an introduction<statements>'
+        # pre_prompt =  'create an investment risk summary of investing in a property described by the following statements at least one posative attribute must be described<statements>'
+        class encode_sequence:
+            def __init__(self):
+                self.sequence_items = []
+                self.completes = 0
+
+            def new_set(self):
+                self.sequence_items.append(encode_set())
+                self.cur_set = self.sequence_items[-1]
+
+            def update_set(self, single):
+                self.cur_set.add_unit(single)
+                if not self.cur_set.token_input < 2250:
+                    self.cur_set.complete()
+                    self.completes += 1
+                    self.new_set()
+
+            def manual_complete(self):
+                self.cur_set.complete()
+                self.completes += 1
+                self.new_set()
+
+        class encode_set:
+            def __init__(self):
+                self.token_input = 0
+                self.items = []
+                self.return_data = 0
+
+            def add_unit(self, single):
+                self.token_input += single["length"]
+                self.items.append(single)
+
+            def complete(self):
+                self.final_text = (
+                    pre_prompt
+                    + "".join([item["text"] for item in self.items])
+                    + "</statements>"
+                )
+                default_prompt["prompt"] = self.final_text
+                default_prompt["max_tokens"] = max_tokens - (self.token_input + 20)
+                self.response = openai.Completion.create(**default_prompt)
+
+        # class encode_item:
+        #   def __init__(self):
+
+        encoding = tiktoken.encoding_for_model("text-davinci-003")
+        # encoding.encode("tiktoken is great!")
+        sections = self.element_relevances["sections"]
+        questions = self.element_relevances["questions"]
+        data = self.data
+
+        sequence = encode_sequence()
+        sequence.new_set()
+
+        def collate_means(sections, questions, data):
+            for section in sections:
+                encode_text = f'<section topic = "{section}">'
+                new_encode_length = len(encoding.encode(encode_text))
+                single = {
+                    "length": new_encode_length,
+                    "text": encode_text,
+                    "identifier": section,
+                }
+                sequence.update_set(single)
+                for question in questions[section]:
+                    # print(question)
+                    if "identifier" in question and question["identifier"] in data:
+                        if data[question["identifier"]]["relevant"] == 1:
+                            cur_data = data[question["identifier"]]
+                            if (
+                                "meanings" in cur_data
+                                and "meaning" in cur_data["meanings"]
+                                and len(cur_data["meanings"]["meaning"]) > 1
+                            ):
+                                encode_text = (
+                                    "<p>" + cur_data["meanings"]["meaning"] + "</p>"
+                                )
+                                new_encode_length = len(encoding.encode(encode_text))
+                                single = {
+                                    "length": new_encode_length,
+                                    "text": encode_text,
+                                    "identifier": question["identifier"],
+                                }
+                                sequence.update_set(single)
+                            if (
+                                "pro_meanings" in cur_data
+                                and "pro_meaning" in cur_data["pro_meanings"]
+                                and len(cur_data["pro_meanings"]["pro_meaning"]) > 1
+                            ):
+                                encode_text = (
+                                    "<p>"
+                                    + cur_data["pro_meanings"]["pro_meaning"]
+                                    + "</p>"
+                                )
+                                new_encode_length = len(encoding.encode(encode_text))
+                                single = {
+                                    "length": new_encode_length,
+                                    "text": encode_text,
+                                    "identifier": question["identifier"],
+                                }
+                                sequence.update_set(single)
+                            else:
+                                continue
+                    if sequence.completes > 0:
+                        break
+                encode_text = f"</section>"
+                new_encode_length = len(encoding.encode(encode_text))
+                single = {
+                    "length": new_encode_length,
+                    "text": encode_text,
+                    "identifier": section,
+                }
+                if sequence.completes > 0:
+                    break
+
+        collate_means(sections, questions, data)
+
+        for f in self.sub_forms:
+            form = self.sub_forms[f]
+            sections = form["element_relevances"]["sections"]
+            questions = form["element_relevances"]["questions"]
+            data = form["data"]
+            collate_means(sections, questions, data)
+
+        if sequence.completes == 0:
+            sequence.manual_complete()
+
+        for item in sequence.sequence_items:
+            print(item.__dict__)
+        # chat_completion = openai.ChatCompletion.create(model="text-davinci-003", messages=[{"role": "user", "content": "Hello world"}])
+
 
 # take python specific values out of python to allow for interchangability within Json format
 def collected_value_interpretation(value):

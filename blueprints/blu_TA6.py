@@ -333,7 +333,7 @@ def collect_synopsis_data(form_name, p_type, particular_id):
                 "sub_forms": subforms,
             }
             return render_template(
-                "synopsis_template_html.html",
+                "synopsis_template.jinja",
                 form_set=json.dumps(form_set),
                 p_type=p_type,
                 particular_id=particular_id,
@@ -354,7 +354,7 @@ def collect_synopsis_data(form_name, p_type, particular_id):
         data["form"] = particular_id
         # print(data['form_name'])
         return render_template(
-            "synopsis_template_html.html",
+            "synopsis_template.jinja",
             form_set=json.dumps(data),
             p_type=p_type,
             particular_id=particular_id,
