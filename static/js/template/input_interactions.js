@@ -91,11 +91,11 @@ var empty_and_convert_funcs = {
 		if (results[item.identifier] != undefined && results[item.identifier]['value'] != undefined){
 		var resulty = results[item.identifier]['value']
 			if (resulty == 'yes'){
-				$(`input[name=${item.identifier}]`).click()
+				$(`input[name=${item.identifier}]`).click();
 			};
 		};
 		$(`#${item.identifier}_empty`).click(function(){
-			$(`input[name=${item.identifier}]`).prop('checked',false)
+			$(`input[name=${item.identifier}]`).prop('checked',false);
 		});
 	},
 	'bool':function(item){
