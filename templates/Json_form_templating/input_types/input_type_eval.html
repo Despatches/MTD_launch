@@ -12,7 +12,7 @@
 			</div>
 		{% endif %}
 		<div func='question_type_box' identifier='{{question['identifier']}}'>
-		{% include "Json_form_templating/input_types/"+question['input_type']+".html"%}
+			{% include "Json_form_templating/input_types/"+question['input_type']+".html"%}
 		</div>
 	</div>
 {% endif %}

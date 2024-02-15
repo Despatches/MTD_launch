@@ -13,10 +13,13 @@ stamps  = {
 					"if non complaint a despatches stratified mortgages may lend to cover the cost of bringing the property in addition to the purchase.",
 					"cover for any non compliant damage done can be appended to conveyance indemnity "
 				],
-				"new_disclose_name":"Small Sewage"
+				"new_disclose_name":"Small Sewage",
+				"linkage":"",
+				"action":""
 			},
 			'loan_opp':{'text':['Loan Funding may be possible in order to enable installation of either mains sewage connection or a small sewage treatment plant']},
-			'indem_opp':{'text':['An indemnity may be available in order to mitigate this risk']}
+			'indem_opp':{'text':['An indemnity may be available in order to mitigate this risk']},
+			'esg':{'text':['some esg text']}
 			},
 		'info_type':['']
 	},
