@@ -31,6 +31,19 @@ from .blueprints.form_templates.templates import templates
 # openai.Model.list()
 
 
+def create_rand_string(string_length):
+    code = string.ascii_letters
+    code2 = string.digits
+    codes = (code, code2)
+    rand = ""
+    counter = 0
+    while counter != string_length:
+        a = character_type(codes)
+        rand = f"{rand}" + (random.choice(a))
+        counter += 1
+    return rand
+
+
 def create_app():
     app = Flask(__name__)  # ,static_url_path='/static',static_folder='launch/static')
     app.config.from_object(Config)

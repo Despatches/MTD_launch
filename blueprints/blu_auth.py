@@ -1,11 +1,14 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 import mysql.connector as mysql
 from werkzeug.security import generate_password_hash, check_password_hash
-from launch import db
 from flask_login import login_user, login_required, current_user, logout_user
+from launch.blueprints.form_templates.json_form_templates import template_sort
 from launch.models.models import User
+import launch
 
 blu_auth = Blueprint("blu_auth", __name__)
+
+db = launch.db
 
 
 @blu_auth.route("/login")

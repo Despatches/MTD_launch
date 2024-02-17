@@ -31,7 +31,7 @@ from launch.blueprints.form_templates.new_db_sql_code_writer import (
     create_new_sql_table,
     element_relevancy,
 )
-from launch.blueprints.form_templates.template_data_transitions import (
+from launch.blueprints.form_templates.obj_form_collection import (
     collect_form_data,
     form_results_collection,
     input_type_jiggling,
@@ -458,7 +458,7 @@ def complete_work_task():
 
 
 # prep generic form data to send to templating system
-def template_send_prep(form_name):
+def template_send_prep(form_name, **kwargs):
     form_set = templates[form_name]
     template = form_set["template"]
     returns = template_sort(template)
@@ -575,23 +575,83 @@ def template_form(form_name, p_type, particular_id, **kwargs):
     # return render_template("Json_form_templating/Json_form_templating.html", template = template, flow_controls = flow_controls, js_template=js_template, questions=questions ,form_id = form['form'], sections=sections, results = result_send, sub_table_data = sub_tables_send)
 
 
+def prepare_lead_creation(self, lead_set, data_type):
+    email_reg_ex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
+    insert = """INSERT INTO `lead_creation`.`created_links`(
+                    link_created, 
+                    link_code,
+                    form_id,
+                    target_email,
+                    target_organisation,
+                    ) VALUES (CURDATE(),%s,%s, %s, %s);"""
+    cursor = db.cursor()
+    import smtplib, ssl
+
+    port = 465
+    password = ""
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+        server.login("noreply@despatches.com", "S1lk-5carf(55)*2f@tlads(88)")
+    for lead in lead_set:
+        if re.fullmatch(email_reg_ex, lead[0]):
+            code = create_rand_string(12)
+            params = (code, self.form_name, lead[0], lead[1])
+            cursor.execute(insert, params)
+            # sending email
+            server.sendmail(
+                "noreply@despatches.com",
+                lead[0],
+                "http://127.0.0.1:5000/synopsis_temp/TA6_Part_1/market_particular/1",
+            )
+    cursor.close()
+
+
+def lead_form_creation(form, data_type):
+    if form in launch.templates:
+        form_set = launch.templates[form]
+        template_data = template_sort(form_set[template])
+
+
+@TA6_forms.route("/redeemlinkq/<sepcific_link>")
+def redeem_leed_form(sepcific_link):
+    query = """
+            SELECT form_id 
+                FROM `lead_creation`.`created_links`
+                WHERE link_code = %s
+            """
+    cursor = db.cursor()
+    cursor.execute(query, (sepcific_link,))
+    link = cursor.fetchall()
+    if len(link) > 0:
+        form = link[0][0]
+        return template_micro_form(form, 0, 0, col_type="leed_create")
+
+
 # TA6_forms.route("/form/micro/<form_name>/<root_linkage>/<root_linkage_id>", defaults={'parent_data': 'none'})
 @TA6_forms.route("/form/micro/<form_name>/<root_linkage>/<root_linkage_id>")
 @login_required
 def template_micro_form(form_name, root_linkage, root_linkage_id, **kwargs):
     form_set = templates[form_name]
     main_form_data = template_send_prep(form_name)
-    form = form_results_collection(
-        root_linkage, root_linkage_id, form_name, "ancilliary_form"
-    )
-    main_form_data["form_id"] = form.form
-    # main_form_data["template"] = form_set["template"]
-    if form.data == None:
-        main_form_data["result_send"] = json.dumps("none")
-    else:
-        main_form_data["result_send"] = json.dumps(form.data)
+    col_type = "micro"
+    if "col_type" in kwargs:
+        col_type = kwargs[col_type]
+
+    main_form_data["result_send"] = json.dumps("none")
+    main_form_data["section_marker"] = 0
+    main_form_data["form_id"] = 0
+    if col_type != "leed_create":
+        form = form_results_collection(
+            root_linkage, root_linkage_id, form_name, "ancilliary_form"
+        )
+        main_form_data["form_id"] = form.form
+        # main_form_data["template"] = form_set["template"]
+        if form.data != None:
+            main_form_data["result_send"] = json.dumps(form.data)
+            main_form_data["section_marker"] = form.section_marker
+
     main_form_data["sub_tables_send"] = json.dumps("none")
-    main_form_data["section_marker"] = form.section_marker
+
     template = copy.deepcopy(main_form_data["template"])
     main_form_data["template"] = json.dumps(main_form_data["template"])
     sub_forms = "micro"

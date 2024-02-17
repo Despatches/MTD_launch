@@ -1,4 +1,4 @@
-from launch import db, templates
+from launch import db, templates, create_rand_string
 from flask_login import login_user, current_user, login_required
 from launch.functions.data_base_procedures import (
     add_to_selections_with_parents,
@@ -41,7 +41,7 @@ from flask import (
     jsonify,
 )
 import mysql.connector
-import string, random, datetime, ast
+import string, random, datetime, ast, re
 
 
 def print_for_eqivilents(template):
@@ -517,6 +517,7 @@ class form_results_collection:
                 for key in self.data:
                     if edits[0] == key:
                         self.data[key]["meanings"]["edit_meaning"] = edits[1]
+            cursor.close()
 
     # currently just for the purpose of answer meanings allowing answer meanings to be tagged to be assigned based on question answer
     def append_data(self, data_set, data_name):

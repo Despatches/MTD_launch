@@ -1,4 +1,4 @@
-from launch.blueprints.form_templates import template_data_transitions
+from launch.blueprints.form_templates import obj_form_collection
 from launch.blueprints.form_templates import new_db_sql_code_writer as data_vals
 from launch.blueprints.models.models import market_particulars
 import pandas as pd
@@ -102,7 +102,7 @@ class selection_group:
 		form_id_set = cursor.fetchall()
 		self.data_set = []
 		for form in form_id_set:
-			form_results = template_data_transitions.form_results_collection(template_data_transitions.collect_form_data(template_set['query_columns'],form), template_set['query_select'], form, template['form_identifier'])
+			form_results = obj_form_collection.form_results_collection(obj_form_collection.collect_form_data(template_set['query_columns'],form), template_set['query_select'], form, template['form_identifier'])
 			form_results.add_element_relevances(template)
 			form_results.exclude_irrelevants()
 			form_results.value_interpret()
