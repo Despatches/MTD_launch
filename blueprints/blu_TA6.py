@@ -1,4 +1,4 @@
-from launch import db
+from launch import db, create_rand_string
 from flask_login import login_user, current_user, login_required
 from launch.models.models import User, market_particulars, new_form_object, templates
 from launch.functions.data_base_procedures import (
@@ -575,34 +575,65 @@ def template_form(form_name, p_type, particular_id, **kwargs):
     # return render_template("Json_form_templating/Json_form_templating.html", template = template, flow_controls = flow_controls, js_template=js_template, questions=questions ,form_id = form['form'], sections=sections, results = result_send, sub_table_data = sub_tables_send)
 
 
-def prepare_lead_creation(self, lead_set, data_type):
+lead_set = [["humes101@gmail.com", "company_1"]]
+
+
+def prepare_lead_creation(lead_set, data_type, form_name):
+    import re
+
     email_reg_ex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
     insert = """INSERT INTO `lead_creation`.`created_links`(
                     link_created, 
                     link_code,
                     form_id,
                     target_email,
-                    target_organisation,
-                    ) VALUES (CURDATE(),%s,%s, %s, %s);"""
+                    target_organisation
+                    )VALUES  (CURDATE(),%s,%s, %s, %s);"""
     cursor = db.cursor()
     import smtplib, ssl
 
-    port = 465
+    port = 587
+    # port = 465
     password = ""
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-        server.login("noreply@despatches.com", "S1lk-5carf(55)*2f@tlads(88)")
+    # with smtplib.SMTP_SSL("smtp.ionos.co.uk", port, context=context) as server:
+    #    server.login("noreply@despatches.com", ":S1lk-5carf(55)*2f@tlads(88)")
+    server = smtplib.SMTP("smtp.ionos.co.uk", port)
+    print(server.ehlo())
+    server.starttls(context=context)
+    print(server.ehlo())
+    server.login("noreply@despatches.com", ":S1lk-5carf(55)*2f@tlads(88)")
+
     for lead in lead_set:
-        if re.fullmatch(email_reg_ex, lead[0]):
-            code = create_rand_string(12)
-            params = (code, self.form_name, lead[0], lead[1])
-            cursor.execute(insert, params)
-            # sending email
+        print("works")
+        # if re.fullmatch(email_reg_ex, lead[0]):
+        code = create_rand_string(12)
+        params = (code, form_name, lead[0], lead[1])
+        print(insert.format(params))
+        cursor.execute(insert, params)
+
+        link = "http://127.0.0.1:5000/synopsis_temp/TA6_Part_1/market_particular/1"
+        msg = "Subject: test \n\n test"
+        try:
             server.sendmail(
                 "noreply@despatches.com",
-                lead[0],
-                "http://127.0.0.1:5000/synopsis_temp/TA6_Part_1/market_particular/1",
+                [
+                    "humes101@gmail.com",
+                    "despatches@gmail.com",
+                    "noreply@despatches.com",
+                ],
+                """
+Subject: Hi there
+
+This message is sent from Python.""",
             )
+        except Exception as e:
+            # Print any error messages to stdout
+            print(e)
+
+    server.quit()
+    db.commit()
+
     cursor.close()
 
 
@@ -610,6 +641,12 @@ def lead_form_creation(form, data_type):
     if form in launch.templates:
         form_set = launch.templates[form]
         template_data = template_sort(form_set[template])
+
+
+@TA6_forms.route("/lead_create/<form_name>")
+def leady_Stuff(form_name):
+    prepare_lead_creation(lead_set, "risk", "TA6_Part_1")
+    return "dd"
 
 
 @TA6_forms.route("/redeemlinkq/<sepcific_link>")
