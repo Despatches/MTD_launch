@@ -1,6 +1,8 @@
 from flask import Flask, render_template, session, redirect, url_for
 from config import Config
 import mysql.connector as mysql
+import string
+import random
 
 # from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
@@ -29,6 +31,24 @@ from .blueprints.form_templates.templates import templates
 
 # openai.api_key = "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"
 # openai.Model.list()
+
+
+def create_rand_string(string_length):
+    code = string.ascii_letters
+    code2 = string.digits
+    codes = (code, code2)
+    rand = ""
+    counter = 0
+
+    def character_type(codes):
+        choice = random.choice(codes)
+        return choice
+
+    while counter != string_length:
+        a = character_type(codes)
+        rand = f"{rand}" + (random.choice(a))
+        counter += 1
+    return rand
 
 
 def create_app():

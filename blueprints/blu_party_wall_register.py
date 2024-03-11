@@ -20,7 +20,7 @@ from launch.functions.data_base_procedures import (
     update_last_data_entry_mp,
 )
 from launch.functions.access_record_procedures import update_last_user_access
-from launch.blueprints.form_templates import template_data_transitions
+from launch.blueprints.form_templates import obj_form_collection
 from flask import (
     Blueprint,
     render_template,
@@ -72,8 +72,8 @@ def generic_input(pairs, table):
             values = f"{values} ,{p['value']}"
 
     query = f"INSERT into {table}\
-				({rows})\
-				VALUES({values})"
+                ({rows})\
+                VALUES({values})"
 
     cursor.execute(query)
 
@@ -92,7 +92,7 @@ def pw_register_submission():
     full_input_set = {"pairs": [], "details": [], "docu": []}
     for key in inputs:
         equals = pairings[key]
-        final_inputs = template_data_transitions.form_equals_evaluation(
+        final_inputs = obj_form_collection.form_equals_evaluation(
             equals, inputs[key], None
         )
         print(final_inputs)
@@ -113,7 +113,7 @@ def search_pw_register():
     address = json.loads(request.form.get("address"))
     postcode = address["postcode"]
     base_query = """SELECT {}
-	 			FROM `party_wall_register`.party_wall_entry_data """
+                FROM `party_wall_register`.party_wall_entry_data """
     if request.form.get("filtered") == "1":
         filters = json.loads(request.form.get("filters"))
         if filters["address_type"] == "both":
@@ -209,8 +209,8 @@ def search_pw_register():
 @login_required
 def search_pw_records(notice):
     form_name = party_wall_entry["template"]["form_identifier"]
-    notice = template_data_transitions.form_results_collection(
-        template_data_transitions.collect_form_data(
+    notice = obj_form_collection.form_results_collection(
+        obj_form_collection.collect_form_data(
             party_wall_entry["query_columns"],
             notice,
             "`party_wall_register`.party_wall_entry_data",

@@ -523,13 +523,13 @@ def prospect_properties():
     return render_template("prospect_properties.html", props=prospect_props)
 
 
-def create_rand_string():
+def create_rand_string(string_length):
     code = string.ascii_letters
     code2 = string.digits
     codes = (code, code2)
     rand = ""
     counter = 0
-    while counter != 10:
+    while counter != string_length:
         a = character_type(codes)
         rand = f"{rand}" + (random.choice(a))
         counter += 1
@@ -552,7 +552,7 @@ def create_view_code(particular_id):
             flash("error producing view code request again or try again later")
             return f"{exists}"
             return redirect(url_for("mp.selectedmp", particular_id=particular_id))
-        view_code = create_rand_string()
+        view_code = create_rand_string(10)
 
         check_code = db.cursor()
 

@@ -1,7 +1,7 @@
 from launch import db, templates
 from flask import redirect, url_for
 from flask_login import UserMixin
-from launch.blueprints.form_templates import template_data_transitions as form_data
+from launch.blueprints.form_templates import obj_form_collection as form_data
 from launch.blueprints.form_templates.templates import templates
 from launch.models.stamps import stamps
 import re
@@ -11,17 +11,17 @@ class User(UserMixin):
     def __init__(self, ID):
         user_get = db.cursor()
         user_data = f"""SELECT `user`.`user_ID`,
-			    `user`.`first_name`,
-			    `user`.`last_name`,
-			    `user`.`other_names`,
-			    `user`.`join_date`,
-			    `user`.`user_email`,
-			    `user`.`standard_user`,
-			    `user`.`user_is_freeholder`,
-			    `user`.`user_is_leaseholder`,
-			    `user`.`user_password`,
-			    `user`.`user_is_estate_agent`
-				FROM `user_data`.`user`;"""
+                `user`.`first_name`,
+                `user`.`last_name`,
+                `user`.`other_names`,
+                `user`.`join_date`,
+                `user`.`user_email`,
+                `user`.`standard_user`,
+                `user`.`user_is_freeholder`,
+                `user`.`user_is_leaseholder`,
+                `user`.`user_password`,
+                `user`.`user_is_estate_agent`
+                FROM `user_data`.`user`;"""
 
         user_get.execute(user_data)
         user = user_get.fetchone()
@@ -53,8 +53,8 @@ class User(UserMixin):
 
 
 # class title_derivative():
-# 	def __init__(data_list,pair_set):
-# 		self.X_location_point =
+#   def __init__(data_list,pair_set):
+#       self.X_location_point =
 
 
 # class cns(title_derivative):
@@ -121,23 +121,23 @@ class market_particulars:
         market_partics_get = db.cursor()
         # mp_data = "select * from particulars_and_objects.market_particulars where market_particulars_ID = %s"
         mp_data = "SELECT \
-			`market_particulars`.`market_particulars_ID`,\
-    		`market_particulars`.`user_creator`,\
-    		`market_particulars`.`vendor_ID`,\
-    		`market_particulars`.`active_offers`,\
-    		`market_particulars`.`assigned_agency`,\
-    		`market_particulars`.`validated_vendor_lawyer`,\
-    		`market_particulars`.`particulars_proceed_to_sale`,\
-    		`market_particulars`.`optional_componants`,\
-   		 	`market_particulars`.`confirmed_on_the_market`,\
-    		`market_particulars`.`sudo_name`,\
-    		`market_particulars`.`creation`,\
-    		`market_particulars`.`last_user_to_change`,\
-    		`market_particulars`.`last_data_change`,\
-    		`market_particulars`.`single_point_loci_lat`,\
-    		`market_particulars`.`single_point_loci_lng`\
-		FROM `particulars_and_objects`.`market_particulars`\
-		where`market_particulars_ID` = %s;"
+            `market_particulars`.`market_particulars_ID`,\
+            `market_particulars`.`user_creator`,\
+            `market_particulars`.`vendor_ID`,\
+            `market_particulars`.`active_offers`,\
+            `market_particulars`.`assigned_agency`,\
+            `market_particulars`.`validated_vendor_lawyer`,\
+            `market_particulars`.`particulars_proceed_to_sale`,\
+            `market_particulars`.`optional_componants`,\
+            `market_particulars`.`confirmed_on_the_market`,\
+            `market_particulars`.`sudo_name`,\
+            `market_particulars`.`creation`,\
+            `market_particulars`.`last_user_to_change`,\
+            `market_particulars`.`last_data_change`,\
+            `market_particulars`.`single_point_loci_lat`,\
+            `market_particulars`.`single_point_loci_lng`\
+        FROM `particulars_and_objects`.`market_particulars`\
+        where`market_particulars_ID` = %s;"
         params = (market_particulars_id,)
         market_partics_get.execute(mp_data, params)
         mp = market_partics_get.fetchone()
@@ -200,7 +200,7 @@ class market_particulars:
         self.forms = {}
         cursor = db.cursor()
         query = "SELECT `form_name`, `form` FROM `particulars_and_objects`.`cur_forms`\
-			WHERE market_particulars = %s"
+            WHERE market_particulars = %s"
         params = (self.id,)
         cursor.execute(query, params)
         results = cursor.fetchall()
@@ -265,27 +265,27 @@ class market_particulars:
     def new_freehold_derivative(self):
         cursor = db.cursor()
         query = """INSERT INTO `title_derivatives`.`freehold`
-					(
-					`creating_user`,
-					`reference_name`,
-					`parent_object_type`,
-					`parent_ID`,
-					`verified`,
-					`x_location_point`,
-					`y_location_point`,
-					`other_data`,
-					`date_first_specified`)
-					VALUES
-					(%s,
-					%s,
-					%s,
-					%s,
-					%s,
-					%s,
-					%s,
-					%s,
-					NOW());
-					"""
+                    (
+                    `creating_user`,
+                    `reference_name`,
+                    `parent_object_type`,
+                    `parent_ID`,
+                    `verified`,
+                    `x_location_point`,
+                    `y_location_point`,
+                    `other_data`,
+                    `date_first_specified`)
+                    VALUES
+                    (%s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    NOW());
+                    """
         params = (
             None,
             self.sudo_name + " Freehold",
@@ -304,27 +304,27 @@ class market_particulars:
     def new_leasehold_derivative(self):
         cursor = db.cursor()
         query = """INSERT INTO `title_derivatives`.`leasehold`
-					(
-					`parent_object_type`,
-					`creating_user`,
-					`reference_name`,
-					`parent_ID`,
-					`x_location_point`,
-					`y_location_point`,
-					`other_data`,
-					`date_first_specified`)
-					VALUES
-					(
-					%s,
-					%s,
-					%s,
-					%s,
-					%s,
-					%s,
-					%s,
-					NOW());
+                    (
+                    `parent_object_type`,
+                    `creating_user`,
+                    `reference_name`,
+                    `parent_ID`,
+                    `x_location_point`,
+                    `y_location_point`,
+                    `other_data`,
+                    `date_first_specified`)
+                    VALUES
+                    (
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    NOW());
 
-					"""
+                    """
         params = (
             "market_particular",
             None,

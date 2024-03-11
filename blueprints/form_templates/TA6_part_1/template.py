@@ -378,7 +378,7 @@ template = {
                 {
                     "question_numbering": "3.1",
                     "question_title": "When you bought the property, you may have been given the following: copies or details of the warranties and guarantees, and \
- 							any planning consents or other planning documents. If available, upload or scan copies or details.",
+                            any planning consents or other planning documents. If available, upload or scan copies or details.",
                     "sub_q_other_text": "",
                     "identifier": "warranties_docu",
                     "input_type": "docu",
