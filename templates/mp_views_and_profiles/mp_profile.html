@@ -35,8 +35,12 @@
 .colour_tab{
     width:100%;
     height:15px;
+    cursor: pointer;
+    border-radius:3px;
     background-color:rgba(255,220,59,1);
     overflow:visible;
+    margin: 0px 0px 0px 0px;
+
 }
 .feed_content{
     width:100%;
@@ -71,13 +75,18 @@
     left: 0;
     width:100%;
 }
-.hover
-{
+.hover_tab{
   position: absolute;
   /*transform: translate(-50%,-50%);  /* optional */
   border: 1px solid black;  /* optional */
   color:black;
   background-color:white;
+}
+
+div.colour_tab:hover{
+    border-style: solid;
+    border-width: 10px;
+    border: rgba(0,0,0,1);
 }
 </style>
 <section>
@@ -415,13 +424,62 @@ function add_micro_forms(form_data){
             disabled = 'disabled'
         }*/
         //console.log(completion, disabled)
-        var synopsis_button = `<div><button form=${form} action='synopsis' class='button is-link'>Synopsis</button></div>`
+        var synopsis_button = `
+            <div>
+                <button 
+                    form=${form} 
+                    action='synopsis' 
+                    class='button is-link'>
+                        Synopsis
+                </button>
+            </div>
+        `
 
         var answer_q_button = `<div><button form=${form} ${disabled} class='button is-warning' action='answer'>Answer questions</button></div> `
 
         var issue_disclose_button = `<div><button form=${form} ${disabled} class='button is-info' action='disclose_code'>Create Issue Code</button></div>`
 
-        var new_table_row = `<tr set='form_rows'form=${form} style='color:black;' status='hide'><td>${cur_form['form_name']}</td><td><div>${completion_eval}</div></td><td></td><td form=${form} type='action'><div>${synopsis_button}${answer_q_button}${issue_disclose_button}</div></td></tr><tr form=${form} type='form_info' style='background-color=transparent;'><td colspan='3'><div class=box><div set='unanswerd_count'form='${form}'><span>${cur_form['empty']}:unanswered questions</span></div><div set='unanswerd_questions' form=${form}></div></div></td></tr>`
+        var new_table_row = `
+        <tr 
+            set='form_rows'
+            form=${form} 
+            style='color:black;' 
+            status='hide'
+        >
+            <td>
+                ${cur_form['form_name']}
+            </td>
+            <td>
+                <div>
+                    ${completion_eval}
+                </div>
+            </td>
+            <td>
+            </td>
+            <td 
+                form=${form} 
+                type='action'
+            >
+                <div>
+                    ${synopsis_button}${answer_q_button}${issue_disclose_button}
+                </div>
+            </td>
+        </tr>
+            <tr 
+                form=${form} 
+                type='form_info' 
+                style='background-color=transparent;'
+            >
+                <td 
+                    colspan='3'
+                >
+                    <div 
+                        class=box>
+                        <div set='unanswerd_count'form='${form}'><span>${cur_form['empty']}:unanswered questions</span></div><div set='unanswerd_questions' form=${form}>
+                    </div>
+                </div>
+            </td>
+        </tr>`
         $(`#other_micro_form_body`).append(new_table_row);
         $('tr[type=form_info]').slideUp()
         Object.keys(cur_form.data).forEach(function(ident){
@@ -618,7 +676,7 @@ $(document).ready(function(){
     $("div[group=colour_stamp]").mouseenter(function(e){
         var x = e.pageX
         var y = e.pageY;
-        $(this).append(`<div class='hover' style='top :${y};left:${x};z-index:5'>${$(this).attr("display")}</div>`)
+        $(this).append(`<div class='hover_tab' style='top :${y};left:${x};z-index:5'>${$(this).attr("display")}</div>`)
     });
     $("div[group=colour_stamp]").mouseleave(function(e){$(this).empty()});
 

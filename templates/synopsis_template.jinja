@@ -58,7 +58,7 @@
 <div id='mod_mark_box' class='box hide'>
 	<span id='mod_statement'></span>
 </div>
-review versions
+<!--review versions
 <div>
 	<button id="prev_selec_set"> prev version </button>
 	<button id="earlier_selec_set" disabled> next version</button>
@@ -73,16 +73,30 @@ review versions
 		<p id="matches" class="hide"><b><span id="find_counter"></span></b><span> results found</span></p>
 		<p id="statement_matches" class="hide"><b><span id="statement_match_counter"></span></b><span> statement matches</span></p>
 	</div>
-	<div align="center">
-		Filters
-	<form id="filter" class='stand_text'>
-		<input id="bydata" type="radio" name="Topic" value="data"/> Filter By Data
-		<input id="bytopic" type="radio" name="Topic" value="topic" checked/> Filter By Topic		
-		<input type="checkbox" name="Topic" value="risk" set='fraud_comp_risk' class='stand_text'/> Filter By Risk
-		<input type="checkbox" name="Topic" value="fraud" set='fraud_comp_risk'/> Filter By Fraud
-		<input type="checkbox" name="Topic" value="competancy" set='fraud_comp_risk'/> Filter By competancy	
-	</form>
-	<div>
+</div>-->
+
+<div align="center">
+		<t>Filters</t>
+		<div class="box" style="background-color:rgb(16, 105, 118);width:80%">
+			<form id="filter" class='stand_text'>
+					<input id="bydata" type="radio" name="Topic" value="data"/> Filter By Data
+					<input id="bytopic" type="radio" name="Topic" value="topic" checked/> Filter By Topic
+					<div set="fraud_comp_risk_toggle" class= "button is-info is-light" value="risk">
+					Filter By Risk
+					</div>
+						<input type="checkbox" name="Topic" value="risk" set='fraud_comp_risk' class='stand_text hide'/>
+					<div set="fraud_comp_risk_toggle" class= "button is-info is-light" value="fraud">
+ 						Filter By Fraud
+					</div>						
+					<input type="checkbox" name="Topic" value="fraud" set='fraud_comp_risk' class="hide"/>
+					<div set="fraud_comp_risk_toggle" class= "button is-info is-light" value="competancy">
+						 Filter By competancy	
+					</div>
+					<input type="checkbox" name="Topic" value="competancy" set='fraud_comp_risk' class="hide"/>
+			</form>
+	</div>
+</div>
+	<!--<div>
 		<div>Meaning Type</div>
 		<input name='meaning_type' type='radio' value='standard' set='meaning_type' label='Standard'> 
 		<input name='meaning_type' type='radio' value='pro' set='meaning_type' label='pro'> pro
@@ -96,10 +110,12 @@ review versions
 			</div>
 		</div>
 	</div>
-		<br>
+	<br>-->
 	</div>
-	<div  style = 'display:flex;flex-direction:row;' >
-		<div id='fil' align="center">
+	<div align="center">
+		<div  style = 'display:flex;flex-direction:row;margin-top:10px' >
+			<div id='fil' align="center">
+			</div>
 		</div>
 	</div>
 	<div id='dat_fil' align="center" class='hide'>
@@ -514,7 +530,20 @@ function create_meaning_span(){
 	var selec_ident;
 	const meaning_body = $('#meaning_body');
 	var meaning_string = $(`p[id=meaning_string]`);
-	var fraud_comp_risk = {'risk':{'colour':{'color':'purple'}},'fraud':{'colour':{'background-color':'red'}},'competancy':{'colour':{'border': '5px solid orange'}}};
+	var fraud_comp_risk = {
+		'risk':{
+				'colour':{'color':'purple'},
+				"base_colour":"purple",
+		},
+			'fraud':{
+				'colour':{'background-color':'#f98c96',},
+				"base_colour":"#f98c96",
+		},
+			'competancy':{
+				'colour':{'border': '5px solid orange'},
+				"base_colour":"orange",
+			}
+	};
 	var section_data = {'collated':{'risk':{'high':[],'standard':[]},'fraud':{'high':[],'standard':[]},'competancy':{'high':[],'standard':[]}}};
 	var section_counter = 0;
 		function meaning_body_extend(){
@@ -749,14 +778,23 @@ function create_meaning_span(){
 
 	function fraud_or_comp(f_or_c){
 		colour = fraud_comp_risk[f_or_c]['colour']
-		if ($(`input[type=checkbox][value=${f_or_c}]`).prop("checked") == true){
+		var toggle = 	$(`div[set=fraud_comp_risk_toggle][value=${f_or_c}]`);
+		var checkbox = $(`input[type=checkbox][value=${f_or_c}]`);
+		if ($(checkbox).prop("checked") === true){
 			$("span[type=meaning]").each(function(){
 				if ($(this).data(`${f_or_c}`) == 1){
 					$(this).css(colour)
 						.attr("marked",+1);
 				};
 			});
-		}else if($(`input[type=checkbox][value=${f_or_c}]`).prop("checked") == false){
+			$(toggle).attr("return_col",$(toggle).css("background-color"));
+			$(toggle).attr("return_text",$(toggle).css("color"));
+			$(toggle).removeClass("is-info");
+			$(toggle).css({
+				"background-color":fraud_comp_risk[f_or_c].base_colour,
+				"color":"white"
+			});
+		}else {
 			$("span[type=meaning]").each(function(){
 				var act_mean = $(this).data()
 				if (act_mean[f_or_c] == 1){
@@ -773,6 +811,14 @@ function create_meaning_span(){
 					$(this).css(new_style)
 					$(this).attr("marked",-1);
 				};
+			});
+			//$(`div[set=fraud_comp_risk_toggle][value=${f_or_c}]`).css({"background-color":"transparent"});
+			$(toggle).addClass("button");		
+			$(toggle).addClass("is-info");
+			$(toggle).addClass("is-light");
+			$(toggle).css({
+				"background-color":$(toggle).attr("return_col"),
+				"color":$(toggle).attr("return_text")
 			});
 		};
 	};
@@ -1202,32 +1248,6 @@ var	fraud_comp_risk_sec_div = { 'high_risk':function(count){
 			return popup;	
 			},
 	}	
-	/*Object.keys(fraud_comp_risk).forEach(function(marker){
-		err_sec_count = section_data['collated'][marker]['high'].length;
-		$(`#high_${marker}_sections_count`).text(err_sec_count);
-		err_sec_count = section_data['collated'][marker]['standard'].length;
-		$(`#${marker}_sections_count`).text(err_sec_count);		
-	});*/
-	/*Object.keys(fraud_comp_risk).forEach(function(marker){
-		$(`#view_high_${marker}_sections`).click(function(){
-			all_sections('none')
-			section_data['collated'][marker]['high'].forEach(function(section){
-				$(`input[group=sections][name=${section}]`).click();
-			});
-			if ($(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).prop('checked') == false){
-				$(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).click();
-			};
-		});
-		$(`#view_${marker}_sections`).click(function(){
-			all_sections('none')
-			section_data['collated'][marker]['standard'].forEach(function(section){
-				$(`input[group=sections][name=${section}]`).click();
-			});
-			if ($(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).prop('checked') == false){
-				$(`input[type=checkbox][set=fraud_comp_risk][value=${marker}]`).click();
-			};
-		});		
-	});*/
 
 const side_view_col = `
 			<div class="column is-one-third" id="side_holder">
@@ -1830,7 +1850,6 @@ $(document).ready(function(){
 };
 
 event_set()
-
 	reached_section_loop(initiation, curform_set)
 	section_buttons(curform_set['form_name'])
 
@@ -1878,7 +1897,13 @@ event_set()
 	$("#create_work_task").click(function(){
 		work_task_data_sender()
 	});
-
+	$("div[set=fraud_comp_risk_toggle]").each(function(){
+		$(this).click(function(){
+			var frc_val = $(this).attr("value");
+			//fraud_or_comp(frc_val);
+			$(`input[type=checkbox][set=fraud_comp_risk][value=${frc_val}]`).click();
+		});	
+	});	
 	$('button[group=section_frc]').each(function(){
 		var marker = $(this).attr('frc');
 		var level = $(this).attr('level');
@@ -1988,7 +2013,7 @@ $('#prop_meaning_options').slideUp()
 
 	section_disable_check()
 	/*curform_set['sub_forms'].forEach(function(form){
-		var cur_form = curform_set['sub_forms'][form]
+		var cur_form = curform_set['sub_forms'][form]s
 		var completion = false
     var completion_eval
     var disabled = ''
@@ -1996,7 +2021,6 @@ $('#prop_meaning_options').slideUp()
             completion = true
         }
 	});*/
-
 
 });
 
